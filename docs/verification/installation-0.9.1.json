@@ -26,8 +26,11 @@
   "fresh_install_tested": false,
   "cross_version_upgrade_tested_by_agent": false,
   "friend_device_tested": false,
-  "verified_download_url": "https://github.com/bentley338/iSwara-Music/releases/download/v0.9.1/iSwara-0.9.1-verified.apk",
+  "verified_download_url": "https://github.com/bentley338/iSwara-Music/releases/download/v0.9.1/iSwara-0.9.1.apk",
   "github_verified_asset_digest_checked": true,
   "verified_asset_anonymous_head_checked": true,
-  "application_code_changed": false
+  "application_code_changed": false,
+  "duplicate_download_alias_removed": true,
+  "canonical_download_url": "https://github.com/bentley338/iSwara-Music/releases/download/v0.9.1/iSwara-0.9.1.apk",
+  "canonical_cleanup_checked_at": "2026-11-03T08:34:24.572419+00:00"
 }
