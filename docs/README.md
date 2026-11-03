@@ -3,6 +3,7 @@
 Current documentation is maintained in English. App display language remains configurable in Settings.
 
 - [User guide](USER_GUIDE.md): navigation, playback, lyrics, imports, and updates.
+- [Installation checks](INSTALLATION.md): invalid packages, download hashes and installer diagnostics.
 - [Build guide](BUILD.md): toolchains, configuration, tests, signing, and source distribution.
 - [Cloud setup](CLOUD_SETUP.md): Supabase migrations, Auth, SMTP, and Edge Functions.
 - [Administration](ADMIN_SUPABASE.md): server roles, content, users, and public-build restrictions.

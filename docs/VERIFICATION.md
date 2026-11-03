@@ -35,3 +35,13 @@ Source audits check actual configured values without printing them, common crede
 The latest host probe found 0 ADB devices and emulator acceleration status 6. The APK was not executed on a physical device/emulator, and no real installer upgrade was performed. Native encoder/stem processing, prolonged playback/background/Bluetooth/audio focus, overlay/launcher behavior and two-device cloud/Radio/Listen Together flows still require Android QA. Existing earlier component/network results are not presented as a new physical test.
 
 The existing 0.9.0 release is preserved with its original assets; its GitHub release notes were translated to English. Publication and Supabase registration of 0.9.1 are separate steps recorded in the distribution publication proof after packaging. The Android installer still requests confirmation. No claim of complete production acceptance, perfect security or copy prevention is made.
+
+## Post-release installation investigation
+
+An Android 16 / SDK 36 / arm64 device became available after publication. The device already had the non-debuggable 0.9.1 release installed through its in-app updater, according to the owner. Its separate browser-downloaded iSwara-0.9.1.apk had the expected 173592244-byte size but SHA-256 d0deae308344caa3f4580ad37bb4aec954dfc788c76ea1a5f3dd2846081a0f72, instead of the official 4a71818141190a0a9ecff460380a1961e4acc78be3522c667714c6b0b7af2841.
+
+The copied device file failed APK v2 integrity verification and ZIP CRC at lib/x86/libonnxruntime.so. Byte comparison identified two zero-filled damaged regions. The exact size therefore did not establish file integrity. The creating software/network cause was not identified; the report does not blame a particular browser or prove that another user's file had the same corruption.
+
+A clean official APK was copied to Download/iSwara-0.9.1-verified.apk and its on-device SHA-256 matched the official release. ADB install -r --no-streaming returned Success. No uninstall or clear-data command was performed. This is a verified same-version reinstall, not a fresh installation, cross-version upgrade test, playback test or validation on every Android device. The earlier pre-publication device-limit section remains historical; this new evidence supersedes installation coverage only.
+
+The verified-named GitHub asset is byte-identical to the original 0.9.1 APK, and its uploaded digest/size and anonymous accessibility were checked. Existing APK, source and checksum assets were not replaced. Application code and signing identity are unchanged. Installation instructions are in INSTALLATION.md, with machine-readable evidence in verification/installation-0.9.1.json.

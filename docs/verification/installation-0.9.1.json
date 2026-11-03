@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-11-03T08:26:41.361167+00:00",
+  "android_sdk": 36,
+  "android_release": "16",
+  "abi": "arm64-v8a",
+  "downloaded_apk_bytes": 173592244,
+  "downloaded_apk_sha256": "d0deae308344caa3f4580ad37bb4aec954dfc788c76ea1a5f3dd2846081a0f72",
+  "downloaded_apk_signature_valid": false,
+  "downloaded_apk_crc_failure": "lib/x86/libonnxruntime.so",
+  "zero_filled_ranges": [
+    {
+      "start": 57864081,
+      "end_inclusive": 58062835
+    },
+    {
+      "start": 115728162,
+      "end_inclusive": 115849902
+    }
+  ],
+  "official_apk_sha256": "4a71818141190a0a9ecff460380a1961e4acc78be3522c667714c6b0b7af2841",
+  "verified_copy_hash_confirmed_on_device": true,
+  "adb_reinstall_result": "Success",
+  "installed_version_code_before": 12,
+  "installed_version_code_after": 12,
+  "uninstall_or_clear_data_performed": false,
+  "fresh_install_tested": false,
+  "cross_version_upgrade_tested_by_agent": false,
+  "friend_device_tested": false,
+  "verified_download_url": "https://github.com/bentley338/iSwara-Music/releases/download/v0.9.1/iSwara-0.9.1-verified.apk",
+  "github_verified_asset_digest_checked": true,
+  "verified_asset_anonymous_head_checked": true,
+  "application_code_changed": false
+}

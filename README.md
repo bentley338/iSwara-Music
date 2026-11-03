@@ -4,6 +4,8 @@ An open-source Android music player with a local library, synchronized lyrics, a
 
 [Download the latest release](https://github.com/bentley338/iSwara-Music/releases/latest) · [User guide](docs/USER_GUIDE.md) · [Build guide](docs/BUILD.md) · [Security policy](SECURITY.md)
 
+If Android reports an invalid package, see [installation checks](docs/INSTALLATION.md). Compare the file's SHA-256 as well as its size; a damaged download can have the expected length.
+
 ## Requirements
 
 Android 8.0 or newer. The application targets Android 16 / API 36. Install the release APK from this repository's Releases page. To update an existing installation, use the same signing identity and install without uninstalling.
