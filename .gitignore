@@ -1,0 +1,15 @@
+.gradle/
+.kotlin/
+.idea/
+**/build/
+local.properties
+secrets.properties
+*.jks
+*.keystore
+*.hprof
+captures/
+.env
+.tools/
+supabase/.temp/
+tools/node_modules/
+*.log

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.RemixTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:16:38.480Z" hostname="DESKTOP-TQS95I0" time="0.146">
+  <properties/>
+  <testcase name="disabledIsBitExactAndEmptyDrainIsSafe" classname="id.iswara.music.RemixTest" time="0.013"/>
+  <testcase name="hallHasTailNoClippingAndFlushRemovesPreviousSong" classname="id.iswara.music.RemixTest" time="0.105"/>
+  <testcase name="presetsAndIndependentPitchAreBoundedAndRoomUsesOriginalTiming" classname="id.iswara.music.RemixTest" time="0.021"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.MusicRulesTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T02:10:01.447Z" hostname="DESKTOP-TQS95I0" time="0.113">
+  <properties/>
+  <testcase name="rejectsUnsafeFileUrls" classname="id.iswara.music.MusicRulesTest" time="0.073"/>
+  <testcase name="ignoresUnstampedLyricMetadata" classname="id.iswara.music.MusicRulesTest" time="0.014"/>
+  <testcase name="backupReaderRejectsOversizeBeforeLoadingWholeFile" classname="id.iswara.music.MusicRulesTest" time="0.001"/>
+  <testcase name="parsesMultipleLyricStampsAndOrdersLines" classname="id.iswara.music.MusicRulesTest" time="0.015"/>
+  <testcase name="backupReaderAcceptsExactByteLimit" classname="id.iswara.music.MusicRulesTest" time="0.0"/>
+  <testcase name="reorderingPreservesAllTracks" classname="id.iswara.music.MusicRulesTest" time="0.0"/>
+  <testcase name="rejectsDuplicatePlaylistIds" classname="id.iswara.music.MusicRulesTest" time="0.002"/>
+  <testcase name="rejectsUnknownBackupVersion" classname="id.iswara.music.MusicRulesTest" time="0.0"/>
+  <testcase name="backupRoundtripPreservesPlaylistOrder" classname="id.iswara.music.MusicRulesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

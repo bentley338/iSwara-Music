@@ -1,0 +1,70 @@
+{
+  "jni/arm64-v8a/libonnxruntime.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "jni/arm64-v8a/libonnxruntime4j_jni.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "jni/armeabi-v7a/libonnxruntime.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "jni/armeabi-v7a/libonnxruntime4j_jni.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "jni/x86/libonnxruntime.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "jni/x86/libonnxruntime4j_jni.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "jni/x86_64/libonnxruntime.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "jni/x86_64/libonnxruntime4j_jni.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  }
+}

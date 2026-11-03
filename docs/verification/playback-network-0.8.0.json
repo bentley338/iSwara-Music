@@ -1,0 +1,12 @@
+{
+  "source_test": "SourceLiveTest.searchAndResolveRealAudio",
+  "scope": "Host network extraction and initial HTTP bytes; not Android audible startup or physical stutter measurement",
+  "metrics": {
+    "resolveMs": "1741",
+    "cachedResolveMs": "0",
+    "firstByteIncludingResolveMs": "1885",
+    "bytes": "524288",
+    "downloadMs": "262",
+    "bitrateKbps": "128"
+  }
+}

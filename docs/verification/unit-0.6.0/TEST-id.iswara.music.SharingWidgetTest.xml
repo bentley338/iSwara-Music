@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.SharingWidgetTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:56:30.470Z" hostname="DESKTOP-TQS95I0" time="7.94">
+  <properties/>
+  <testcase name="cardStylesFitLongLyricsAndBothFormatsWithoutCropping" classname="id.iswara.music.SharingWidgetTest" time="6.061"/>
+  <testcase name="vinylLayoutAnimatesOnlyWhilePlayingAndHonorsReducedMotion" classname="id.iswara.music.SharingWidgetTest" time="0.213"/>
+  <testcase name="lyricCardProducesReadablePngInItsPrivateShareDirectory" classname="id.iswara.music.SharingWidgetTest" time="0.128"/>
+  <testcase name="manySelectedLinesArePaginatedWithoutLosingAnyText" classname="id.iswara.music.SharingWidgetTest" time="0.224"/>
+  <testcase name="allWidgetStylesRenderTrackAndWorkingControlViews" classname="id.iswara.music.SharingWidgetTest" time="0.773"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

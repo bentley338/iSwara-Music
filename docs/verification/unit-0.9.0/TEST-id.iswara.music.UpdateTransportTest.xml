@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.UpdateTransportTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:29:41.320Z" hostname="DESKTOP-TQS95I0" time="10.761">
+  <properties/>
+  <testcase name="downloadRejectsOversizeBadChecksumUntrustedRedirectAndNonApkAndCleansTemporaryFiles" classname="id.iswara.music.UpdateTransportTest" time="9.027"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Failed to open APK 'C:\Users\bentl\AppData\Local\Temp\robolectric-UpdateTransportTest_downloadRejectsOversizeBadChecksumUntrustedRedirectAndNonApkAndCleansTemporaryFiles16551144821878648974\id.iswara.music-dataDir\files\updates\update-5155860239614072313.part' Error -2147483643
+]]></system-err>
+</testsuite>

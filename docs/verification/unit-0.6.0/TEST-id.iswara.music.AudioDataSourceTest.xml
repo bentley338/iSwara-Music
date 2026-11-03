@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.AudioDataSourceTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:54:58.396Z" hostname="DESKTOP-TQS95I0" time="7.666">
+  <properties/>
+  <testcase name="otherHostsKeepTheirOriginalRequest" classname="id.iswara.music.AudioDataSourceTest" time="1.776"/>
+  <testcase name="seekAndExplicitLengthReturnTheExactRequestedBytes" classname="id.iswara.music.AudioDataSourceTest" time="0.114"/>
+  <testcase name="prematureEndIsAnErrorInsteadOfASilentlyTruncatedSong" classname="id.iswara.music.AudioDataSourceTest" time="0.022"/>
+  <testcase name="liveContinuousPlaybackTransportAndSeek" classname="id.iswara.music.AudioDataSourceTest" time="5.121"/>
+  <testcase name="readsContinuouslyAcrossThreeRangesWithoutDroppingBytes" classname="id.iswara.music.AudioDataSourceTest" time="0.066"/>
+  <testcase name="responseRangeSuppliesLengthWhenUrlHasNoLength" classname="id.iswara.music.AudioDataSourceTest" time="0.03"/>
+  <system-out><![CDATA[CHUNKED_METRICS firstByteIncludingResolveMs=3361 bytes=1105920 totalMs=3808 contentLength=3918515 seekBytes=32768
+WARM_METRICS cachedBytes=131072 firstCachedReadUs=66
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

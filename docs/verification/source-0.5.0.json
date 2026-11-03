@@ -1,0 +1,11 @@
+{
+  "version": "0.5.0",
+  "files_checked": 343,
+  "zip_integrity_passed": true,
+  "private_files_absent": true,
+  "configured_passwords_and_anon_key_absent": true,
+  "signed_apk_sha256": "9fd6ae14b83f3d232149db7ec0f19727f0412cb4d5fb44b5c4b4e7ad2ab8e335",
+  "release_cert_matches_previous": true,
+  "installed_on_device": false,
+  "full_emulator_booted": false
+}

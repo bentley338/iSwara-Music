@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.ExperienceTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:49:51.270Z" hostname="DESKTOP-TQS95I0" time="13.842">
+  <properties/>
+  <testcase name="paletteUsesPopulousCoverColorAndKeepsControlsReadableInBothThemes[26]" classname="id.iswara.music.ExperienceTest" time="2.058"/>
+  <testcase name="lyricsRejectWrongArtistVersionAndDurationAndCleanCatalogTitles[26]" classname="id.iswara.music.ExperienceTest" time="0.069"/>
+  <testcase name="savedQueuesAndManualLyricsSurviveRestartRemainOwnerIsolatedAndRespectDeletion[26]" classname="id.iswara.music.ExperienceTest" time="4.172"/>
+  <testcase name="paletteUsesPopulousCoverColorAndKeepsControlsReadableInBothThemes" classname="id.iswara.music.ExperienceTest" time="5.957"/>
+  <testcase name="lyricsRejectWrongArtistVersionAndDurationAndCleanCatalogTitles" classname="id.iswara.music.ExperienceTest" time="0.101"/>
+  <testcase name="savedQueuesAndManualLyricsSurviveRestartRemainOwnerIsolatedAndRespectDeletion" classname="id.iswara.music.ExperienceTest" time="0.517"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

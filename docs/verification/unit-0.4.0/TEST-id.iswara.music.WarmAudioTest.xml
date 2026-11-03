@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.WarmAudioTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:51:47.419Z" hostname="DESKTOP-TQS95I0" time="11.861">
+  <properties/>
+  <testcase name="prefixStartsWithoutNetworkAndRemainderHasNoMissingOrRepeatedBytes" classname="id.iswara.music.WarmAudioTest" time="9.988"/>
+  <testcase name="clearingWhilePrefetchRunsDoesNotRepopulatePreviousOwnerCache" classname="id.iswara.music.WarmAudioTest" time="0.419"/>
+  <testcase name="runtimeErrorsUseAudioRecoveryAndDiagnosticsExcludeSignedUrls" classname="id.iswara.music.WarmAudioTest" time="0.264"/>
+  <testcase name="seekExplicitRangeExpiryAndOwnerClearNeverReuseWrongBytes" classname="id.iswara.music.WarmAudioTest" time="0.19"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

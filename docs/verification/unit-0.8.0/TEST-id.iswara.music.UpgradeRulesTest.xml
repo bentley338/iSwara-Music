@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.UpgradeRulesTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-03T03:34:36.756Z" hostname="DESKTOP-TQS95I0" time="0.08">
+  <properties/>
+  <testcase name="radioHonorsLimitAndManualQueueRemainsUnchanged" classname="id.iswara.music.UpgradeRulesTest" time="0.027"/>
+  <testcase name="radioExcludesQueueRecentDuplicatesAndLongMixes" classname="id.iswara.music.UpgradeRulesTest" time="0.001"/>
+  <testcase name="listeningSummaryUsesActualSecondsAndCalendarPeriod" classname="id.iswara.music.UpgradeRulesTest" time="0.009"/>
+  <testcase name="offlineAudioAuthenticatesCiphertextAndSeparatesOwners" classname="id.iswara.music.UpgradeRulesTest" time="0.04"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

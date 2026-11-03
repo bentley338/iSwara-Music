@@ -1,0 +1,15 @@
+begin;
+select plan(7);
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000001'),('00000000-0000-0000-0000-000000000002');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);
+select lives_ok($$select public.sync_document('p1','playlist','{"id":"p1","title":"A","tracks":[]}',0,false,'10000000-0000-0000-0000-000000000001')$$, 'owner can create');
+select is((select count(*)::integer from public.documents),1,'owner sees document');
+select lives_ok($$select public.sync_document('p1','playlist','{"id":"p1","title":"A","tracks":[]}',0,false,'10000000-0000-0000-0000-000000000001')$$,'operation can be retried');
+select is((select count(*)::integer from public.documents),1,'retry does not duplicate');
+select is((select public.sync_document('p1','playlist','{"id":"p1","title":"B","tracks":[]}',0,false,'10000000-0000-0000-0000-000000000002')->>'conflict'),'true','stale revision detects conflict');
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000002',true);
+select is((select count(*)::integer from public.documents),0,'other account cannot read');
+select throws_ok($$update public.documents set deleted=true$$,'42501',null,'direct updates forbidden');
+select * from finish();
+rollback;

@@ -1,0 +1,13 @@
+{
+  "version": "0.6.0",
+  "bytes": 147533074,
+  "sha256": "4abf19ffa49a1a8d80f8c8ec8b0c5d9406a21f3b88fa43e0b73767034749ad93",
+  "bundled_models_match_manifest": true,
+  "all_native_abis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86",
+    "x86_64"
+  ],
+  "apk_runtime_executed_on_android": false
+}

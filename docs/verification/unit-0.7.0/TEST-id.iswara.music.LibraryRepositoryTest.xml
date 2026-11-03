@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.LibraryRepositoryTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T02:08:42.314Z" hostname="DESKTOP-TQS95I0" time="0.206">
+  <properties/>
+  <testcase name="guestAndTwoAccountsStayIsolated" classname="id.iswara.music.LibraryRepositoryTest" time="0.169"/>
+  <testcase name="stalePlaylistObjectCannotOverwriteNewlyAddedTrack" classname="id.iswara.music.LibraryRepositoryTest" time="0.006"/>
+  <testcase name="importedPlaylistDoesNotOverwriteExistingId" classname="id.iswara.music.LibraryRepositoryTest" time="0.016"/>
+  <testcase name="backupExportsActualDataWithoutWaitingForObserver" classname="id.iswara.music.LibraryRepositoryTest" time="0.004"/>
+  <testcase name="favoriteRemovalLeavesSyncTombstone" classname="id.iswara.music.LibraryRepositoryTest" time="0.002"/>
+  <testcase name="mixPlaylistIsOneOwnerBoundDocumentWithoutDuplicateTracks" classname="id.iswara.music.LibraryRepositoryTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

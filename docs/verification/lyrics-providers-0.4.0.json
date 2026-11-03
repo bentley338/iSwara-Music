@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-11-02T08:50:55.768702+00:00",
+  "lrclib": {
+    "available": true,
+    "synced_lines": 49
+  },
+  "kugou": {
+    "candidates": 10,
+    "matching_duration_found": true,
+    "synced_lines": 44
+  }
+}

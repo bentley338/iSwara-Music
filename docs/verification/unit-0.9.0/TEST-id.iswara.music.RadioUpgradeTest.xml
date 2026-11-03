@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.RadioUpgradeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:28:48.335Z" hostname="DESKTOP-TQS95I0" time="1.967">
+  <properties/>
+  <testcase name="localReadingsKeepOriginalTextAndWordOffsets" classname="id.iswara.music.RadioUpgradeTest" time="1.638"/>
+  <testcase name="radioMessagesMergeTombstonesWithoutDuplicatesAndBoundHistory" classname="id.iswara.music.RadioUpgradeTest" time="0.03"/>
+  <testcase name="analogHeadphoneCrossfeedFlushAndMultichannelRemainBounded" classname="id.iswara.music.RadioUpgradeTest" time="0.079"/>
+  <testcase name="analogOffIsBitExactAndEmptyDrainSafe" classname="id.iswara.music.RadioUpgradeTest" time="0.003"/>
+  <testcase name="allThemeAccentTextPairsHaveReadableContrast" classname="id.iswara.music.RadioUpgradeTest" time="0.115"/>
+  <testcase name="fallbackRejectsOtherVersionsArtistsAndUnknownDuration" classname="id.iswara.music.RadioUpgradeTest" time="0.088"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.TabletPlayerUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T02:10:41.104Z" hostname="DESKTOP-TQS95I0" time="18.226">
+  <properties/>
+  <testcase name="queueTimerFavoriteAndLargeTextOnTablet" classname="id.iswara.music.TabletPlayerUiTest" time="17.472"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

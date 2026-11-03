@@ -1,0 +1,534 @@
+{
+  "version": "0.7.0",
+  "tests": 105,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "id.iswara.music.AdminContentUiTest",
+      "name": "previewNeverPublishesAndAllContentActionsHaveIndependentHandlers",
+      "seconds": 16.619
+    },
+    {
+      "class": "id.iswara.music.AdminToolsTest",
+      "name": "duplicationIsAlwaysANewDraftAndCannotCopyIdentityOrCreator",
+      "seconds": 0.073
+    },
+    {
+      "class": "id.iswara.music.AdminToolsTest",
+      "name": "auditExportQuotesCellsNeutralizesSpreadsheetFormulasAndHandlesEmptyPages",
+      "seconds": 0.053
+    },
+    {
+      "class": "id.iswara.music.AudioDataSourceTest",
+      "name": "otherHostsKeepTheirOriginalRequest",
+      "seconds": 17.793
+    },
+    {
+      "class": "id.iswara.music.AudioDataSourceTest",
+      "name": "seekAndExplicitLengthReturnTheExactRequestedBytes",
+      "seconds": 2.794
+    },
+    {
+      "class": "id.iswara.music.AudioDataSourceTest",
+      "name": "prematureEndIsAnErrorInsteadOfASilentlyTruncatedSong",
+      "seconds": 0.813
+    },
+    {
+      "class": "id.iswara.music.AudioDataSourceTest",
+      "name": "liveContinuousPlaybackTransportAndSeek",
+      "seconds": 6.033
+    },
+    {
+      "class": "id.iswara.music.AudioDataSourceTest",
+      "name": "readsContinuouslyAcrossThreeRangesWithoutDroppingBytes",
+      "seconds": 0.115
+    },
+    {
+      "class": "id.iswara.music.AudioDataSourceTest",
+      "name": "responseRangeSuppliesLengthWhenUrlHasNoLength",
+      "seconds": 0.092
+    },
+    {
+      "class": "id.iswara.music.AudioPipelineTest",
+      "name": "pcmPlaybackSurvivesSeekSpeedSilenceAndTrackTransition[26]",
+      "seconds": 5.11
+    },
+    {
+      "class": "id.iswara.music.AudioPipelineTest",
+      "name": "pcmPlaybackSurvivesSeekSpeedSilenceAndTrackTransition[34]",
+      "seconds": 5.792
+    },
+    {
+      "class": "id.iswara.music.AudioPipelineTest",
+      "name": "pcmPlaybackSurvivesSeekSpeedSilenceAndTrackTransition",
+      "seconds": 12.852
+    },
+    {
+      "class": "id.iswara.music.CarLibraryTest",
+      "name": "realMediaBrowserReadsLibraryResolvesSavedTrackAndSwitchesOwner",
+      "seconds": 14.95
+    },
+    {
+      "class": "id.iswara.music.CarLibraryTest",
+      "name": "catalogPreservesPlaylistOrderFiltersOtherDeviceAndBoundsPages",
+      "seconds": 0.099
+    },
+    {
+      "class": "id.iswara.music.CompactPhonePlayerUiTest",
+      "name": "coreControlsStayVisibleWithoutScrollingOnSmallPhoneWithLargeText",
+      "seconds": 18.507
+    },
+    {
+      "class": "id.iswara.music.ExperienceTest",
+      "name": "paletteUsesPopulousCoverColorAndKeepsControlsReadableInBothThemes[26]",
+      "seconds": 1.698
+    },
+    {
+      "class": "id.iswara.music.ExperienceTest",
+      "name": "lyricsRejectWrongArtistVersionAndDurationAndCleanCatalogTitles[26]",
+      "seconds": 0.074
+    },
+    {
+      "class": "id.iswara.music.ExperienceTest",
+      "name": "savedQueuesAndManualLyricsSurviveRestartRemainOwnerIsolatedAndRespectDeletion[26]",
+      "seconds": 11.015
+    },
+    {
+      "class": "id.iswara.music.ExperienceTest",
+      "name": "paletteUsesPopulousCoverColorAndKeepsControlsReadableInBothThemes",
+      "seconds": 9.971
+    },
+    {
+      "class": "id.iswara.music.ExperienceTest",
+      "name": "lyricsRejectWrongArtistVersionAndDurationAndCleanCatalogTitles",
+      "seconds": 0.25
+    },
+    {
+      "class": "id.iswara.music.ExperienceTest",
+      "name": "savedQueuesAndManualLyricsSurviveRestartRemainOwnerIsolatedAndRespectDeletion",
+      "seconds": 0.721
+    },
+    {
+      "class": "id.iswara.music.FloatingLyricsTest",
+      "name": "overlayRequiresPermissionFollowsLyricsHidesOnPauseClosesAndHandlesRevocation",
+      "seconds": 9.831
+    },
+    {
+      "class": "id.iswara.music.LibraryRepositoryTest",
+      "name": "guestAndTwoAccountsStayIsolated",
+      "seconds": 0.169
+    },
+    {
+      "class": "id.iswara.music.LibraryRepositoryTest",
+      "name": "stalePlaylistObjectCannotOverwriteNewlyAddedTrack",
+      "seconds": 0.006
+    },
+    {
+      "class": "id.iswara.music.LibraryRepositoryTest",
+      "name": "importedPlaylistDoesNotOverwriteExistingId",
+      "seconds": 0.016
+    },
+    {
+      "class": "id.iswara.music.LibraryRepositoryTest",
+      "name": "backupExportsActualDataWithoutWaitingForObserver",
+      "seconds": 0.004
+    },
+    {
+      "class": "id.iswara.music.LibraryRepositoryTest",
+      "name": "favoriteRemovalLeavesSyncTombstone",
+      "seconds": 0.002
+    },
+    {
+      "class": "id.iswara.music.LibraryRepositoryTest",
+      "name": "mixPlaylistIsOneOwnerBoundDocumentWithoutDuplicateTracks",
+      "seconds": 0.004
+    },
+    {
+      "class": "id.iswara.music.ListeningDatabaseTest",
+      "name": "legacyRecapMigrationIsIdempotentConcurrentAndOwnerIsolated",
+      "seconds": 10.213
+    },
+    {
+      "class": "id.iswara.music.ListeningDatabaseTest",
+      "name": "versionOneLibrarySurvivesDatabaseUpgrade",
+      "seconds": 0.285
+    },
+    {
+      "class": "id.iswara.music.ListeningToolsTest",
+      "name": "concurrentTimingAdjustmentsAreAtomicOwnerIsolatedPersistentAndRemovable[26]",
+      "seconds": 2.416
+    },
+    {
+      "class": "id.iswara.music.ListeningToolsTest",
+      "name": "queueFilteringKeepsShuffleOrderAndExplicitDuplicates[26]",
+      "seconds": 0.124
+    },
+    {
+      "class": "id.iswara.music.ListeningToolsTest",
+      "name": "lyricTimingHandlesIntroDuplicateTimestampsOffsetsAndSeekBounds[26]",
+      "seconds": 0.024
+    },
+    {
+      "class": "id.iswara.music.ListeningToolsTest",
+      "name": "concurrentTimingAdjustmentsAreAtomicOwnerIsolatedPersistentAndRemovable",
+      "seconds": 9.075
+    },
+    {
+      "class": "id.iswara.music.ListeningToolsTest",
+      "name": "queueFilteringKeepsShuffleOrderAndExplicitDuplicates",
+      "seconds": 0.063
+    },
+    {
+      "class": "id.iswara.music.ListeningToolsTest",
+      "name": "lyricTimingHandlesIntroDuplicateTimestampsOffsetsAndSeekBounds",
+      "seconds": 0.055
+    },
+    {
+      "class": "id.iswara.music.LyricsMotionUiTest",
+      "name": "disabledMotionHasNoIntermediateFrames",
+      "seconds": 17.209
+    },
+    {
+      "class": "id.iswara.music.LyricsMotionUiTest",
+      "name": "paletteChangesDoNotRestartTheLyricMovement",
+      "seconds": 0.4
+    },
+    {
+      "class": "id.iswara.music.LyricsMotionUiTest",
+      "name": "activeLyricsAnimateWithArtworkColorsDisabled",
+      "seconds": 0.248
+    },
+    {
+      "class": "id.iswara.music.LyricsMotionUiTest",
+      "name": "activeLyricsAnimateOnEntryWithArtworkPalette",
+      "seconds": 0.139
+    },
+    {
+      "class": "id.iswara.music.LyricsMotionUiTest",
+      "name": "activeLyricsAnimateInLightTheme",
+      "seconds": 0.121
+    },
+    {
+      "class": "id.iswara.music.LyricsSelectionUiTest",
+      "name": "selectAllCanReturnMoreThanFourLinesInOriginalOrder",
+      "seconds": 6.712
+    },
+    {
+      "class": "id.iswara.music.LyricVideoPainterTest",
+      "name": "lyricRegionChangesAtRealLineTimestampWithoutUsingProgressBarPixels",
+      "seconds": 20.949
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "rejectsUnsafeFileUrls",
+      "seconds": 0.073
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "ignoresUnstampedLyricMetadata",
+      "seconds": 0.014
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "backupReaderRejectsOversizeBeforeLoadingWholeFile",
+      "seconds": 0.001
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "parsesMultipleLyricStampsAndOrdersLines",
+      "seconds": 0.015
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "backupReaderAcceptsExactByteLimit",
+      "seconds": 0.0
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "reorderingPreservesAllTracks",
+      "seconds": 0.0
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "rejectsDuplicatePlaylistIds",
+      "seconds": 0.002
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "rejectsUnknownBackupVersion",
+      "seconds": 0.0
+    },
+    {
+      "class": "id.iswara.music.MusicRulesTest",
+      "name": "backupRoundtripPreservesPlaylistOrder",
+      "seconds": 0.001
+    },
+    {
+      "class": "id.iswara.music.NavigationSpaceUiTest",
+      "name": "phoneMenusFeatureSearchShortcutsDialogsAndMixPreview",
+      "seconds": 38.587
+    },
+    {
+      "class": "id.iswara.music.NavigationSpaceUiTest",
+      "name": "tabletUsesSideNavigationAndBothThemes",
+      "seconds": 2.906
+    },
+    {
+      "class": "id.iswara.music.NavigationSpaceUiTest",
+      "name": "linkDialogDocumentActionsAndDirectPlayerTabs",
+      "seconds": 3.215
+    },
+    {
+      "class": "id.iswara.music.NavigationSpaceUiTest",
+      "name": "realMixSearchDoesNotAutoplayAndClearsOnAccountSwitch",
+      "seconds": 0.855
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "duplicatesAreExplicitAndEmptyShuffleQueueCanAcceptItsFirstSong",
+      "seconds": 6.633
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "normalQueueMovesExistingSongNextAndKeepsSeekPosition",
+      "seconds": 0.223
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "reorderAndClearUseActualShuffleOrderRatherThanStorageIndex",
+      "seconds": 0.165
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "radioAndSessionRestorePreserveManualShuffleEdits",
+      "seconds": 0.162
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "playNextHonorsShuffleForExistingAndNewSongsWithoutChangingCurrentTrack",
+      "seconds": 0.126
+    },
+    {
+      "class": "id.iswara.music.RemixTest",
+      "name": "disabledIsBitExactAndEmptyDrainIsSafe",
+      "seconds": 0.011
+    },
+    {
+      "class": "id.iswara.music.RemixTest",
+      "name": "hallHasTailNoClippingAndFlushRemovesPreviousSong",
+      "seconds": 0.096
+    },
+    {
+      "class": "id.iswara.music.RemixTest",
+      "name": "presetsAndIndependentPitchAreBoundedAndRoomUsesOriginalTiming",
+      "seconds": 0.023
+    },
+    {
+      "class": "id.iswara.music.SessionExpiryTest",
+      "name": "restSessionGetsStableAbsoluteExpiry",
+      "seconds": 0.028
+    },
+    {
+      "class": "id.iswara.music.SessionExpiryTest",
+      "name": "existingExpiryIsPreservedAndMissingExpiryIsNotInvented",
+      "seconds": 0.001
+    },
+    {
+      "class": "id.iswara.music.SharingWidgetTest",
+      "name": "cardStylesFitLongLyricsAndBothFormatsWithoutCropping",
+      "seconds": 10.245
+    },
+    {
+      "class": "id.iswara.music.SharingWidgetTest",
+      "name": "vinylLayoutAnimatesOnlyWhilePlayingAndHonorsReducedMotion",
+      "seconds": 0.37
+    },
+    {
+      "class": "id.iswara.music.SharingWidgetTest",
+      "name": "lyricCardProducesReadablePngInItsPrivateShareDirectory",
+      "seconds": 0.194
+    },
+    {
+      "class": "id.iswara.music.SharingWidgetTest",
+      "name": "manySelectedLinesArePaginatedWithoutLosingAnyText",
+      "seconds": 0.501
+    },
+    {
+      "class": "id.iswara.music.SharingWidgetTest",
+      "name": "allWidgetStylesRenderTrackAndWorkingControlViews",
+      "seconds": 1.054
+    },
+    {
+      "class": "id.iswara.music.SourceLiveTest",
+      "name": "searchAndResolveRealAudio",
+      "seconds": 3.348
+    },
+    {
+      "class": "id.iswara.music.SourceLiveTest",
+      "name": "browseRealAlbumAndArtist",
+      "seconds": 1.128
+    },
+    {
+      "class": "id.iswara.music.SpaceRulesTest",
+      "name": "offlineSearchAndSortKeepOriginalEntriesAndActualSize",
+      "seconds": 0.038
+    },
+    {
+      "class": "id.iswara.music.SpaceRulesTest",
+      "name": "corruptAndObsoletePinsCannotExposeAdminOrDuplicateActions",
+      "seconds": 0.032
+    },
+    {
+      "class": "id.iswara.music.SpaceRulesTest",
+      "name": "localizedFeatureSearchRespectsCategoryAndWhitespace",
+      "seconds": 0.003
+    },
+    {
+      "class": "id.iswara.music.StemCipherTest",
+      "name": "authenticatedBlocksSupportSeekAndRejectDifferentOwnerCorruptionAndReordering",
+      "seconds": 0.141
+    },
+    {
+      "class": "id.iswara.music.StemDspTest",
+      "name": "fftRoundTripAndUnitMaskReconstructMiddleOfStereoSignal",
+      "seconds": 0.148
+    },
+    {
+      "class": "id.iswara.music.StemDspTest",
+      "name": "resamplingPreservesDurationAndStereoChannelsInBoundedChunks",
+      "seconds": 0.03
+    },
+    {
+      "class": "id.iswara.music.StemModelTest",
+      "name": "officialMusicExampleProducesNonzeroVocalAndInstrumentEstimates",
+      "seconds": 1.702
+    },
+    {
+      "class": "id.iswara.music.StemModelTest",
+      "name": "bundledAiModelsProduceFiniteDistinctStereoStemsAndKeepDuration",
+      "seconds": 0.787
+    },
+    {
+      "class": "id.iswara.music.StreamResolverTest",
+      "name": "rejectedStreamRetriesWithFullExtractor",
+      "seconds": 0.178
+    },
+    {
+      "class": "id.iswara.music.StreamResolverTest",
+      "name": "failureCanBeRetriedWithoutPoisoningCache",
+      "seconds": 0.143
+    },
+    {
+      "class": "id.iswara.music.StreamResolverTest",
+      "name": "expiredUrlsAreResolvedAgainAndQualityIsIsolated",
+      "seconds": 0.203
+    },
+    {
+      "class": "id.iswara.music.StreamResolverTest",
+      "name": "failedAbandonedPrefetchDoesNotPoisonLaterPlayback",
+      "seconds": 0.187
+    },
+    {
+      "class": "id.iswara.music.StreamResolverTest",
+      "name": "simultaneousPrefetchAndPlaybackShareOneRequest",
+      "seconds": 0.08
+    },
+    {
+      "class": "id.iswara.music.StreamResolverTest",
+      "name": "cancellationOfPrefetchDoesNotCancelPlaybackRequest",
+      "seconds": 0.077
+    },
+    {
+      "class": "id.iswara.music.TabletPlayerUiTest",
+      "name": "queueTimerFavoriteAndLargeTextOnTablet",
+      "seconds": 17.472
+    },
+    {
+      "class": "id.iswara.music.TogetherPlaybackModernTest",
+      "name": "roomEditsAndTransportDoNotReplaceThePersonalQueueOnExit",
+      "seconds": 9.577
+    },
+    {
+      "class": "id.iswara.music.TogetherPlaybackTest",
+      "name": "roomEditsAndTransportDoNotReplaceThePersonalQueueOnExit",
+      "seconds": 3.603
+    },
+    {
+      "class": "id.iswara.music.TogetherRulesTest",
+      "name": "projectedPositionUsesServerClockClampsAtTrackEndAndStopsWhenPaused",
+      "seconds": 0.011
+    },
+    {
+      "class": "id.iswara.music.TogetherRulesTest",
+      "name": "invitationsAcceptFormattedCodesAndOnlyRemoteTracksCanBeShared",
+      "seconds": 0.007
+    },
+    {
+      "class": "id.iswara.music.UiFlowTest",
+      "name": "navigationPlaylistAndThemes",
+      "seconds": 18.096
+    },
+    {
+      "class": "id.iswara.music.UpgradeRulesTest",
+      "name": "radioHonorsLimitAndManualQueueRemainsUnchanged",
+      "seconds": 0.033
+    },
+    {
+      "class": "id.iswara.music.UpgradeRulesTest",
+      "name": "radioExcludesQueueRecentDuplicatesAndLongMixes",
+      "seconds": 0.001
+    },
+    {
+      "class": "id.iswara.music.UpgradeRulesTest",
+      "name": "listeningSummaryUsesActualSecondsAndCalendarPeriod",
+      "seconds": 0.01
+    },
+    {
+      "class": "id.iswara.music.UpgradeRulesTest",
+      "name": "offlineAudioAuthenticatesCiphertextAndSeparatesOwners",
+      "seconds": 0.053
+    },
+    {
+      "class": "id.iswara.music.VolumeBalancerTest",
+      "name": "loudSignalIsReducedWithoutClipping",
+      "seconds": 0.046
+    },
+    {
+      "class": "id.iswara.music.VolumeBalancerTest",
+      "name": "disabledLeavesPcmUnchanged",
+      "seconds": 0.002
+    },
+    {
+      "class": "id.iswara.music.VolumeBalancerTest",
+      "name": "drainingBeforeFirstAudioAndAfterFlushIsSafe",
+      "seconds": 0.006
+    },
+    {
+      "class": "id.iswara.music.VolumeBalancerTest",
+      "name": "silenceRemainsSilenceAndQuietSignalIsBounded",
+      "seconds": 0.009
+    },
+    {
+      "class": "id.iswara.music.WarmAudioTest",
+      "name": "prefixStartsWithoutNetworkAndRemainderHasNoMissingOrRepeatedBytes",
+      "seconds": 6.381
+    },
+    {
+      "class": "id.iswara.music.WarmAudioTest",
+      "name": "clearingWhilePrefetchRunsDoesNotRepopulatePreviousOwnerCache",
+      "seconds": 0.389
+    },
+    {
+      "class": "id.iswara.music.WarmAudioTest",
+      "name": "runtimeErrorsUseAudioRecoveryAndDiagnosticsExcludeSignedUrls",
+      "seconds": 0.186
+    },
+    {
+      "class": "id.iswara.music.WarmAudioTest",
+      "name": "seekExplicitRangeExpiryAndOwnerClearNeverReuseWrongBytes",
+      "seconds": 0.123
+    }
+  ]
+}

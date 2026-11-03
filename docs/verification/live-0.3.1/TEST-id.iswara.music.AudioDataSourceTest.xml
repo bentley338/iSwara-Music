@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.AudioDataSourceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-02T06:20:17.127Z" hostname="DESKTOP-TQS95I0" time="40.144">
+  <properties/>
+  <testcase name="liveContinuousPlaybackTransportAndSeek" classname="id.iswara.music.AudioDataSourceTest" time="39.575"/>
+  <system-out><![CDATA[CHUNKED_METRICS firstByteIncludingResolveMs=3445 bytes=1105920 totalMs=30429 contentLength=3918515 seekBytes=32768
+WARM_METRICS cachedBytes=131072 firstCachedReadUs=194
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

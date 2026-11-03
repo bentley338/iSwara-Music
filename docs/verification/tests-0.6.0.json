@@ -1,0 +1,7 @@
+{
+  "tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "method": "96 full-suite tests with live network, then focused UI/stream tests after compact player polish; merged latest result per class"
+}

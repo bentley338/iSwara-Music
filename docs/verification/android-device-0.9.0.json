@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-11-03T05:39:43.571343+00:00",
+  "adb_connected_devices": 0,
+  "emulator_accel_status": 6,
+  "emulator_message": "Android Emulator hypervisor driver is not installed on this machine",
+  "apk_executed_on_android": false,
+  "github_release_published_by_agent": false,
+  "real_upgrade_installation_tested": false
+}

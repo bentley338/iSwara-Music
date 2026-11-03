@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.PlaybackQueueTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T02:10:02.467Z" hostname="DESKTOP-TQS95I0" time="8.043">
+  <properties/>
+  <testcase name="duplicatesAreExplicitAndEmptyShuffleQueueCanAcceptItsFirstSong" classname="id.iswara.music.PlaybackQueueTest" time="6.633"/>
+  <testcase name="normalQueueMovesExistingSongNextAndKeepsSeekPosition" classname="id.iswara.music.PlaybackQueueTest" time="0.223"/>
+  <testcase name="reorderAndClearUseActualShuffleOrderRatherThanStorageIndex" classname="id.iswara.music.PlaybackQueueTest" time="0.165"/>
+  <testcase name="radioAndSessionRestorePreserveManualShuffleEdits" classname="id.iswara.music.PlaybackQueueTest" time="0.162"/>
+  <testcase name="playNextHonorsShuffleForExistingAndNewSongsWithoutChangingCurrentTrack" classname="id.iswara.music.PlaybackQueueTest" time="0.126"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

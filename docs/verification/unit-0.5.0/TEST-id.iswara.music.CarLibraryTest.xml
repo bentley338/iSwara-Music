@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.CarLibraryTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-02T11:31:11.116Z" hostname="DESKTOP-TQS95I0" time="7.623">
+  <properties/>
+  <testcase name="realMediaBrowserReadsLibraryResolvesSavedTrackAndSwitchesOwner" classname="id.iswara.music.CarLibraryTest" time="6.997"/>
+  <testcase name="catalogPreservesPlaylistOrderFiltersOtherDeviceAndBoundsPages" classname="id.iswara.music.CarLibraryTest" time="0.057"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

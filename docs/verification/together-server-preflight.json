@@ -1,0 +1,14 @@
+{
+  "room_read": {
+    "status": 401,
+    "code": "42501"
+  },
+  "create_rpc": {
+    "status": 401,
+    "code": "42501"
+  },
+  "state_rpc": {
+    "status": 401,
+    "code": "42501"
+  }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.VolumeBalancerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-02T07:04:26.449Z" hostname="DESKTOP-TQS95I0" time="0.065">
+  <properties/>
+  <testcase name="loudSignalIsReducedWithoutClipping" classname="id.iswara.music.VolumeBalancerTest" time="0.036"/>
+  <testcase name="disabledLeavesPcmUnchanged" classname="id.iswara.music.VolumeBalancerTest" time="0.001"/>
+  <testcase name="drainingBeforeFirstAudioAndAfterFlushIsSafe" classname="id.iswara.music.VolumeBalancerTest" time="0.004"/>
+  <testcase name="silenceRemainsSilenceAndQuietSignalIsBounded" classname="id.iswara.music.VolumeBalancerTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

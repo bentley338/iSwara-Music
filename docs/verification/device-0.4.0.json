@@ -1,0 +1,190 @@
+{
+  "checked_at": "2026-11-02T09:04:28.521491+00:00",
+  "version": "0.4.0",
+  "checks": {
+    "search_and_native_playback": true,
+    "system_pause": true,
+    "system_resume": true,
+    "screen_off_native_playback": true,
+    "next_track_native_playback": true
+  },
+  "samples": {
+    "start": {
+      "state": 3,
+      "position_ms": 0,
+      "buffered_ms": 52421,
+      "active_id": 0,
+      "error": "null"
+    },
+    "first_pause": {
+      "state": 2,
+      "position_ms": 10403,
+      "buffered_ms": 163881,
+      "active_id": 0,
+      "error": "null"
+    },
+    "screen_off_samples": [
+      {
+        "state": 3,
+        "position_ms": 13430,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 19435,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 25444,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 28440,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 34437,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 40450,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 43452,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 49469,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 55469,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 61487,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 64493,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 70507,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 76521,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 79528,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 85540,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 91542,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 94537,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      },
+      {
+        "state": 3,
+        "position_ms": 100549,
+        "buffered_ms": 163881,
+        "active_id": 0,
+        "error": "null"
+      }
+    ],
+    "screen_off": {
+      "state": 3,
+      "position_ms": 100549,
+      "buffered_ms": 163881,
+      "active_id": 0,
+      "error": "null"
+    },
+    "after_screen_off_pause": {
+      "state": 2,
+      "position_ms": 100981,
+      "buffered_ms": 163881,
+      "active_id": 0,
+      "error": "null"
+    },
+    "next_track": {
+      "state": 3,
+      "position_ms": 0,
+      "buffered_ms": 13541,
+      "active_id": 1,
+      "error": "null"
+    },
+    "final_pause": {
+      "state": 2,
+      "position_ms": 5940,
+      "buffered_ms": 120761,
+      "active_id": 1,
+      "error": "null"
+    }
+  },
+  "model": "2602BPC18G",
+  "sdk": 36,
+  "first_playing_observed_ms": 5294,
+  "screen_off_seconds": 90,
+  "buffering_samples": 0,
+  "next_playing_observed_ms": 1203,
+  "passed": true
+}

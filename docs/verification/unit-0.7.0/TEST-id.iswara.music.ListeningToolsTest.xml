@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.ListeningToolsTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T02:08:55.896Z" hostname="DESKTOP-TQS95I0" time="12.644">
+  <properties/>
+  <testcase name="concurrentTimingAdjustmentsAreAtomicOwnerIsolatedPersistentAndRemovable[26]" classname="id.iswara.music.ListeningToolsTest" time="2.416"/>
+  <testcase name="queueFilteringKeepsShuffleOrderAndExplicitDuplicates[26]" classname="id.iswara.music.ListeningToolsTest" time="0.124"/>
+  <testcase name="lyricTimingHandlesIntroDuplicateTimestampsOffsetsAndSeekBounds[26]" classname="id.iswara.music.ListeningToolsTest" time="0.024"/>
+  <testcase name="concurrentTimingAdjustmentsAreAtomicOwnerIsolatedPersistentAndRemovable" classname="id.iswara.music.ListeningToolsTest" time="9.075"/>
+  <testcase name="queueFilteringKeepsShuffleOrderAndExplicitDuplicates" classname="id.iswara.music.ListeningToolsTest" time="0.063"/>
+  <testcase name="lyricTimingHandlesIntroDuplicateTimestampsOffsetsAndSeekBounds" classname="id.iswara.music.ListeningToolsTest" time="0.055"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,22 @@
+project_id = "iswara"
+
+[api]
+enabled = true
+max_rows = 10000
+
+[auth]
+enabled = true
+site_url = "iswara://auth"
+additional_redirect_urls = ["iswara://auth"]
+enable_signup = true
+minimum_password_length = 8
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+
+[functions.delete-account]
+verify_jwt = false
+
+[functions.admin-users]
+verify_jwt = false

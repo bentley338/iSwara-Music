@@ -1,0 +1,60 @@
+{
+  "checked_at": "2026-11-02T07:15:51.530272+00:00",
+  "version": "0.3.1",
+  "checks": {
+    "search_and_native_playback": true,
+    "system_pause": true,
+    "system_resume": true,
+    "screen_off_native_playback": true,
+    "next_track_native_playback": true
+  },
+  "samples": {
+    "start": {
+      "state": 3,
+      "position_ms": 0,
+      "buffered_ms": 5341,
+      "active_id": 0,
+      "error": "null"
+    },
+    "first_pause": {
+      "state": 2,
+      "position_ms": 10576,
+      "buffered_ms": 163881,
+      "active_id": 0,
+      "error": "null"
+    },
+    "screen_off": {
+      "state": 3,
+      "position_ms": 22607,
+      "buffered_ms": 163881,
+      "active_id": 0,
+      "error": "null"
+    },
+    "after_screen_off_pause": {
+      "state": 2,
+      "position_ms": 23125,
+      "buffered_ms": 163881,
+      "active_id": 0,
+      "error": "null"
+    },
+    "next_track": {
+      "state": 3,
+      "position_ms": 0,
+      "buffered_ms": 7521,
+      "active_id": 1,
+      "error": "null"
+    },
+    "final_pause": {
+      "state": 2,
+      "position_ms": 5887,
+      "buffered_ms": 150821,
+      "active_id": 1,
+      "error": "null"
+    }
+  },
+  "model": "2602BPC18G",
+  "sdk": 36,
+  "first_playing_observed_ms": 5580,
+  "next_playing_observed_ms": 1177,
+  "passed": true
+}

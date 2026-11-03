@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.LyricsMotionUiTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-02T11:31:45.318Z" hostname="DESKTOP-TQS95I0" time="8.714">
+  <properties/>
+  <testcase name="disabledMotionHasNoIntermediateFrames" classname="id.iswara.music.LyricsMotionUiTest" time="7.531"/>
+  <testcase name="paletteChangesDoNotRestartTheLyricMovement" classname="id.iswara.music.LyricsMotionUiTest" time="0.261"/>
+  <testcase name="activeLyricsAnimateWithArtworkColorsDisabled" classname="id.iswara.music.LyricsMotionUiTest" time="0.177"/>
+  <testcase name="activeLyricsAnimateOnEntryWithArtworkPalette" classname="id.iswara.music.LyricsMotionUiTest" time="0.13"/>
+  <testcase name="activeLyricsAnimateInLightTheme" classname="id.iswara.music.LyricsMotionUiTest" time="0.094"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

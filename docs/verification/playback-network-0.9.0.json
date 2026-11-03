@@ -1,0 +1,11 @@
+{
+  "scope": "Host network metrics; not Android audible startup or stutter comparison",
+  "metrics": {
+    "resolveMs": "1743",
+    "cachedResolveMs": "0",
+    "firstByteIncludingResolveMs": "1937",
+    "bytes": "524288",
+    "downloadMs": "321",
+    "bitrateKbps": "128"
+  }
+}

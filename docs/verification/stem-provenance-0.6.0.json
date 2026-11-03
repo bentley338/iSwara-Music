@@ -1,0 +1,12 @@
+{
+  "vocals": {
+    "learned_parameters_unchanged": true,
+    "initializer_count": 60,
+    "sha256": "489a6ef810271fa8a491c06f5e17fcc6f23219370d92912bf6c6aad272b7fc48"
+  },
+  "accompaniment": {
+    "learned_parameters_unchanged": true,
+    "initializer_count": 60,
+    "sha256": "43b89efbefb3b1db74ee70d073a8193c2b43da432f9085f7a6bc00e280043580"
+  }
+}

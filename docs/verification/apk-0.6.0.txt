@@ -1,0 +1,5 @@
+﻿package: name='id.iswara.music' versionCode='8' versionName='0.6.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+minSdkVersion:'26'
+targetSdkVersion:'36'
+application-label:'iSwara Music'
+native-code: 'arm64-v8a' 'armeabi-v7a' 'x86' 'x86_64'

@@ -1,0 +1,12 @@
+{
+  "version": "0.6.0",
+  "files_checked": 422,
+  "zip_integrity_passed": true,
+  "configured_passwords_and_anon_key_absent": true,
+  "private_files_absent": true,
+  "source_matches_workspace": true,
+  "signed_apk_sha256": "4abf19ffa49a1a8d80f8c8ec8b0c5d9406a21f3b88fa43e0b73767034749ad93",
+  "installed_or_executed_on_android": false,
+  "native_codec_export_end_to_end_verified": false,
+  "unique_tests_passed": 97
+}

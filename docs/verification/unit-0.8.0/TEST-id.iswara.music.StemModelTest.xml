@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.StemModelTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T03:33:46.137Z" hostname="DESKTOP-TQS95I0" time="1.398">
+  <properties/>
+  <testcase name="officialMusicExampleProducesNonzeroVocalAndInstrumentEstimates" classname="id.iswara.music.StemModelTest" time="0.805"/>
+  <testcase name="bundledAiModelsProduceFiniteDistinctStereoStemsAndKeepDuration" classname="id.iswara.music.StemModelTest" time="0.588"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

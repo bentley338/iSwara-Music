@@ -1,0 +1,57 @@
+import { PGlite } from '@electric-sql/pglite';
+import { readFile } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+
+const db = new PGlite();
+await db.exec(`
+  create schema auth;
+  create role anon;
+  create role authenticated;
+  create table auth.users(id uuid primary key);
+  create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
+  grant usage on schema auth to authenticated, anon;
+`);
+await db.exec(await readFile(new URL('../supabase/migrations/202611010001_library.sql', import.meta.url), 'utf8'));
+const a = '00000000-0000-0000-0000-000000000001';
+const b = '00000000-0000-0000-0000-000000000002';
+await db.query('insert into auth.users(id) values ($1), ($2)', [a, b]);
+await db.exec('set role authenticated');
+await db.query("select set_config('request.jwt.claim.sub',$1,false)", [a]);
+let op = 0;
+const operation = () => `10000000-0000-0000-0000-${String(++op).padStart(12,'0')}`;
+async function sync(id, title, revision, deleted = false, operationId = operation()) {
+  const result = await db.query('select public.sync_document($1,$2,$3,$4,$5,$6) as result', [id, 'playlist', JSON.stringify({ id, title, tracks: [] }), revision, deleted, operationId]);
+  return result.rows[0].result;
+}
+const firstOp = operation();
+const created = await sync('playlist-a', 'Original', 0, false, firstOp);
+assert.equal(created.conflict, false);
+const retry = await sync('playlist-a', 'Original', 0, false, firstOp);
+assert.deepEqual(retry, created);
+const edited = await sync('playlist-a', 'Edited', created.document.revision);
+assert.equal(edited.conflict, false);
+assert.ok(edited.document.revision > created.document.revision);
+const oldRetry = await sync('playlist-a', 'Original', 0, false, firstOp);
+assert.deepEqual(oldRetry, created, 'old operation is still idempotent after later edits');
+const stale = await sync('playlist-a', 'Conflicting edit', created.document.revision);
+assert.equal(stale.conflict, true);
+assert.equal(stale.document.payload.title, 'Edited');
+await db.query("select set_config('request.jwt.claim.sub',$1,false)", [b]);
+assert.equal((await db.query('select * from public.documents')).rows.length, 0);
+await assert.rejects(db.query("update public.documents set payload = '{}'"), /permission denied/);
+const secondOwner = await sync('playlist-a', 'Other account', 0);
+assert.equal(secondOwner.document.owner, b);
+assert.equal((await db.query('select * from public.documents')).rows.length, 1);
+await db.query("select set_config('request.jwt.claim.sub',$1,false)", [a]);
+assert.equal((await db.query('select payload from public.documents')).rows[0].payload.title, 'Edited');
+const removed = await sync('playlist-a', 'Edited', edited.document.revision, true);
+assert.equal(removed.document.deleted, true);
+await db.exec('reset role; set role anon');
+await assert.rejects(db.query('select * from public.documents'), /permission denied/);
+await assert.rejects(sync('anon', 'No access', 0), /permission denied/);
+await db.exec('reset role');
+await db.query('delete from auth.users where id=$1', [a]);
+assert.equal((await db.query('select * from public.documents where owner=$1', [a])).rows.length, 0);
+assert.equal((await db.query('select * from public.sync_receipts where owner=$1', [a])).rows.length, 0);
+console.log('PASS: actual PostgreSQL migration, ownership RLS, mutation grants, anonymous denial, revision conflicts, idempotency, tombstones, and deletion cascade.');
+await db.close();

@@ -1,0 +1,1998 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 9.2.1">
+
+    <issue
+        id="ApplySharedPref"
+        severity="Warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
+        category="Correctness"
+        priority="6"
+        summary="Use `apply()` on `SharedPreferences`"
+        explanation="Consider using `apply()` instead of `commit` on shared preferences. Whereas `commit` blocks and writes its data to persistent storage immediately, `apply` will handle it in the background."
+        errorLine1="        preferences.edit().putString(&quot;pkce&quot;, encrypt(verifier)).putLong(&quot;pkceCreated&quot;, System.currentTimeMillis()).putBoolean(&quot;pkceRecovery&quot;, recovery).commit()"
+        errorLine2="                                                                                                                                                        ~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\cloud\AuthRepository.kt"
+            line="65"
+            column="153"/>
+    </issue>
+
+    <issue
+        id="ApplySharedPref"
+        severity="Warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
+        category="Correctness"
+        priority="6"
+        summary="Use `apply()` on `SharedPreferences`"
+        explanation="Consider using `apply()` instead of `commit` on shared preferences. Whereas `commit` blocks and writes its data to persistent storage immediately, `apply` will handle it in the background."
+        errorLine1="        if (value == null) preferences.edit().clear().commit() else {"
+        errorLine2="                                                      ~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\cloud\AuthRepository.kt"
+            line="75"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="ApplySharedPref"
+        severity="Warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
+        category="Correctness"
+        priority="6"
+        summary="Use `apply()` on `SharedPreferences`"
+        explanation="Consider using `apply()` instead of `commit` on shared preferences. Whereas `commit` blocks and writes its data to persistent storage immediately, `apply` will handle it in the background."
+        errorLine1="            preferences.edit().putString(&quot;session&quot;, encrypt(stored.toString())).commit()"
+        errorLine2="                                                                                ~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\cloud\AuthRepository.kt"
+            line="76"
+            column="81"/>
+    </issue>
+
+    <issue
+        id="ApplySharedPref"
+        severity="Warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
+        category="Correctness"
+        priority="6"
+        summary="Use `apply()` on `SharedPreferences`"
+        explanation="Consider using `apply()` instead of `commit` on shared preferences. Whereas `commit` blocks and writes its data to persistent storage immediately, `apply` will handle it in the background."
+        errorLine1="        preferences.edit().remove(&quot;pkce&quot;).remove(&quot;pkceCreated&quot;).remove(&quot;pkceRecovery&quot;).commit()"
+        errorLine2="                                                                                       ~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\cloud\AuthRepository.kt"
+            line="128"
+            column="88"/>
+    </issue>
+
+    <issue
+        id="OldTargetApi"
+        severity="Warning"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
+        category="Correctness"
+        priority="6"
+        summary="Target SDK attribute is not targeting latest version"
+        explanation="When your application or sdk runs on a version of Android that is more recent than your `targetSdk` specifies that it has been tested with, various compatibility modes kick in. This ensures that your application continues to work, but it may look out of place. For example, if the `targetSdk` is less than 14, your app may get an option button in the UI.&#xA;&#xA;To fix this issue, set the `targetSdk` to the highest available value. Then test your app to make sure everything works correctly. You may want to consult the compatibility notes to see what changes apply to each version you are adding support for: https://developer.android.com/reference/android/os/Build.VERSION_CODES.html as well as follow this guide:&#xA;https://developer.android.com/distribute/best-practices/develop/target-sdk.html"
+        url="https://developer.android.com/distribute/best-practices/develop/target-sdk.html"
+        urls="https://developer.android.com/distribute/best-practices/develop/target-sdk.html,https://developer.android.com/reference/android/os/Build.VERSION_CODES.html"
+        errorLine1="        targetSdk = 36"
+        errorLine2="        ~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        severity="Warning"
+        message="Attribute `localeConfig` is only used in API level 33 and higher (current min is 26)"
+        category="Correctness"
+        priority="6"
+        summary="Attribute unused on older versions"
+        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
+        errorLine1="    &lt;application android:name=&quot;.IswaraApp&quot; android:label=&quot;@string/app_name&quot; android:icon=&quot;@mipmap/ic_launcher&quot; android:roundIcon=&quot;@mipmap/ic_launcher&quot; android:theme=&quot;@style/Theme.Iswara&quot; android:allowBackup=&quot;false&quot; android:dataExtractionRules=&quot;@xml/data_extraction_rules&quot; android:supportsRtl=&quot;true&quot; android:usesCleartextTraffic=&quot;false&quot; android:localeConfig=&quot;@xml/locales_config&quot;>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\AndroidManifest.xml"
+            line="13"
+            column="337"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        severity="Warning"
+        message="Attribute `targetCellHeight` is only used in API level 31 and higher (current min is 26)"
+        category="Correctness"
+        priority="6"
+        summary="Attribute unused on older versions"
+        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
+        errorLine1="&lt;appwidget-provider xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:minWidth=&quot;250dp&quot; android:minHeight=&quot;120dp&quot; android:targetCellWidth=&quot;4&quot; android:targetCellHeight=&quot;2&quot; android:updatePeriodMillis=&quot;0&quot; android:initialLayout=&quot;@layout/music_widget&quot; android:resizeMode=&quot;horizontal|vertical&quot; android:widgetCategory=&quot;home_screen&quot; />"
+        errorLine2="                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\xml\music_widget_info.xml"
+            line="2"
+            column="159"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        severity="Warning"
+        message="Attribute `targetCellWidth` is only used in API level 31 and higher (current min is 26)"
+        category="Correctness"
+        priority="6"
+        summary="Attribute unused on older versions"
+        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
+        errorLine1="&lt;appwidget-provider xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:minWidth=&quot;250dp&quot; android:minHeight=&quot;120dp&quot; android:targetCellWidth=&quot;4&quot; android:targetCellHeight=&quot;2&quot; android:updatePeriodMillis=&quot;0&quot; android:initialLayout=&quot;@layout/music_widget&quot; android:resizeMode=&quot;horizontal|vertical&quot; android:widgetCategory=&quot;home_screen&quot; />"
+        errorLine2="                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\xml\music_widget_info.xml"
+            line="2"
+            column="131"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        severity="Warning"
+        message="Attribute `targetCellHeight` is only used in API level 31 and higher (current min is 26)"
+        category="Correctness"
+        priority="6"
+        summary="Attribute unused on older versions"
+        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
+        errorLine1="&lt;appwidget-provider xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:minWidth=&quot;250dp&quot; android:minHeight=&quot;248dp&quot; android:targetCellWidth=&quot;4&quot; android:targetCellHeight=&quot;4&quot; android:updatePeriodMillis=&quot;0&quot; android:initialLayout=&quot;@layout/music_widget_retro&quot; android:resizeMode=&quot;horizontal|vertical&quot; android:widgetCategory=&quot;home_screen&quot; />"
+        errorLine2="                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\xml\retro_widget_info.xml"
+            line="2"
+            column="159"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        severity="Warning"
+        message="Attribute `targetCellWidth` is only used in API level 31 and higher (current min is 26)"
+        category="Correctness"
+        priority="6"
+        summary="Attribute unused on older versions"
+        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
+        errorLine1="&lt;appwidget-provider xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:minWidth=&quot;250dp&quot; android:minHeight=&quot;248dp&quot; android:targetCellWidth=&quot;4&quot; android:targetCellHeight=&quot;4&quot; android:updatePeriodMillis=&quot;0&quot; android:initialLayout=&quot;@layout/music_widget_retro&quot; android:resizeMode=&quot;horizontal|vertical&quot; android:widgetCategory=&quot;home_screen&quot; />"
+        errorLine2="                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\xml\retro_widget_info.xml"
+            line="2"
+            column="131"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        severity="Warning"
+        message="Attribute `targetCellHeight` is only used in API level 31 and higher (current min is 26)"
+        category="Correctness"
+        priority="6"
+        summary="Attribute unused on older versions"
+        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
+        errorLine1="&lt;appwidget-provider xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:minWidth=&quot;250dp&quot; android:minHeight=&quot;180dp&quot; android:targetCellWidth=&quot;4&quot; android:targetCellHeight=&quot;3&quot; android:updatePeriodMillis=&quot;0&quot; android:initialLayout=&quot;@layout/music_widget_vinyl&quot; android:resizeMode=&quot;horizontal|vertical&quot; android:widgetCategory=&quot;home_screen&quot; />"
+        errorLine2="                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\xml\vinyl_widget_info.xml"
+            line="2"
+            column="159"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        severity="Warning"
+        message="Attribute `targetCellWidth` is only used in API level 31 and higher (current min is 26)"
+        category="Correctness"
+        priority="6"
+        summary="Attribute unused on older versions"
+        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
+        errorLine1="&lt;appwidget-provider xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:minWidth=&quot;250dp&quot; android:minHeight=&quot;180dp&quot; android:targetCellWidth=&quot;4&quot; android:targetCellHeight=&quot;3&quot; android:updatePeriodMillis=&quot;0&quot; android:initialLayout=&quot;@layout/music_widget_vinyl&quot; android:resizeMode=&quot;horizontal|vertical&quot; android:widgetCategory=&quot;home_screen&quot; />"
+        errorLine2="                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\xml\vinyl_widget_info.xml"
+            line="2"
+            column="131"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        severity="Warning"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        category="Correctness"
+        priority="5"
+        summary="Data tags should only declare unique attributes"
+        explanation="`&lt;intent-filter>` `&lt;data>` tags should only declare a single unique attribute (i.e. scheme OR host, but not both). This better matches the runtime behavior of intent filters, as they combine all of the declared data attributes into a single matcher which is allowed to handle any combination across attribute types.&#xA;&#xA;For example, the following two `&lt;intent-filter>` declarations are the same:&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot; android:host=&quot;example.com&quot; />&#xA;    &lt;data android:scheme=&quot;https&quot; android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot;/>&#xA;    &lt;data android:scheme=&quot;https&quot;/>&#xA;    &lt;data android:host=&quot;example.com&quot; />&#xA;    &lt;data android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;They both handle all of the following:&#xA;* http://example.com&#xA;* https://example.com&#xA;* http://example.org&#xA;* https://example.org&#xA;&#xA;The second one better communicates the combining behavior and is clearer to an external reader that one should not rely on the scheme/host being self contained. It is not obvious in the first that http://example.org is also matched, which can lead to confusion (or incorrect behavior) with a more complex set of schemes/hosts.&#xA;&#xA;Note that this does not apply to host + port, as those must be declared in the same `&lt;data>` tag and are only associated with each other."
+        url="https://developer.android.com/guide/components/intents-filters"
+        urls="https://developer.android.com/guide/components/intents-filters"
+        errorLine1="            &lt;intent-filter>&lt;action android:name=&quot;android.intent.action.VIEW&quot; />&lt;category android:name=&quot;android.intent.category.DEFAULT&quot; />&lt;category android:name=&quot;android.intent.category.BROWSABLE&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;track&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;playlist&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;room&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;radio&quot; />&lt;/intent-filter>"
+        errorLine2="                                                                                                                                                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\AndroidManifest.xml"
+            line="24"
+            column="200"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        severity="Warning"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        category="Correctness"
+        priority="5"
+        summary="Data tags should only declare unique attributes"
+        explanation="`&lt;intent-filter>` `&lt;data>` tags should only declare a single unique attribute (i.e. scheme OR host, but not both). This better matches the runtime behavior of intent filters, as they combine all of the declared data attributes into a single matcher which is allowed to handle any combination across attribute types.&#xA;&#xA;For example, the following two `&lt;intent-filter>` declarations are the same:&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot; android:host=&quot;example.com&quot; />&#xA;    &lt;data android:scheme=&quot;https&quot; android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot;/>&#xA;    &lt;data android:scheme=&quot;https&quot;/>&#xA;    &lt;data android:host=&quot;example.com&quot; />&#xA;    &lt;data android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;They both handle all of the following:&#xA;* http://example.com&#xA;* https://example.com&#xA;* http://example.org&#xA;* https://example.org&#xA;&#xA;The second one better communicates the combining behavior and is clearer to an external reader that one should not rely on the scheme/host being self contained. It is not obvious in the first that http://example.org is also matched, which can lead to confusion (or incorrect behavior) with a more complex set of schemes/hosts.&#xA;&#xA;Note that this does not apply to host + port, as those must be declared in the same `&lt;data>` tag and are only associated with each other."
+        url="https://developer.android.com/guide/components/intents-filters"
+        urls="https://developer.android.com/guide/components/intents-filters"
+        errorLine1="            &lt;intent-filter>&lt;action android:name=&quot;android.intent.action.VIEW&quot; />&lt;category android:name=&quot;android.intent.category.DEFAULT&quot; />&lt;category android:name=&quot;android.intent.category.BROWSABLE&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;track&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;playlist&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;room&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;radio&quot; />&lt;/intent-filter>"
+        errorLine2="                                                                                                                                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\AndroidManifest.xml"
+            line="24"
+            column="253"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        severity="Warning"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        category="Correctness"
+        priority="5"
+        summary="Data tags should only declare unique attributes"
+        explanation="`&lt;intent-filter>` `&lt;data>` tags should only declare a single unique attribute (i.e. scheme OR host, but not both). This better matches the runtime behavior of intent filters, as they combine all of the declared data attributes into a single matcher which is allowed to handle any combination across attribute types.&#xA;&#xA;For example, the following two `&lt;intent-filter>` declarations are the same:&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot; android:host=&quot;example.com&quot; />&#xA;    &lt;data android:scheme=&quot;https&quot; android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot;/>&#xA;    &lt;data android:scheme=&quot;https&quot;/>&#xA;    &lt;data android:host=&quot;example.com&quot; />&#xA;    &lt;data android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;They both handle all of the following:&#xA;* http://example.com&#xA;* https://example.com&#xA;* http://example.org&#xA;* https://example.org&#xA;&#xA;The second one better communicates the combining behavior and is clearer to an external reader that one should not rely on the scheme/host being self contained. It is not obvious in the first that http://example.org is also matched, which can lead to confusion (or incorrect behavior) with a more complex set of schemes/hosts.&#xA;&#xA;Note that this does not apply to host + port, as those must be declared in the same `&lt;data>` tag and are only associated with each other."
+        url="https://developer.android.com/guide/components/intents-filters"
+        urls="https://developer.android.com/guide/components/intents-filters"
+        errorLine1="            &lt;intent-filter>&lt;action android:name=&quot;android.intent.action.VIEW&quot; />&lt;category android:name=&quot;android.intent.category.DEFAULT&quot; />&lt;category android:name=&quot;android.intent.category.BROWSABLE&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;track&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;playlist&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;room&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;radio&quot; />&lt;/intent-filter>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\AndroidManifest.xml"
+            line="24"
+            column="309"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        severity="Warning"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        category="Correctness"
+        priority="5"
+        summary="Data tags should only declare unique attributes"
+        explanation="`&lt;intent-filter>` `&lt;data>` tags should only declare a single unique attribute (i.e. scheme OR host, but not both). This better matches the runtime behavior of intent filters, as they combine all of the declared data attributes into a single matcher which is allowed to handle any combination across attribute types.&#xA;&#xA;For example, the following two `&lt;intent-filter>` declarations are the same:&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot; android:host=&quot;example.com&quot; />&#xA;    &lt;data android:scheme=&quot;https&quot; android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;```xml&#xA;&lt;intent-filter>&#xA;    &lt;data android:scheme=&quot;http&quot;/>&#xA;    &lt;data android:scheme=&quot;https&quot;/>&#xA;    &lt;data android:host=&quot;example.com&quot; />&#xA;    &lt;data android:host=&quot;example.org&quot; />&#xA;&lt;/intent-filter>&#xA;```&#xA;&#xA;They both handle all of the following:&#xA;* http://example.com&#xA;* https://example.com&#xA;* http://example.org&#xA;* https://example.org&#xA;&#xA;The second one better communicates the combining behavior and is clearer to an external reader that one should not rely on the scheme/host being self contained. It is not obvious in the first that http://example.org is also matched, which can lead to confusion (or incorrect behavior) with a more complex set of schemes/hosts.&#xA;&#xA;Note that this does not apply to host + port, as those must be declared in the same `&lt;data>` tag and are only associated with each other."
+        url="https://developer.android.com/guide/components/intents-filters"
+        urls="https://developer.android.com/guide/components/intents-filters"
+        errorLine1="            &lt;intent-filter>&lt;action android:name=&quot;android.intent.action.VIEW&quot; />&lt;category android:name=&quot;android.intent.category.DEFAULT&quot; />&lt;category android:name=&quot;android.intent.category.BROWSABLE&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;track&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;playlist&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;room&quot; />&lt;data android:scheme=&quot;iswara&quot; android:host=&quot;radio&quot; />&lt;/intent-filter>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\AndroidManifest.xml"
+            line="24"
+            column="361"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        severity="Warning"
+        message="A newer version of Gradle than 9.4.1 is available: 9.8.2"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Android Gradle Plugin Version"
+        explanation="This detector looks for usage of the Android Gradle Plugin where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-9.4.1-bin.zip"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\gradle\wrapper\gradle-wrapper.properties"
+            line="3"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of `compileSdk` than 36 is available: 37"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    compileSdk = 36"
+        errorLine2="    ~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="14"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.core:core-ktx than 1.18.0 is available: 1.19.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.core:core-ktx:1.18.0&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="75"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.10.0 is available: 2.11.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.lifecycle:lifecycle-runtime-compose:2.10.0&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="77"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.10.0 is available: 2.11.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="78"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.compose.ui:ui than 1.11.2 is available: 1.12.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.compose.ui:ui:1.11.2&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="79"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="Upgrade `androidx.compose.foundation` for keyboard and mouse support"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.compose.foundation:foundation:1.11.2&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="80"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.compose.ui:ui-tooling-preview than 1.11.2 is available: 1.12.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.compose.ui:ui-tooling-preview:1.11.2&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="83"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.compose.ui:ui-tooling than 1.11.2 is available: 1.12.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    debugImplementation(&quot;androidx.compose.ui:ui-tooling:1.11.2&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="84"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.media3:media3-exoplayer than 1.10.1 is available: 1.11.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.media3:media3-exoplayer:1.10.1&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="85"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.media3:media3-session than 1.10.1 is available: 1.11.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.media3:media3-session:1.10.1&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="86"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.media3:media3-datasource-okhttp than 1.10.1 is available: 1.11.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.media3:media3-datasource-okhttp:1.10.1&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="87"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.room:room-runtime than 2.8.4 is available: 2.8.5"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.room:room-runtime:2.8.4&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="88"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.room:room-ktx than 2.8.4 is available: 2.8.5"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.room:room-ktx:2.8.4&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="89"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.room:room-compiler than 2.8.4 is available: 2.8.5"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    ksp(&quot;androidx.room:room-compiler:2.8.4&quot;)"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="90"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.datastore:datastore-preferences than 1.2.1 is available: 1.3.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.datastore:datastore-preferences:1.2.1&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="91"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.work:work-runtime-ktx than 2.11.1 is available: 2.12.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation(&quot;androidx.work:work-runtime-ktx:2.11.1&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="92"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.compose.ui:ui-test-junit4 than 1.11.2 is available: 1.12.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    testImplementation(&quot;androidx.compose.ui:ui-test-junit4:1.11.2&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="107"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.compose.ui:ui-test-junit4 than 1.11.2 is available: 1.12.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    androidTestImplementation(&quot;androidx.compose.ui:ui-test-junit4:1.11.2&quot;)"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="111"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.compose.ui:ui-test-manifest than 1.11.2 is available: 1.12.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    debugImplementation(&quot;androidx.compose.ui:ui-test-manifest:1.11.2&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="112"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.ibm.icu:icu4j than 76.1 is available: 79.1"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation(&quot;com.ibm.icu:icu4j:76.1&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="72"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.microsoft.onnxruntime:onnxruntime-android than 1.24.3 is available: 1.31.1"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation(&quot;com.microsoft.onnxruntime:onnxruntime-android:1.24.3&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="73"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.microsoft.onnxruntime:onnxruntime than 1.24.3 is available: 1.31.1"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    testRuntimeOnly(&quot;com.microsoft.onnxruntime:onnxruntime:1.24.3&quot;)"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="74"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.google.dagger:hilt-android than 2.59.2 is available: 2.60.1"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation(&quot;com.google.dagger:hilt-android:2.59.2&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="93"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.google.dagger:hilt-compiler than 2.59.2 is available: 2.60.1"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    ksp(&quot;com.google.dagger:hilt-compiler:2.59.2&quot;)"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="94"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.squareup.okhttp3:okhttp than 4.12.0 is available: 5.5.1"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation(&quot;com.squareup.okhttp3:okhttp:4.12.0&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="95"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of io.coil-kt.coil3:coil-compose than 3.4.0 is available: 3.6.3"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation(&quot;io.coil-kt.coil3:coil-compose:3.4.0&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="96"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of io.coil-kt.coil3:coil-network-okhttp than 3.4.0 is available: 3.6.3"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation(&quot;io.coil-kt.coil3:coil-network-okhttp:3.4.0&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="97"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-serialization-json than 1.8.1 is available: 1.12.0"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation(&quot;org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="98"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of org.json:json than 20240303 is available: 20260814"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    testImplementation(&quot;org.json:json:20240303&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\build.gradle.kts"
+            line="105"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ExportedService"
+        severity="Warning"
+        message="Exported service does not require permission"
+        category="Security"
+        priority="5"
+        summary="Exported service does not require permission"
+        explanation="Exported services (services which either set `exported=true` or contain an intent-filter and do not specify `exported=false`) should define a permission that an entity must have in order to launch the service or bind to it. Without this, any application can use this service."
+        url="https://goo.gle/ExportedService"
+        urls="https://goo.gle/ExportedService"
+        errorLine1="        &lt;service android:name=&quot;.playback.PlaybackService&quot; android:foregroundServiceType=&quot;mediaPlayback&quot; android:exported=&quot;true&quot;>"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\AndroidManifest.xml"
+            line="30"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="DataExtractionRules"
+        severity="Warning"
+        message="The attribute `android:dataExtractionRules` only applies for Android 12 and higher; since `minSdkVersion` is API 26 you should also set `android:fullBackupContent`"
+        category="Security"
+        priority="3"
+        summary="Missing data extraction rules"
+        explanation="Before Android 12, the attributes `android:allowBackup` and `android:fullBackupContent` were used to configure all forms of backup, including cloud backups, device-to-device transfers and adb backup.&#xA;&#xA;In Android 12 and higher, these attributes have been deprecated and will only apply to cloud backups. You should instead use the attribute `android:dataExtractionRules`, specifying an `@xml` resource that configures which files to back up, for cloud backups and for device-to-device transfers, separately. If your `minSdkVersion` supports older versions, you&apos;ll still want to specify an `android:fullBackupContent` resource if the default behavior is not right for your app."
+        url="https://developer.android.com/about/versions/12/backup-restore#xml-changes"
+        urls="https://developer.android.com/about/versions/12/backup-restore#xml-changes,https://goo.gle/DataExtractionRules"
+        errorLine1="    &lt;application android:name=&quot;.IswaraApp&quot; android:label=&quot;@string/app_name&quot; android:icon=&quot;@mipmap/ic_launcher&quot; android:roundIcon=&quot;@mipmap/ic_launcher&quot; android:theme=&quot;@style/Theme.Iswara&quot; android:allowBackup=&quot;false&quot; android:dataExtractionRules=&quot;@xml/data_extraction_rules&quot; android:supportsRtl=&quot;true&quot; android:usesCleartextTraffic=&quot;false&quot; android:localeConfig=&quot;@xml/locales_config&quot;>"
+        errorLine2="                                                                                                                                                                                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\AndroidManifest.xml"
+            line="13"
+            column="245"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        severity="Warning"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 26. Merge all the resources in this folder into `mipmap-anydpi`."
+        category="Performance"
+        priority="6"
+        summary="Obsolete SDK_INT Version Check"
+        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder.">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\mipmap-anydpi-v26"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        severity="Warning"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        category="Performance"
+        priority="3"
+        summary="Missing `baselineAligned` attribute"
+        explanation="When a `LinearLayout` is used to distribute the space proportionally between nested layouts, the baseline alignment property should be turned off to make the layout computation faster."
+        errorLine1=" &lt;LinearLayout android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;0dp&quot; android:layout_weight=&quot;1&quot; android:gravity=&quot;center_vertical&quot; android:orientation=&quot;horizontal&quot;>"
+        errorLine2="  ~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="2"
+            column="3"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        severity="Warning"
+        message="Nested weights are bad for performance"
+        category="Performance"
+        priority="3"
+        summary="Nested layout weights"
+        explanation="Layout weights require a widget to be measured twice. When a `LinearLayout` with non-zero weights is nested inside another `LinearLayout` with non-zero weights, then the number of measurements increase exponentially."
+        errorLine1="        &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:orientation=&quot;vertical&quot; android:paddingStart=&quot;12dp&quot;>"
+        errorLine2="                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="6"
+            column="87"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        severity="Warning"
+        message="Nested weights are bad for performance"
+        category="Performance"
+        priority="3"
+        summary="Nested layout weights"
+        explanation="Layout weights require a widget to be measured twice. When a `LinearLayout` with non-zero weights is nested inside another `LinearLayout` with non-zero weights, then the number of measurements increase exponentially."
+        errorLine1="  &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:paddingStart=&quot;12dp&quot; android:orientation=&quot;vertical&quot;>"
+        errorLine2="                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="4"
+            column="81"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        severity="Warning"
+        message="Nested weights are bad for performance"
+        category="Performance"
+        priority="3"
+        summary="Nested layout weights"
+        explanation="Layout weights require a widget to be measured twice. When a `LinearLayout` with non-zero weights is nested inside another `LinearLayout` with non-zero weights, then the number of measurements increase exponentially."
+        errorLine1="  &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:orientation=&quot;vertical&quot; android:paddingStart=&quot;16dp&quot;>"
+        errorLine2="                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="4"
+            column="81"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        severity="Warning"
+        message="Nested weights are bad for performance"
+        category="Performance"
+        priority="3"
+        summary="Nested layout weights"
+        explanation="Layout weights require a widget to be measured twice. When a `LinearLayout` with non-zero weights is nested inside another `LinearLayout` with non-zero weights, then the number of measurements increase exponentially."
+        errorLine1="  &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:orientation=&quot;vertical&quot; android:paddingStart=&quot;16dp&quot;>"
+        errorLine2="                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="4"
+            column="81"/>
+    </issue>
+
+    <issue
+        id="UsableSpace"
+        severity="Warning"
+        message="Consider also using `StorageManager#getAllocatableBytes` and `allocateBytes` which will consider clearable cached data"
+        category="Performance"
+        priority="3"
+        summary="Using getUsableSpace()"
+        explanation="When you need to allocate disk space for large files, consider using the new `allocateBytes(FileDescriptor, long)` API, which will automatically clear cached files belonging to other apps (as needed) to meet your request.&#xA;&#xA;When deciding if the device has enough disk space to hold your new data, call `getAllocatableBytes(UUID)` instead of using `getUsableSpace()`, since the former will consider any cached data that the system is willing to clear on your behalf.&#xA;&#xA;Note that these methods require API level 26. If your app is running on older devices, you will probably need to use both APIs, conditionally switching on `Build.VERSION.SDK_INT`. Lint only looks in the same compilation unit to see if you are already using both APIs, so if it warns even though you are already using the new API, consider moving the calls to the same file or suppressing the warning."
+        errorLine1="        check(temporary.usableSpace>350L*1024*1024){&quot;Sediakan sedikitnya 350 MB ruang kosong untuk proses AI.&quot;}"
+        errorLine2="                        ~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\data\StemStore.kt"
+            line="88"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UsableSpace"
+        severity="Warning"
+        message="Consider also using `StorageManager#getAllocatableBytes` and `allocateBytes` which will consider clearable cached data"
+        category="Performance"
+        priority="3"
+        summary="Using getUsableSpace()"
+        explanation="When you need to allocate disk space for large files, consider using the new `allocateBytes(FileDescriptor, long)` API, which will automatically clear cached files belonging to other apps (as needed) to meet your request.&#xA;&#xA;When deciding if the device has enough disk space to hold your new data, call `getAllocatableBytes(UUID)` instead of using `getUsableSpace()`, since the former will consider any cached data that the system is willing to clear on your behalf.&#xA;&#xA;Note that these methods require API level 26. If your app is running on older devices, you will probably need to use both APIs, conditionally switching on `Build.VERSION.SDK_INT`. Lint only looks in the same compilation unit to see if you are already using both APIs, so if it warns even though you are already using the new API, consider moving the calls to the same file or suppressing the warning."
+        errorLine1="        checkpoint();check(temporary.usableSpace>350L*1024*1024){&quot;Sediakan sedikitnya 350 MB ruang kosong.&quot;}"
+        errorLine2="                                     ~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\data\StemStore.kt"
+            line="144"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        severity="Warning"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        category="Usability"
+        priority="4"
+        summary="Text size is too small"
+        explanation="Avoid using sizes smaller than 11sp."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_brand&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara / CLASSIC&quot; android:textColor=&quot;#C3CEAB&quot; android:textSize=&quot;10sp&quot;/>"
+        errorLine2="                                                                                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="5"
+            column="178"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        severity="Warning"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        category="Usability"
+        priority="4"
+        summary="Text size is too small"
+        explanation="Avoid using sizes smaller than 11sp."
+        errorLine1="  &lt;TextView android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;32dp&quot; android:layout_alignParentTop=&quot;true&quot; android:layout_marginTop=&quot;8dp&quot; android:gravity=&quot;center&quot; android:text=&quot;MENU&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#716C64&quot;/>"
+        errorLine2="                                                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="11"
+            column="191"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        severity="Warning"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        category="Usability"
+        priority="4"
+        summary="Text size is too small"
+        explanation="Avoid using sizes smaller than 11sp."
+        errorLine1="  &lt;TextView android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;32dp&quot; android:layout_alignParentBottom=&quot;true&quot; android:layout_marginBottom=&quot;8dp&quot; android:gravity=&quot;center&quot; android:text=&quot;iSwara&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#716C64&quot;/>"
+        errorLine2="                                                                                                                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="15"
+            column="199"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        severity="Warning"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        category="Usability"
+        priority="4"
+        summary="Text size is too small"
+        explanation="Avoid using sizes smaller than 11sp."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_brand&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara / VINYL&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#FFAB85&quot;/>"
+        errorLine2="                                                                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="5"
+            column="148"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        severity="Warning"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        category="Usability"
+        priority="4"
+        summary="Text size is too small"
+        explanation="Avoid using sizes smaller than 11sp."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_brand&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara / VINYL&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#FFAB85&quot;/>"
+        errorLine2="                                                                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="5"
+            column="148"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `Bitmap.get` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                for (x in insetX until image.width - insetX step maxOf(1, image.width / 48)) samples += image.getPixel(x, y)"
+        errorLine2="                                                                                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\ArtworkTools.kt"
+            line="44"
+            column="105"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX function `createBitmap` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        val output = Bitmap.createBitmap(1080, height, Bitmap.Config.ARGB_8888)"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\ArtworkTools.kt"
+            line="79"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `Canvas.withTranslation` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                canvas.save();canvas.translate(x,y);text.draw(canvas);canvas.restore()"
+        errorLine2="                ~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\ArtworkTools.kt"
+            line="105"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        preferences.edit().putString(&quot;pkce&quot;, encrypt(verifier)).putLong(&quot;pkceCreated&quot;, System.currentTimeMillis()).putBoolean(&quot;pkceRecovery&quot;, recovery).commit()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\cloud\AuthRepository.kt"
+            line="65"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="            preferences.edit().putString(&quot;session&quot;, encrypt(stored.toString())).commit()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\cloud\AuthRepository.kt"
+            line="76"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        preferences.edit().remove(&quot;pkce&quot;).remove(&quot;pkceCreated&quot;).remove(&quot;pkceRecovery&quot;).commit()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\cloud\AuthRepository.kt"
+            line="128"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        return preferences.getString(&quot;id&quot;, null) ?: UUID.randomUUID().toString().also { preferences.edit().putString(&quot;id&quot;, it).commit() }"
+        errorLine2="                                                                                        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\data\DeviceIdentity.kt"
+            line="9"
+            column="89"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                result += Track(&quot;local:$device:$id&quot;, c.getString(1).orEmpty(), c.getString(2).orEmpty().replace(&quot;&lt;unknown>&quot;, &quot;&quot;), ContentUris.withAppendedId(Uri.parse(&quot;content://media/external/audio/albumart&quot;), c.getLong(4)).toString(), c.getLong(3) / 1000, ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id).toString(), true, device)"
+        errorLine2="                                                                                                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\source\LocalMusic.kt"
+            line="23"
+            column="158"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX function `createBitmap` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="    val bitmap=Bitmap.createBitmap(720,1280,Bitmap.Config.ARGB_8888)"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\LyricVideoPainter.kt"
+            line="11"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `Canvas.withTranslation` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        canvas.save();canvas.translate(48f,y);layout.draw(canvas);canvas.restore()"
+        errorLine2="        ~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\LyricVideoPainter.kt"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `Canvas.withTranslation` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="            canvas.save();canvas.translate(48f,380f);body.draw(canvas);canvas.restore()"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\LyricVideoPainter.kt"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        if (nativeTrack != null) { val id = Uri.parse(nativeTrack).lastPathSegment.orEmpty(); require(id.matches(Regex(&quot;[A-Za-z0-9_-]{11}&quot;))) { &quot;Tautan lagu tidak valid&quot; }; playback.play(listOf(source.fromUrl(&quot;https://www.youtube.com/watch?v=$id&quot;))); return@action }"
+        errorLine2="                                            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\MusicViewModel.kt"
+            line="232"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        if (text.startsWith(&quot;iswara://playlist&quot;)) { val target = Uri.parse(text).getQueryParameter(&quot;url&quot;) ?: error(&quot;Tautan playlist tidak valid&quot;); require(Uri.parse(target).scheme == &quot;https&quot; &amp;&amp; Uri.parse(target).host in setOf(&quot;youtube.com&quot;, &quot;www.youtube.com&quot;, &quot;music.youtube.com&quot;, &quot;m.youtube.com&quot;, &quot;youtu.be&quot;)) { &quot;Tautan playlist tidak valid&quot; }; shared(target); return@action }"
+        errorLine2="                                                                 ~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\MusicViewModel.kt"
+            line="233"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        if (text.startsWith(&quot;iswara://playlist&quot;)) { val target = Uri.parse(text).getQueryParameter(&quot;url&quot;) ?: error(&quot;Tautan playlist tidak valid&quot;); require(Uri.parse(target).scheme == &quot;https&quot; &amp;&amp; Uri.parse(target).host in setOf(&quot;youtube.com&quot;, &quot;www.youtube.com&quot;, &quot;music.youtube.com&quot;, &quot;m.youtube.com&quot;, &quot;youtu.be&quot;)) { &quot;Tautan playlist tidak valid&quot; }; shared(target); return@action }"
+        errorLine2="                                                                                                                                                           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\MusicViewModel.kt"
+            line="233"
+            column="156"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        if (text.startsWith(&quot;iswara://playlist&quot;)) { val target = Uri.parse(text).getQueryParameter(&quot;url&quot;) ?: error(&quot;Tautan playlist tidak valid&quot;); require(Uri.parse(target).scheme == &quot;https&quot; &amp;&amp; Uri.parse(target).host in setOf(&quot;youtube.com&quot;, &quot;www.youtube.com&quot;, &quot;music.youtube.com&quot;, &quot;m.youtube.com&quot;, &quot;youtu.be&quot;)) { &quot;Tautan playlist tidak valid&quot; }; shared(target); return@action }"
+        errorLine2="                                                                                                                                                                                                  ~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\MusicViewModel.kt"
+            line="233"
+            column="195"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        } else if(image!=null) view.setImageViewBitmap(R.id.widget_art,Bitmap.createScaledBitmap(image,128,128,true))"
+        errorLine2="                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\MusicWidgets.kt"
+            line="98"
+            column="72"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX function `createBitmap` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        val bitmap=Bitmap.createBitmap(192,192,Bitmap.Config.ARGB_8888)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\MusicWidgets.kt"
+            line="112"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `Canvas.withClip` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        if(cover!=null) {canvas.save();canvas.clipPath(Path().apply {addCircle(96f,96f,39f,Path.Direction.CW)});val size=minOf(cover.width,cover.height);canvas.drawBitmap(cover,Rect((cover.width-size)/2,(cover.height-size)/2,(cover.width+size)/2,(cover.height+size)/2),Rect(57,57,135,135),paint);canvas.restore()}"
+        errorLine2="                         ~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\MusicWidgets.kt"
+            line="118"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="            val uri = android.net.Uri.parse(audio.url)"
+        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\data\OfflineStore.kt"
+            line="53"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                if (id != null &amp;&amp; offline.available(id)) return@ResolvingDataSource spec.withUri(Uri.parse(&quot;iswara-offline://$id&quot;))"
+        errorLine2="                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\Playback.kt"
+            line="120"
+            column="98"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                    return@ResolvingDataSource spec.withUri(Uri.parse(page))"
+        errorLine2="                                                            ~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\Playback.kt"
+            line="123"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                spec.withUri(Uri.parse(url))"
+        errorLine2="                             ~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\Playback.kt"
+            line="127"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                warmCache.preload(Uri.parse(audio.url), audioHttpFactory)"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\Playback.kt"
+            line="362"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="                            TextButton({ val text = if (selectedLines.isEmpty()) lyricLines.joinToString(&quot;\n&quot;) { it.text }.take(2500) else selectedLines.sorted().mapNotNull { lyricLines.getOrNull(it)?.text }.joinToString(&quot;\n&quot;); context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(&quot;https://translate.google.com/?sl=auto&amp;tl=id&amp;text=&quot; + android.net.Uri.encode(text)))) }) { Text(tr(&quot;Terjemahkan di browser&quot;, &quot;Translate in browser&quot;)) }"
+        errorLine2="                                                                                                                                                                                                                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\PlayerSheet.kt"
+            line="126"
+            column="310"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="            if (enabled &amp;&amp; !android.provider.Settings.canDrawOverlays(context)) overlayPermission.launch(Intent(android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(&quot;package:${context.packageName}&quot;)))"
+        errorLine2="                                                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\SettingsScreen.kt"
+            line="76"
+            column="173"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        modifier=Modifier.width(230.dp).height(26.dp).clickable {context.startActivity(Intent(Intent.ACTION_VIEW,Uri.parse(&quot;https://translate.google.com/&quot;)))})"
+        errorLine2="                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\ui\SmartLyricsUi.kt"
+            line="36"
+            column="114"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        if(track.local){require(track.device==DeviceIdentity.id(context)){&quot;Pilih file lokal di perangkat ini dahulu.&quot;};context.contentResolver.openInputStream(Uri.parse(track.url))?.use {input->target.outputStream().use {out->val bytes=ByteArray(32768);var total=0L;while(true){checkpoint();val n=input.read(bytes);if(n&lt;0)break;total+=n;require(total&lt;=64L*1024*1024){&quot;Ukuran audio maksimal 64 MB.&quot;};out.write(bytes,0,n)}}} ?: error(&quot;Berkas lokal tidak ditemukan.&quot;);return}"
+        errorLine2="                                                                                                                                                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\data\StemStore.kt"
+            line="149"
+            column="160"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        severity="Warning"
+        message="Use the KTX extension function `String.toUri` instead?"
+        category="Productivity"
+        priority="6"
+        summary="Use KTX extension function"
+        explanation="The Android KTX libraries decorates the Android platform SDK as well as various libraries with more convenient extension functions available from Kotlin, allowing you to use default parameters, named parameters, and more."
+        errorLine1="        try {source.open(DataSpec(Uri.parse(stream.url)));target.outputStream().use {out->val buffer=ByteArray(32768);var total=0L;while(true){checkpoint();val n=source.read(buffer,0,buffer.size);if(n&lt;0)break;total+=n;require(total&lt;=64L*1024*1024){&quot;Ukuran audio maksimal 64 MB.&quot;};out.write(buffer,0,n)}}} catch(e:kotlinx.coroutines.CancellationException){throw e} catch(e:Exception){streams.invalidate(track,&quot;high&quot;);throw e}finally {source.close()}"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\data\StemStore.kt"
+            line="153"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        severity="Warning"
+        message="Custom view ``TextView`` has `setOnTouchListener` called on it but does not override `performClick`"
+        category="Accessibility"
+        priority="6"
+        summary="Accessibility in Custom Views"
+        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
+        errorLine1="                title.setOnTouchListener(drag);label.setOnTouchListener(drag)"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\FloatingLyrics.kt"
+            line="72"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        severity="Warning"
+        message="Custom view ``TextView`` has `setOnTouchListener` called on it but does not override `performClick`"
+        category="Accessibility"
+        priority="6"
+        summary="Accessibility in Custom Views"
+        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
+        errorLine1="                title.setOnTouchListener(drag);label.setOnTouchListener(drag)"
+        errorLine2="                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\java\id\iswara\music\playback\FloatingLyrics.kt"
+            line="72"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara Music&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="    &lt;TextView android:id=&quot;@+id/widget_brand&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara Music&quot; android:textSize=&quot;11sp&quot; android:textColor=&quot;#FF8954&quot; />"
+        errorLine2="                                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="3"
+            column="119"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Sampul iSwara&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="        &lt;ImageView android:id=&quot;@+id/widget_art&quot; android:layout_width=&quot;48dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@drawable/ic_logo&quot; android:contentDescription=&quot;Sampul iSwara&quot; />"
+        errorLine2="                                                                                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="5"
+            column="138"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara Music&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="            &lt;TextView android:id=&quot;@+id/widget_title&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara Music&quot; android:textSize=&quot;16sp&quot; android:textStyle=&quot;bold&quot; android:textColor=&quot;#FAF7F2&quot; android:maxLines=&quot;1&quot; android:ellipsize=&quot;end&quot; />"
+        errorLine2="                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="7"
+            column="127"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu sebelumnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="        &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot; />"
+        errorLine2="                                                                                                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="12"
+            column="211"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Putar atau jeda&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="        &lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;80dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot; />"
+        errorLine2="                                                                                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="13"
+            column="205"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu berikutnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="        &lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot; />"
+        errorLine2="                                                                                                                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="14"
+            column="203"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Sampul album&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageView android:id=&quot;@+id/widget_art&quot; android:layout_width=&quot;56dp&quot; android:layout_height=&quot;56dp&quot; android:src=&quot;@drawable/ic_logo&quot; android:contentDescription=&quot;Sampul album&quot;/>"
+        errorLine2="                                                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="3"
+            column="132"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara / CLASSIC&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_brand&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara / CLASSIC&quot; android:textColor=&quot;#C3CEAB&quot; android:textSize=&quot;10sp&quot;/>"
+        errorLine2="                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="5"
+            column="118"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara Music&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_title&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara Music&quot; android:textColor=&quot;#FFF8E7&quot; android:textSize=&quot;16sp&quot; android:textStyle=&quot;bold&quot; android:maxLines=&quot;2&quot; android:ellipsize=&quot;end&quot;/>"
+        errorLine2="                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="6"
+            column="118"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;MENU&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;TextView android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;32dp&quot; android:layout_alignParentTop=&quot;true&quot; android:layout_marginTop=&quot;8dp&quot; android:gravity=&quot;center&quot; android:text=&quot;MENU&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#716C64&quot;/>"
+        errorLine2="                                                                                                                                                                          ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="11"
+            column="171"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu sebelumnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;48dp&quot; android:layout_height=&quot;48dp&quot; android:layout_centerVertical=&quot;true&quot; android:layout_alignParentStart=&quot;true&quot; android:tint=&quot;#33332F&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                                                                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="12"
+            column="304"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Putar atau jeda&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;48dp&quot; android:layout_height=&quot;48dp&quot; android:layout_centerInParent=&quot;true&quot; android:tint=&quot;#33332F&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot;/>"
+        errorLine2="                                                                                                                                                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="13"
+            column="259"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu berikutnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;48dp&quot; android:layout_height=&quot;48dp&quot; android:layout_centerVertical=&quot;true&quot; android:layout_alignParentEnd=&quot;true&quot; android:tint=&quot;#33332F&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="14"
+            column="294"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;TextView android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;32dp&quot; android:layout_alignParentBottom=&quot;true&quot; android:layout_marginBottom=&quot;8dp&quot; android:gravity=&quot;center&quot; android:text=&quot;iSwara&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#716C64&quot;/>"
+        errorLine2="                                                                                                                                                                                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="15"
+            column="177"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Piringan musik&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageView android:id=&quot;@+id/widget_art&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>"
+        errorLine2="                                                                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="3"
+            column="133"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara / VINYL&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_brand&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara / VINYL&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#FFAB85&quot;/>"
+        errorLine2="                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="5"
+            column="118"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara Music&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_title&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara Music&quot; android:textSize=&quot;18sp&quot; android:textStyle=&quot;bold&quot; android:textColor=&quot;#FAF7F2&quot; android:maxLines=&quot;2&quot; android:ellipsize=&quot;end&quot;/>"
+        errorLine2="                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="6"
+            column="118"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu berikutnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="11"
+            column="687"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu sebelumnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="11"
+            column="205"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Putar atau jeda&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="11"
+            column="447"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Piringan musik&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ViewFlipper android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:autoStart=&quot;true&quot; android:flipInterval=&quot;1400&quot; android:inAnimation=&quot;@anim/widget_disc_turn&quot;>&lt;ImageView android:id=&quot;@+id/widget_art&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_1&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_2&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_3&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;/ViewFlipper>"
+        errorLine2="                                                                                                                                                                                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="3"
+            column="301"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Piringan musik&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ViewFlipper android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:autoStart=&quot;true&quot; android:flipInterval=&quot;1400&quot; android:inAnimation=&quot;@anim/widget_disc_turn&quot;>&lt;ImageView android:id=&quot;@+id/widget_art&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_1&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_2&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_3&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;/ViewFlipper>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="3"
+            column="479"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Piringan musik&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ViewFlipper android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:autoStart=&quot;true&quot; android:flipInterval=&quot;1400&quot; android:inAnimation=&quot;@anim/widget_disc_turn&quot;>&lt;ImageView android:id=&quot;@+id/widget_art&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_1&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_2&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_3&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;/ViewFlipper>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="3"
+            column="657"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Piringan musik&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ViewFlipper android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:autoStart=&quot;true&quot; android:flipInterval=&quot;1400&quot; android:inAnimation=&quot;@anim/widget_disc_turn&quot;>&lt;ImageView android:id=&quot;@+id/widget_art&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_1&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_2&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;ImageView android:id=&quot;@+id/widget_disc_3&quot; android:layout_width=&quot;96dp&quot; android:layout_height=&quot;96dp&quot; android:src=&quot;@drawable/ic_vinyl&quot; android:contentDescription=&quot;Piringan musik&quot;/>&lt;/ViewFlipper>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="3"
+            column="835"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara / VINYL&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_brand&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara / VINYL&quot; android:textSize=&quot;10sp&quot; android:textColor=&quot;#FFAB85&quot;/>"
+        errorLine2="                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="5"
+            column="118"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;iSwara Music&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="   &lt;TextView android:id=&quot;@+id/widget_title&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;iSwara Music&quot; android:textSize=&quot;18sp&quot; android:textStyle=&quot;bold&quot; android:textColor=&quot;#FAF7F2&quot; android:maxLines=&quot;2&quot; android:ellipsize=&quot;end&quot;/>"
+        errorLine2="                                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="6"
+            column="118"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu berikutnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="11"
+            column="687"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Lagu sebelumnya&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="11"
+            column="205"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
+        message="Hardcoded string &quot;Putar atau jeda&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="  &lt;ImageButton android:id=&quot;@+id/widget_previous&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_previous&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu sebelumnya&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_toggle&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_play&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Putar atau jeda&quot;/>&lt;ImageButton android:id=&quot;@+id/widget_next&quot; android:layout_width=&quot;64dp&quot; android:layout_height=&quot;48dp&quot; android:src=&quot;@android:drawable/ic_media_next&quot; android:background=&quot;@android:color/transparent&quot; android:contentDescription=&quot;Lagu berikutnya&quot;/>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="11"
+            column="447"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        severity="Warning"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        category="Internationalization:Bidirectional Text"
+        priority="6"
+        summary="Padding and margin symmetry"
+        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
+        errorLine1="        &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:orientation=&quot;vertical&quot; android:paddingStart=&quot;12dp&quot;>"
+        errorLine2="                                                                                                                                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget.xml"
+            line="6"
+            column="144"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        severity="Warning"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        category="Internationalization:Bidirectional Text"
+        priority="6"
+        summary="Padding and margin symmetry"
+        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
+        errorLine1="  &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:paddingStart=&quot;12dp&quot; android:orientation=&quot;vertical&quot;>"
+        errorLine2="                                                                                                          ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_retro.xml"
+            line="4"
+            column="107"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        severity="Warning"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        category="Internationalization:Bidirectional Text"
+        priority="6"
+        summary="Padding and margin symmetry"
+        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
+        errorLine1="  &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:orientation=&quot;vertical&quot; android:paddingStart=&quot;16dp&quot;>"
+        errorLine2="                                                                                                                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl.xml"
+            line="4"
+            column="138"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        severity="Warning"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        category="Internationalization:Bidirectional Text"
+        priority="6"
+        summary="Padding and margin symmetry"
+        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
+        errorLine1="  &lt;LinearLayout android:layout_width=&quot;0dp&quot; android:layout_height=&quot;wrap_content&quot; android:layout_weight=&quot;1&quot; android:orientation=&quot;vertical&quot; android:paddingStart=&quot;16dp&quot;>"
+        errorLine2="                                                                                                                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\project\iSwaraMusic\app\src\main\res\layout\music_widget_vinyl_play.xml"
+            line="4"
+            column="138"/>
+    </issue>
+
+</issues>

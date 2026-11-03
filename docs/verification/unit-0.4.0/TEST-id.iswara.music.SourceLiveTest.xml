@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.SourceLiveTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:50:43.152Z" hostname="DESKTOP-TQS95I0" time="5.089">
+  <properties/>
+  <testcase name="searchAndResolveRealAudio" classname="id.iswara.music.SourceLiveTest" time="3.742"/>
+  <testcase name="browseRealAlbumAndArtist" classname="id.iswara.music.SourceLiveTest" time="1.342"/>
+  <system-out><![CDATA[PLAYBACK_METRICS resolveMs=1933 cachedResolveMs=0 firstByteIncludingResolveMs=2092 bytes=524288 downloadMs=276 bitrateKbps=128
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

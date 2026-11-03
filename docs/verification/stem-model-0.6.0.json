@@ -1,0 +1,10 @@
+{
+  "model": "Spleeter 2 stems fp16 mobile 128 frames",
+  "audio_rate": 44100,
+  "real_music_input": true,
+  "model_outputs_finite": true,
+  "vocal_spectral_energy_fraction": 0.20015931129455566,
+  "desktop_elapsed_seconds": 0.3444759000049089,
+  "android_performance_measured": false,
+  "model_audio_not_distributed": true
+}

@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-11-02T11:25:40.712375+00:00",
+  "auth_reachable": true,
+  "email_auth_enabled": true,
+  "email_confirmation_required": true,
+  "anonymous_library_read_blocked": true,
+  "sync_rpc_exists_and_blocks_anonymous": true,
+  "delete_function_present": true,
+  "anonymous_account_deletion_blocked": true,
+  "authenticated_two_device_sync_tested": false,
+  "smtp_delivery_tested": false,
+  "project_url_sha256": "aeb4ca7a9a7c33dc356ca4c92a941c8c0bae309a501fe6a409ca51d8179f3ef4",
+  "distribution_note": "Project URL replaced by hash; original endpoint check results and timestamp preserved."
+}

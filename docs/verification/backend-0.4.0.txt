@@ -1,0 +1,4 @@
+PASS node tools/test-database.mjs
+PASS node tools/test-admin.mjs
+PASS Deno 2.9.6 check admin-users/index.ts and delete-account/index.ts
+Production admin tables: HTTP 404 before deployment. No production admin role assigned.

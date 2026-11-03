@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-11-02T11:30:06.085990+00:00",
+  "avd": "iswara_api36",
+  "api": 36,
+  "attempts": [
+    {
+      "mode": "default",
+      "result": "cannot start: Android Emulator hypervisor driver is not installed"
+    },
+    {
+      "mode": "accel off / swiftshader",
+      "result": "ADB offline, boot not completed"
+    },
+    {
+      "mode": "accel off / GPU off / 1 core",
+      "result": "ADB offline, boot not completed"
+    }
+  ],
+  "apk_execution_verified": false,
+  "host_changes": "No system features, drivers or security settings changed",
+  "alternative": "Robolectric Android API 26/34/36 and real-network JVM tests; see test results"
+}

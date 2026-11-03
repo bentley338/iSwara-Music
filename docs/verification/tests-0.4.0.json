@@ -1,0 +1,20 @@
+{
+  "tests": 64,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "audio_pipeline_sdk": [
+    26,
+    34,
+    36
+  ],
+  "experience_storage_palette_sdk": [
+    26,
+    36
+  ],
+  "small_screen_ui_sdk": 34,
+  "tablet_ui_sdk": 34,
+  "tablet_font_scale": 1.5,
+  "live_network_tests": 3,
+  "model_specific_workarounds": false
+}

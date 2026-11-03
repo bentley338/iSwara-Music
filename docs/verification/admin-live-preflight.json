@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-11-02T11:25:45.201873+00:00",
+  "checks": {
+    "published_announcements": true,
+    "published_collections": true,
+    "anonymous_membership_blocked": true,
+    "anonymous_audit_blocked": true,
+    "anonymous_summary_blocked": true,
+    "user_function_present_and_blocks_anonymous": true
+  },
+  "authenticated_admin_actions_tested": false
+}

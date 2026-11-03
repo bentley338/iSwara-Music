@@ -1,0 +1,19 @@
+{
+  "tests": 85,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "method": "Full suite 84 tests with live network, then focused visual suite 6 tests after overlay/preview fixes; merged latest result per class",
+  "audio_pipeline_sdk": [
+    26,
+    34,
+    36
+  ],
+  "queue_and_room_restore_sdk": [
+    26,
+    36
+  ],
+  "ui_sdk": 34,
+  "large_text_scale": 1.5,
+  "full_emulator_apk_executed": false
+}

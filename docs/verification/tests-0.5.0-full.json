@@ -1,0 +1,7 @@
+{
+  "tests": 84,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suite": "Full Android/JVM suite with ISWARA_LIVE_TEST=1"
+}

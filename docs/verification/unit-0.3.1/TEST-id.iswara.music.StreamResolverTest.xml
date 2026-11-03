@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.StreamResolverTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-02T07:03:49.317Z" hostname="DESKTOP-TQS95I0" time="0.708">
+  <properties/>
+  <testcase name="rejectedStreamRetriesWithFullExtractor" classname="id.iswara.music.StreamResolverTest" time="0.124"/>
+  <testcase name="failureCanBeRetriedWithoutPoisoningCache" classname="id.iswara.music.StreamResolverTest" time="0.13"/>
+  <testcase name="expiredUrlsAreResolvedAgainAndQualityIsIsolated" classname="id.iswara.music.StreamResolverTest" time="0.187"/>
+  <testcase name="failedAbandonedPrefetchDoesNotPoisonLaterPlayback" classname="id.iswara.music.StreamResolverTest" time="0.17"/>
+  <testcase name="simultaneousPrefetchAndPlaybackShareOneRequest" classname="id.iswara.music.StreamResolverTest" time="0.046"/>
+  <testcase name="cancellationOfPrefetchDoesNotCancelPlaybackRequest" classname="id.iswara.music.StreamResolverTest" time="0.046"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

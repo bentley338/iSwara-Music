@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.AdminToolsTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T02:06:20.965Z" hostname="DESKTOP-TQS95I0" time="0.155">
+  <properties/>
+  <testcase name="duplicationIsAlwaysANewDraftAndCannotCopyIdentityOrCreator" classname="id.iswara.music.AdminToolsTest" time="0.073"/>
+  <testcase name="auditExportQuotesCellsNeutralizesSpreadsheetFormulasAndHandlesEmptyPages" classname="id.iswara.music.AdminToolsTest" time="0.053"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

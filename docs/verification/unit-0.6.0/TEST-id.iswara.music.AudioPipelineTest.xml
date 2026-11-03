@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.AudioPipelineTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:55:07.380Z" hostname="DESKTOP-TQS95I0" time="11.972">
+  <properties/>
+  <testcase name="pcmPlaybackSurvivesSeekSpeedSilenceAndTrackTransition[26]" classname="id.iswara.music.AudioPipelineTest" time="3.019"/>
+  <testcase name="pcmPlaybackSurvivesSeekSpeedSilenceAndTrackTransition[34]" classname="id.iswara.music.AudioPipelineTest" time="3.043"/>
+  <testcase name="pcmPlaybackSurvivesSeekSpeedSilenceAndTrackTransition" classname="id.iswara.music.AudioPipelineTest" time="5.232"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

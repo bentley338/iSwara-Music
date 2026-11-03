@@ -1,0 +1,13 @@
+{
+  "version": "0.9.0",
+  "source_files": 652,
+  "configured_fields_checked": [
+    "ISWARA_KEY_PASSWORD",
+    "ISWARA_STORE_PASSWORD",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+  ],
+  "configured_values_absent": true,
+  "private_configuration_and_keystores_excluded": true,
+  "archive_crc_and_workspace_bytes_checked": true
+}

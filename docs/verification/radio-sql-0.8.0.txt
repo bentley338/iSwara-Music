@@ -1,0 +1,1 @@
+PASS: repeatable Radio migration, public directory privacy, private isolation, verified join, RLS, host settings, idempotent messages including pruned history, rate limits, reactions, moderation, ban bypass prevention, stale-host filtering and existing private Listen Together compatibility.
