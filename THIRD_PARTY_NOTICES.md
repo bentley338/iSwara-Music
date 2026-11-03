@@ -27,14 +27,14 @@ Lyric endpoints: https://lrclib.net and https://lyrics.kugou.com. These are exte
   Model origin mirror pinned to csukuangfj/sherpa-onnx-spleeter-2stems-fp16 commit 93ba771920ade509f8cbd6825b1a90856c797e08.
   Full licenses: legal/SPLEETER_LICENSE.txt, SHERPA_ONNX_LICENSE.txt, ONNXRUNTIME_LICENSE.txt, ONNXRUNTIME_THIRD_PARTY.txt.
 
-## Tambahan 0.8.0
+## Additions in 0.8.0
 
-Kuromoji 0.9.0 memakai Apache-2.0; kamus IPADIC disertai pemberitahuan aslinya. ICU4J 76.1 memakai Unicode License V3 beserta pemberitahuan terkait. Salinan lengkap dibundel di app/src/main/assets/legal/KUROMOJI_LICENSE.txt, KUROMOJI_IPADIC_NOTICE.txt, dan ICU_LICENSE.txt serta dapat dibaca dalam menu lisensi aplikasi. ProGuard mempertahankan kelas dan resource kamus untuk akses reflektif.
+Kuromoji 0.9.0 uses Apache-2.0; IPADIC includes its original notices. ICU4J 76.1 uses Unicode License V3 and related notices. Full copies are bundled in app/src/main/assets/legal/KUROMOJI_LICENSE.txt, KUROMOJI_IPADIC_NOTICE.txt and ICU_LICENSE.txt, and are available through the application's license screen. Shrinker rules retain the dictionary classes/resources needed for reflective access.
 
-Google Translate merupakan layanan online terpisah, tidak dibundel sebagai SDK atau model AI. Badge atribusi resmi disertakan tanpa perubahan. Teks terjemahan tetap mengikuti hak konten asal dan ketentuan penyedia. Lihat https://docs.cloud.google.com/translate/attribution dan https://policies.google.com/privacy. Integrasi endpoint web dapat berubah dan bukan jaminan layanan API resmi.
+Google Translate is a separate online service, not a bundled SDK/model. Its official attribution badge is included unchanged. Translation remains subject to original content rights and provider terms. See https://docs.cloud.google.com/translate/attribution and https://policies.google.com/privacy. The web integration can change and is not a guarantee of official API service availability.
 
-Sumber alternatif SoundCloud diakses melalui NewPipeExtractor GPL-3.0; audio premium/preview, pembatasan wilayah dan autentikasi tidak diterobos. https://soundcloud.com/terms-of-use
+SoundCloud alternative sources use NewPipeExtractor GPL-3.0. Premium/preview restrictions, regional access and authentication are not bypassed. https://soundcloud.com/terms-of-use
 
-## Layanan tambahan0.9
+## Additional services in 0.9
 
-NetEase menyediakan metadata/teks lirik publik melalui integrasi nonresmi. Impor membaca metadata publik Spotify embed, SoundCloud dan Deezer, atau berkas ekspor pilihan pengguna, tanpa mengambil cookie/login akun. Hak atas audio/lirik tetap milik pemegangnya. GitHub Releases dipakai untuk APK yang diterbitkan pemilik; tidak ada kredensial GitHub di aplikasi. Pemberitahuan lengkap ikut dibundel dalam aset legal aplikasi.
+NetEase supplies available public lyric metadata/text through an unofficial integration. Imports read public Spotify embed, SoundCloud and Deezer metadata or user-selected exports without collecting account login cookies. Audio/lyric rights remain with their respective holders. GitHub Releases hosts owner-published APKs; GitHub credentials are not included in the application. Full notices are also bundled in the application's legal assets.

@@ -16,6 +16,9 @@ await db.query('insert into public.admin_members(user_id) values ($1),($2)',[own
 async function as(role,id='') { await db.exec('reset role; set role '+role); await db.query("select set_config('request.jwt.claim.sub',$1,false)",[id]); }
 await as('authenticated',regular);
 assert.equal((await db.query('select public.is_admin() as ok')).rows[0].ok,false);
+await db.query("select set_config('request.jwt.claim.email',$1,false)",['owner@example.test']);
+await db.query("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({sub:regular,email:'owner@example.test',user_metadata:{is_admin:true},app_metadata:{role:'admin'}})]);
+assert.equal((await db.query('select public.is_admin() as ok')).rows[0].ok,false,'Client email/metadata cannot create an administrator role');
 await assert.rejects(db.query('insert into public.admin_members(user_id) values ($1)',[regular]),/permission denied/);
 await assert.rejects(db.query('select public.admin_summary()'),/Admin required/);
 await assert.rejects(db.query('select public.admin_user_search()'),/permission denied/);
@@ -54,5 +57,5 @@ assert.equal((await db.query('select * from public.documents')).rows.length,1);
 await db.exec('reset role');
 await db.query('delete from auth.users where id=$1',[regular]);
 assert.equal((await db.query('select * from public.documents where owner=$1',[regular])).rows.length,0);
-console.log('PASS: idempotent admin migration, verified UID roles, no self-promotion, anonymous/draft isolation, protected audit, server-only user search, suspension with existing JWT, sync bypass denied, restoration and cascade.');
+console.log('PASS: idempotent admin migration, verified UID roles, forged email/metadata denied, no self-promotion, anonymous/draft isolation, protected audit, server-only user search, suspension with existing JWT, sync bypass denied, restoration and cascade.');
 await db.close();

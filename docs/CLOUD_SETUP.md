@@ -1,85 +1,52 @@
-# Panduan mengaktifkan akun dan sinkronisasi cloud
+﻿# Cloud setup
 
-Untuk proyek yang sudah dikonfigurasi, lihat [catatan pembaruan 0.3.1](PEMBARUAN_0.3.1.md#cloud-dan-pekerjaan-berikutnya). Tidak perlu mengulang migrasi atau pemasangan fungsi yang sudah berhasil.
+Cloud accounts and sync use a Supabase project controlled by the operator. Configure your own project for a fork. Never ship server keys or SMTP/database credentials in Android.
 
-Panduan ini menjelaskan cara mengaktifkan pendaftaran akun, login, dan sinkronisasi koleksi iSwara menggunakan Supabase.
+## Database and functions
 
-Saat aplikasi diserahkan, proyek Supabase dan layanan pengirim email SMTP belum disiapkan. Kode backend sudah tersedia, tetapi layanan cloud produksi belum dibuat. Setelah konfigurasi selesai, APK harus dibangun ulang dengan URL dan kunci publik proyek Supabase milikmu.
-
-## 1. Membuat proyek dan menyiapkan basis data
-
-1. Buat proyek Supabase di akun milikmu. Gunakan paket gratis jika kapasitasnya mencukupi; peningkatan ke paket berbayar tidak dilakukan otomatis.
-2. Pasang Supabase CLI dengan mengikuti [petunjuk instalasi resminya](https://supabase.com/docs/guides/cli/getting-started).
-3. Buka PowerShell di folder proyek `C:\project\iSwaraMusic`.
-4. Jalankan perintah berikut. Ganti `YOUR_PROJECT_REFERENCE` dengan referensi proyek Supabase milikmu:
+Install the official Supabase CLI, authenticate as the project owner, and link your project:
 
 ```powershell
 supabase login
 supabase link --project-ref YOUR_PROJECT_REFERENCE
 supabase db push
 supabase functions deploy delete-account
+supabase functions deploy admin-users
 ```
 
-Migrasi membuat tabel `documents`, tabel `sync_receipts`, urutan nomor revisi, serta fungsi `sync_document`. Setiap baris dimiliki oleh pengguna sesuai `auth.uid()`. Aplikasi hanya dapat membaca dokumen milik akun yang sedang masuk; perubahan data harus melalui fungsi sinkronisasi yang memerlukan autentikasi.
+Alternatively, run the SQL migrations in order through the owner dashboard's SQL Editor. A successful migration does not need to be repeated. The migrations cover library documents and idempotent receipts, server admin roles/content, private listening rooms, Radio lounge, and application release metadata.
 
-Fungsi penghapusan akun memverifikasi pengguna melalui Supabase Auth. Kunci service-role hanya digunakan di server untuk menghapus akun pengguna yang sudah diverifikasi tersebut.
+Deploy the Edge Function source from supabase/functions. The functions validate the caller through Supabase Auth; admin-users also checks the server-assigned admin role. The service-role key is a server-side environment secret. Do not paste it into Android, documentation, public SQL, or release assets. Gateway JWT settings must be compatible with your project's signing configuration; keep the functions' own user verification intact.
 
-## 2. Mengatur email dan autentikasi
+## Authentication and email
 
-- Aktifkan pendaftaran menggunakan email/password dan konfirmasi email.
-- Atur panjang minimum password menjadi 8 karakter atau lebih.
-- Tambahkan tepat `iswara://auth` ke daftar URL pengalihan yang diizinkan. Untuk tahap awal yang hanya menggunakan APK, isi alamat situs atau *site URL* dengan `iswara://auth`.
-- Pertahankan template email konfirmasi dan pemulihan yang menggunakan `{{ .ConfirmationURL }}`. Aplikasi memakai PKCE/S256 dan menyimpan kode verifikasi internal secara terenkripsi melalui Android Keystore. Buka tautan email dalam waktu 30 menit pada instalasi aplikasi yang meminta email tersebut. Tautan pemulihan akan membuka formulir password baru; tautan berisi token yang tidak diminta aplikasi akan ditolak.
-- Konfigurasikan SMTP sendiri dengan domain pengirim yang sudah diverifikasi beserta pengaturan DNS yang sesuai. SMTP bawaan Supabase membatasi penerima publik; baca [panduan SMTP Supabase](https://supabase.com/docs/guides/auth/auth-smtp).
-- Simpan kredensial SMTP hanya di Supabase. Periksa batas pendaftaran dan pengiriman email sebelum mengundang pengguna publik.
-- Gunakan URL proyek dan kunci publik *publishable/anon* pada aplikasi. Tetap aktifkan RLS, yaitu pembatasan akses per baris berdasarkan pemilik data. Kunci publik memang akan disertakan dalam APK; kunci tersebut tidak memiliki wewenang administrasi.
+Enable email/password sign-up and email confirmation. Set a suitable password policy and Auth rate limits. Add exactly iswara://auth to the allowed redirect list. Keep PKCE/S256 confirmation/recovery links on the installation that initiated the flow; unsolicited implicit token callbacks are not accepted by the client.
 
-## 3. Mengisi konfigurasi aplikasi Android
+Configure production SMTP with a verified sender/domain and the necessary DNS records before inviting public users. Use Supabase's dashboard for SMTP credentials. The default email sender is not a public production mail service. See [Supabase SMTP documentation](https://supabase.com/docs/guides/auth/auth-smtp).
 
-Salin `secrets.properties.example` menjadi `secrets.properties`. Isi URL proyek dan kunci publik milikmu:
+Enable MFA on the operator's GitHub and Supabase dashboard accounts. The application's existing email/password flow does not implement an administrator MFA challenge, so dashboard MFA must not be described as an Android login feature.
+
+## Android configuration
+
+Copy secrets.properties.example to the ignored secrets.properties file:
 
 ```properties
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-SUPABASE_ANON_KEY=YOUR_PUBLISHABLE_OR_ANON_KEY
+SUPABASE_ANON_KEY=YOUR_PUBLIC_ANON_KEY
 ```
 
-Siapkan konfigurasi penandatanganan release sesuai [petunjuk di README](../README.md#menandatangani-apk-release), lalu bangun ulang APK:
+This client currently expects a legacy anon key in its existing request headers. A public mobile key is extractable from the APK; RLS and server authorization are the data boundary. Never substitute a secret/service-role key. See the [build guide](BUILD.md) before changing key formats or signing configuration.
 
-```powershell
-.\gradlew.bat :app:assembleRelease
-```
+Rebuild the signed release after changing backend configuration. Unconfigured builds keep local library functions and show the cloud-unavailable state.
 
-APK release yang dihasilkan berada di `app/build/outputs/apk/release/app-release.apk`. Pasang APK hasil pembangunan ulang tersebut untuk menggunakan konfigurasi cloud yang baru.
+## Data and authorization
 
-## 4. Menguji basis data dan alur lengkap
+Room stores library changes locally first. Sync sends playlist/favorite/history metadata through sync_document using stable IDs, server revisions, tombstones, and idempotent operation IDs. Concurrent playlist edits preserve a conflict copy. Files and encrypted offline audio remain on the device.
 
-Setelah Docker dan Supabase CLI terpasang, jalankan:
+Library access is scoped to auth.uid(). Suspended accounts are blocked even with a previously issued access token. Local account scopes are separate from guest storage. Server role assignment is explained in [Administration](ADMIN_SUPABASE.md).
 
-```powershell
-supabase start
-supabase test db
-```
+## Verify before public operation
 
-Pengujian pgTAP memeriksa pembuatan data oleh pengguna yang sudah masuk, pemisahan kepemilikan data, pengiriman ulang tanpa duplikasi, konflik perubahan, serta penolakan penulisan langsung ke tabel. Aktifkan ekstensi pgTAP jika belum tersedia di lingkungan pengujian lokal.
+Run local SQL tests from tools after npm ci: test-database/admin/radio/update scripts listed in tools/package.json and the standalone test-admin.mjs, test-radio.mjs, and test-updates.mjs. Supabase CLI with a local database can also run supabase test db.
 
-Selanjutnya, uji pada dua instalasi Android:
-
-1. Daftar, konfirmasikan email, lalu masuk. Buat playlist dan simpan satu lagu ke favorit.
-2. Masuk ke akun yang sama di perangkat kedua, lalu tekan **Sinkronkan sekarang**. Periksa nama playlist, urutan lagu, dan favorit.
-3. Putuskan koneksi kedua perangkat. Ubah playlist yang sama secara berbeda, sambungkan kembali, lalu sinkronkan keduanya. Pastikan salinan konflik mempertahankan perubahan yang bersamaan.
-4. Hapus favorit dan playlist saat offline. Setelah tersambung kembali, pastikan penghapusan diterapkan di perangkat lainnya.
-5. Keluar, lalu masuk dengan akun lain. Pastikan koleksi tidak tercampur antar-akun maupun dengan koleksi tamu.
-6. Minta pemulihan password, buka tautan email, buat password baru, lalu coba masuk kembali.
-7. Ekspor backup, kemudian hapus akun pengujian. Pastikan akun tidak dapat digunakan untuk masuk lagi dan baris data miliknya ikut terhapus melalui aturan cascade.
-
-## Cara kerja sinkronisasi
-
-- Antarmuka membaca data lokal dari Room. Perubahan lokal tetap tersimpan ketika koneksi gagal.
-- Server memberikan nomor revisi. Penentuan konflik tidak bergantung pada ketepatan jam perangkat.
-- Setiap operasi memiliki tanda terima UUID. Mengirim ulang operasi yang sama tidak menggandakan perubahan.
-- Jika playlist diedit dari revisi lama, versi server dipertahankan dan perubahan lokal disimpan sebagai salinan konflik. Penghapusan atau perubahan favorit/riwayat dari revisi lama disesuaikan dengan revisi server agar dapat dicoba kembali.
-- Sinkronisasi berjalan setelah perubahan lokal, setelah login, dan secara berkala ketika ada koneksi. Perubahan diterapkan bertahap; aplikasi belum menyediakan penyuntingan kolaboratif secara langsung.
-- Berkas audio lokal tidak diunggah. Playlist dapat menyinkronkan metadata berkas tersebut, tetapi pemutarannya pada instalasi berbeda akan ditolak. Pilih berkas lokal pada perangkat tujuan jika ingin memutarnya di sana.
-- Metadata sinkronisasi bersifat pribadi per pengguna. Versi ini belum menerbitkan playlist kolaboratif atau profil publik.
-
-Sebelum memperluas distribusi publik, pantau pemakaian penyimpanan, pertumbuhan tanda terima operasi, keberhasilan pengiriman email, dan kuota proyek. Pengarsipan tanda terima operasi perlu mengikuti kebijakan penyimpanan yang mempertimbangkan batas waktu pengiriman ulang. Aplikasi tidak menghapus tanda terima tersebut secara otomatis.
+Use disposable accounts on two Android devices to test confirmation, password recovery, offline edits, conflict copies, sync retry, account switching, and account deletion. Keep a backup before destructive tests. Do not delete or suspend real users to test an implementation. Local SQL/Robolectric results do not prove SMTP delivery or two-device production behavior.

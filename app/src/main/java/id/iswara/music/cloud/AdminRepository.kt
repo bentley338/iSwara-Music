@@ -13,6 +13,7 @@ fun JsonObject.flag(key: String): Boolean = (get(key) as? JsonPrimitive)?.boolea
 
 @Singleton class AdminRepository @Inject constructor(private val auth: AuthRepository) {
     suspend fun access(): AdminAccess {
+        if (!id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) return AdminAccess()
         val owner = auth.account.value?.id ?: return AdminAccess()
         return try {
             val allowed = auth.request("/rest/v1/rpc/is_admin", token = auth.token()).jsonPrimitive.boolean
@@ -20,6 +21,7 @@ fun JsonObject.flag(key: String): Boolean = (get(key) as? JsonPrimitive)?.boolea
         } catch (e: CancellationException) { throw e } catch (_: Exception) { AdminAccess(owner) }
     }
     private suspend fun token(owner: String): String {
+        check(id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) { "Admin tools are unavailable in public releases." }
         check(auth.account.value?.id == owner) { "Akun berubah. Buka ulang panel admin." }
         val token = auth.token()
         check(auth.account.value?.id == owner) { "Akun berubah." }

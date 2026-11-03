@@ -1,55 +1,37 @@
-﻿# Verifikasi iSwara 0.9.0
+# Verification: iSwara 0.9.1
 
-Tanggal: 3 November 2026. VersionCode 11, minimum Android 8/API 26, compile/target SDK 36, Media3 1.10.1. Keystore dan dependensi terkunci dipertahankan. Panduan pengguna: PEMBARUAN_0.9.0.md. Panduan penerbitan: PEMBARUAN_APLIKASI.md.
+Date: 3 November 2026. VersionCode 12, minimum Android 8/API 26, target/compile API 36. Full native Admin functionality is retained at the owner's explicit request. Complete corresponding Android source remains GPL; production credentials, private signing material and user data are excluded from public distribution.
 
-## Build dan integritas
+## Build and package
 
-Build release/debug, lintDebug, lintVitalRelease dan compileDebugAndroidTestKotlin berhasil. Build pengemasan terakhir selesai dalam 6 menit 51 detik. Kompilasi instrumentation bukan pelaksanaan tes di Android. Perubahan terakhir sesudah build hanya memperbaiki pengambilan bukti pada tes UI dan dokumentasi, tanpa perubahan aplikasi.
+Release/debug assembly, lint, release-specific unit tests and instrumentation compilation completed successfully in 11 minutes 29 seconds. The universal release is 173592244 bytes; SHA-256 4a71818141190a0a9ecff460380a1961e4acc78be3522c667714c6b0b7af2841. Signature v2 is valid and matches the previous release certificate: 6903592161d5a611c0748f4d9b38802b879053927e8c4b84ca7bd64f5c901dbe. Native Admin remains present in the optimized APK. Instrumentation was compiled, not executed on Android.
 
-APK universal: **173592244 byte**. SHA-256: **f93812219660055a8153103f455877cffb4b405f3becf832471daf4d7dbee868**.
+Lint: 0 fatal/error and 128 warnings. Warnings remain recorded rather than treated as resolved. The final verifier checks version/SDK, non-debuggable release configuration, original signing identity, native Admin retention, updater worker names, ZIP/native 16 KB alignment, four ABIs, model hashes and dictionary resources/notices.
 
-Sertifikat SHA-256: 6903592161d5a611c0748f4d9b38802b879053927e8c4b84ca7bd64f5c901dbe. Signature v2 valid dan sertifikat cocok dengan release sebelumnya. Verifier memeriksa identitas/versi/SDK, zipalign 16 KB, seluruh 16 ELF pada empat ABI, hash/ukuran model ONNX, resource kamus/notice, izin installer, serta nama worker update yang dipertahankan pada mapping R8. Bukti: apk-integrity, signature, alignment, native-elf dan apk-0.9.0 dalam verification.
+## Tests and counting
 
-Lint: **0 error/fatal, 128 warning**. Warning tersisa dicatat dalam laporan xml/html/txt dan lint-0.9.0.json; bukan dinyatakan selesai.
+12 targeted tests pass with 0 failures/errors/skips in verification/unit-0.9.1. This is a merged final result per class, not a claim that the entire previous 126-test suite was rerun for this version. Current coverage includes native Admin content callbacks, admin tool utilities, phone/tablet navigation, live mix preview, Space pin/search rules, updater/import/queue entry points, and the release-specific Admin role/navigation test.
 
-## Tes otomatis
+The first targeted debug run skipped an opt-in live navigation case. It was rerun with ISWARA_LIVE_TEST=1 and its class XML replaced. A release-only test initially validated the earlier proposed admin-disabled configuration; that proposal was superseded by the owner's full-APK choice. The final release XML instead checks ADMIN_TOOLS_ENABLED=true, native Admin availability for authorized use, guest navigation and a forged local role with no matching authenticated account. It replaces the earlier result; tests are not counted twice.
 
-**126 tes unik lulus, 0 gagal/error/dilewati pada XML terakhir setiap kelas**, disimpan pada verification/unit-0.9.0. Suite penuh versi ini menjalankan 126 tes: 124 lulus dan dua gagal. Pengujian terarah setelah koreksi menggantikan XML kelas yang terkait. Pengulangan tidak dihitung sebagai tes baru; verifier menolak ID duplikat. Tidak menggunakan XML versi lama sebagai bukti versi ini.
+AGP 9.2 exposes host-test configuration through HostTestBuilder. The release unit-test task was enabled explicitly; obsolete/missing task/property attempts are not passing evidence. Build-key validation rejects a synthetic server/secret key with a generic error that does not print the supplied value. Source pattern probes detect synthetic GitHub tokens, Supabase secret keys and private-key headers without treating public placeholders as secrets.
 
-Dua kegagalan awal berasal dari fixture lirik publik yang tidak tersedia sebagai rekaman artis yang tepat, serta kontrol preset yang berada di luar area terlihat setelah jumlah preset bertambah. Fixture diganti ke lagu publik yang benar-benar cocok, tanpa melonggarkan gerbang judul/artis/versi. Tes tablet menggulir daftar Studio dan memakai label Nightcore yang berlaku. Pengujian terarah beserta lint berhasil; pengambilan snapshot dialog diperbaiki secara terpisah agar menangkap jendela dialog aktif.
+## Backend and repository security
 
-Tambahan cakupan versi ini:
+Read-only production requests with the public anonymous client role return 401 for library documents, admin membership, audits, release table access, admin summary, server-only user search and admin-users Edge Function. No production user, membership, content or release was modified by these probes. See backend-security-0.9.1.json.
 
-- Validasi metadata rilis, URL GitHub/redirect yang diizinkan, checksum, batas ukuran dan penolakan APK tidak valid. Payload worker tetap di bawah batas WorkManager. Verifikasi APK release membandingkan sertifikat yang dipakai updater.
-- CSV dengan kutipan, JSON, M3U dan teks; pencocokan judul/artis/versi/durasi; pembacaan playlist publik nyata, peninjauan dan penyimpanan playlist terpilih, pencegahan simpan ganda serta pembersihan saat akun berubah.
-- Kurasi menghindari duplikasi/rekaman berbeda, memakai riwayat/favorit dan memberi variasi artis tanpa mengubah daftar masukan. Antrean otomatis membaca snapshot koleksi yang telah dimuat.
-- Delapan preset remix dan kesesuaian timeline; kode/label bahasa, palet lirik dan kontras; terjemahan nyata ke bahasa berbeda dan beberapa batch dengan bahasa campuran; pencarian lirik NetEase dengan timestamp nyata.
-- Entry point dan kondisi kosong updater/impor/kurasi, navigasi HP/tablet, serta regresi pemutar, Radio dan lirik pintar. Selector bahasa dicakup pengujian aturan bahasa; interaksi dialog selector belum diuji tersendiri.
+Local PGlite admin/update tests pass. They cover idempotent migrations, verified UID roles, rejection of forged email/client metadata and self-promotion, draft/RLS isolation, protected audit, server-only user search, suspension/sync bypass, and active-admin-only release publishing with URL/checksum/version/channel/SDK validation. These are local authorization tests, not authenticated destructive production tests or a penetration test.
 
-Regresi parsing, antrean/shuffle/undo, backup, isolasi akun/konflik lokal, playlist, cache/range/seek/expiry, audio PCM pada API 26/34/36, model ONNX, overlay/widget, admin dan renderer ekspor tetap tercakup. Robolectric, sink audio sintetis dan JNI model Windows bukan bukti mutu audio fisik atau seluruh pipeline codec Android.
+GitHub API verification confirms secret scanning, push protection, Dependabot security updates and private vulnerability reporting are enabled. CODEOWNERS identifies the repository owner; it is not described as enforced branch approval. No new collaborator, server credential or public write permission was granted. Operator MFA was recommended but not configured/inspected by this session. See github-security-0.9.1.json.
 
-## Backend dan jaringan
+## Source, docs and privacy
 
-Pemilik menyatakan migrasi 202611030005_app_updates.sql berhasil. Pemeriksaan produksi baca-saja membuktikan check_app_update tersedia dan tabel draft tidak dapat dibaca anonim. Tidak membuat atau menerbitkan rilis produksi. Bukti update-preflight-0.9.0.json.
+Maintained README, user/build/cloud/admin/update/privacy/room/emulator guides and current release notes are English. Historical Indonesian release/test records remain identified as history. Thirty-two local documentation links resolved before final packaging. Application language/settings and the existing Indonesian in-app legal notice are unchanged.
 
-Pengujian PGlite tools/test-updates.mjs lulus: migrasi berulang, admin aktif/terverifikasi, pembatasan RLS, metadata tidak aman, pembacaan publik hanya rilis terbit, filter versi/SDK/kanal, penarikan rilis dan penolakan admin yang ditangguhkan. Bukti updates-sql-0.9.0.txt. Radio/Listen Together mengikuti migrasi yang telah berhasil sebelumnya; pengujian SQL lokal bukan dua sesi Realtime di Android.
+Source audits check actual configured values without printing them, common credential/private-key patterns and server-role JWTs; private properties/keys/build caches/local tools are excluded. The final ZIP is checked for CRC, unique entries and equality to audited workspace bytes. Complete corresponding source and dependency notices accompany the APK; copying allowed by GPL is not treated as credential theft or prevented by UI hiding.
 
-Pemutaran jaringan host menghasilkan resolve 1743 ms, resolve dari cache 0 ms, byte pertama termasuk resolve 1937 ms, dan 524288 byte terbaca dalam 321 ms sejak permintaan unduhan dimulai pada sumber 128 kbps. Bukti playback-network-0.9.0.json. Angka ini bukan startup suara APK, ukuran stutter atau perbandingan terkontrol dengan versi lama.
+## Device and publication limits
 
-Endpoint publik untuk musik, playlist, lirik dan terjemahan dapat berubah/dibatasi. Impor tidak menjanjikan seluruh platform/playlist privat atau semua halaman selalu tersedia. Kurasi memakai aturan metadata, bukan klaim AI yang menganalisis audio. Terjemahan mesin dapat salah; teks asli, pemilihan bahasa dan perbaikan manual tetap tersedia.
+The latest host probe found 0 ADB devices and emulator acceleration status 6. The APK was not executed on a physical device/emulator, and no real installer upgrade was performed. Native encoder/stem processing, prolonged playback/background/Bluetooth/audio focus, overlay/launcher behavior and two-device cloud/Radio/Listen Together flows still require Android QA. Existing earlier component/network results are not presented as a new physical test.
 
-## Visual, privasi dan distribusi
-
-Bukti visual dialog updater, impor dan kurasi berada dalam docs/screenshots. Snapshot harus menangkap decorView dialog aktif; Activity di belakang dialog tidak dianggap bukti. Audit desain: verification/ANTI-SLOP-0.9.0.md. Privasi/lisensi dalam aset telah diperbarui untuk metadata update, GitHub, impor, NetEase dan cache terjemahan dalam memori per akun.
-
-GitHub Releases dipilih pemilik; tahap ini hanya menyiapkan panduan dan metadata draft. Tidak mengunggah APK, membuat repository, menerbitkan rilis atau membeli layanan. dist/iSwara-0.9.0-release.json memuat hash/ukuran sebenarnya, URL kosong dan published=false. Pemilik mengisi URL APK nyata serta metadata Admin setelah publikasi.
-
-Versi sampai 0.8 memerlukan pemasangan manual satu kali. Mulai 0.9, pembaruan berikutnya dapat ditemukan melalui aplikasi setelah rilis dengan versionCode lebih tinggi diterbitkan. Android tetap meminta konfirmasi pemasangan. Pengecekan/unduhan worker dapat ditunda sistem saat hemat daya.
-
-## Batas pengujian dan tindak lanjut
-
-ADB tidak melihat perangkat; emulator melaporkan kode 6 karena driver hypervisor belum terpasang. Tidak mengubah keamanan Windows. APK 0.9 belum dijalankan pada perangkat/emulator Android dalam sesi ini. Bukti android-device-0.9.0.json dan panduan EMULATOR.md.
-
-Belum teruji langsung: notifikasi/perizinan installer, unduhan APK GitHub nyata dan upgrade dengan data tetap tersimpan; playback lama/layar mati/Bluetooth/fokus audio; mutu analog/remix; codec-Keystore-worker karaoke dan M4A/MP4 penuh; aplikasi penerima/overlay; dua perangkat cloud/Radio/Listen Together dengan reconnect dan moderasi. SMTP, pemulihan akun dan hapus akun uji belum dibuktikan end-to-end. Tidak ada klaim seluruh penerimaan produksi lulus atau bebas error.
-
-Hasil akhir: APK release/debug, mapping, source ZIP, metadata draft dan SHA256SUMS dalam dist. Source mengecualikan konfigurasi privat, keystore, build/cache dan node_modules; audit nilai konfigurasi aktual serta CRC/isi arsip dijalankan sebelum penyerahan. Riwayat laporan sebelumnya: verification/VERIFICATION-0.8.0.md.
+The existing 0.9.0 release is preserved with its original assets; its GitHub release notes were translated to English. Publication and Supabase registration of 0.9.1 are separate steps recorded in the distribution publication proof after packaging. The Android installer still requests confirmation. No claim of complete production acceptance, perfect security or copy prevention is made.

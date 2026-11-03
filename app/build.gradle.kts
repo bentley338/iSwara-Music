@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.util.Base64
 
 plugins {
     id("com.android.application")
@@ -8,6 +9,17 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 val secrets = Properties().apply { rootProject.file("secrets.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) } }
+val publicSupabaseKey = System.getenv("SUPABASE_ANON_KEY") ?: secrets.getProperty("SUPABASE_ANON_KEY", "")
+if (publicSupabaseKey.isNotBlank()) {
+    val isPublicKey = runCatching {
+        val parts = publicSupabaseKey.split('.')
+        check(parts.size == 3)
+        val payload = String(Base64.getUrlDecoder().decode(parts[1]), Charsets.UTF_8)
+        val claims = groovy.json.JsonSlurper().parseText(payload) as Map<*, *>
+        claims["role"] == "anon"
+    }.getOrDefault(false)
+    check(isPublicKey) { "SUPABASE_ANON_KEY must be a public anon JWT, never a service-role/secret key. Leave it empty for an unconfigured local build." }
+}
 fun secret(name: String) = (System.getenv(name) ?: secrets.getProperty(name, "")).replace("\\", "\\\\").replace("\"", "\\\"")
 android {
     namespace = "id.iswara.music"
@@ -16,8 +28,8 @@ android {
         applicationId = "id.iswara.music"
         minSdk = 26
         targetSdk = 36
-        versionCode = 11
-        versionName = "0.9.0"
+        versionCode = 12
+        versionName = "0.9.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "SUPABASE_URL", "\"${secret("SUPABASE_URL")}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${secret("SUPABASE_ANON_KEY")}\"")
@@ -34,7 +46,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            buildConfigField("boolean", "ADMIN_TOOLS_ENABLED", "true")
+        }
         release {
+            buildConfigField("boolean", "ADMIN_TOOLS_ENABLED", "true")
             isMinifyEnabled = true
             isShrinkResources = true
             signingConfig = signingConfigs.getByName("release")
@@ -57,6 +73,11 @@ android {
         unitTests.all { it.systemProperty("java.library.path", "."); it.testLogging { events("passed", "skipped", "failed"); exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL } }
     }
     lint { abortOnError = true }
+}
+androidComponents {
+    beforeVariants(selector().withBuildType("release")) {
+        it.hostTests[com.android.build.api.variant.HostTestBuilder.UNIT_TEST_TYPE]?.enable = true
+    }
 }
 kotlin { jvmToolchain(17) }
 tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {

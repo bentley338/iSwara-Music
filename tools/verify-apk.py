@@ -49,6 +49,14 @@ badging = run('aapt', 'dump', 'badging', apk)
 (report / f'apk-{version}.txt').write_text(badging, encoding='utf-8')
 assert f"versionCode='{code}'" in badging and f"versionName='{version}'" in badging
 assert re.search(r"(?:minSdkVersion|sdkVersion):'26'", badging) and "targetSdkVersion:'36'" in badging
+assert 'application-debuggable' not in badging, 'Public release must not be debuggable'
+build_config = root / 'app/build/generated/source/buildConfig/release/id/iswara/music/BuildConfig.java'
+if 'ADMIN_TOOLS_ENABLED' in gradle:
+    assert 'ADMIN_TOOLS_ENABLED = true' in build_config.read_text(encoding='utf-8')
+    public_mapping = (root / 'app/build/outputs/mapping/release/mapping.txt').read_text(encoding='utf-8')
+    assert re.search(r'^id\.iswara\.music\.ui\.AdminScreenKt(?:\$[^ ]*)? ->', public_mapping, re.MULTILINE), 'Requested native admin screen is missing'
+    write_public = {'version': version, 'admin_build_flag': True, 'native_admin_retained': True, 'authorization_enforced_by_server': True, 'debuggable': False}
+    (report / f'public-build-{version}.json').write_text(json.dumps(write_public, indent=2)+'\n',encoding='utf-8')
 if (root / 'app/src/main/java/id/iswara/music/data/AppUpdates.kt').exists():
     assert "android.permission.REQUEST_INSTALL_PACKAGES" in badging
     mapping = (root / 'app/build/outputs/mapping/release/mapping.txt').read_text(encoding='utf-8')

@@ -62,11 +62,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
                 }
             }
         }
-        if (access.allowed && access.owner == account?.id) item { MenuAction(Icons.Rounded.AdminPanelSettings, tr("Panel admin", "Admin panel"), { adminOpen = true }) }
+        if (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED && access.allowed && access.owner == account?.id) item { MenuAction(Icons.Rounded.AdminPanelSettings, tr("Panel admin", "Admin panel"), { adminOpen = true }) }
         item { MenuAction(Icons.Rounded.Settings, tr("Buka setelan", "Open settings"), onSettings) }
         if (account != null) item { TextButton({ delete = true }, Modifier.padding(horizontal = 12.dp)) { Text(tr("Hapus akun dan data cloud", "Delete account and cloud data"), color = MaterialTheme.colorScheme.error) } }
     }
-    if (adminOpen && access.allowed && access.owner == account?.id) AdminScreen(vm, access.owner) { adminOpen = false }
+    if (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED && adminOpen && access.allowed && access.owner == account?.id) AdminScreen(vm, access.owner) { adminOpen = false }
     if (delete) ConfirmDialog(tr("Hapus akun permanen?", "Permanently delete account?"), tr("Akun, playlist, favorit, dan riwayat cloud akan dihapus. Ekspor backup dahulu jika ingin menyimpannya.", "Your account, playlists, favorites, and cloud history will be deleted. Export a backup first if you want to keep them."), { delete = false }) { delete = false; vm.deleteAccount() }
 
 }

@@ -79,6 +79,7 @@ import kotlinx.serialization.json.*
 }
 
 @Composable fun AdminReleaseScreen(vm:MusicViewModel,owner:String,close:()->Unit) {
+    if (!id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) return
     var code by remember {mutableStateOf("")};var version by remember {mutableStateOf("")};var url by remember {mutableStateOf("")};var sha by remember {mutableStateOf("")};var bytes by remember {mutableStateOf("")};var notes by remember {mutableStateOf("")};var channel by remember {mutableStateOf("stable")};var published by remember {mutableStateOf(false)}
     var busy by remember {mutableStateOf(false)};var error by remember {mutableStateOf<String?>(null)};var confirm by remember {mutableStateOf(false)};var success by remember {mutableStateOf(false)}
     val scope=rememberCoroutineScope()

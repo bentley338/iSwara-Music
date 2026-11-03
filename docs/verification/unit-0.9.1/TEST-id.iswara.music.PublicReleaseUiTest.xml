@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.iswara.music.PublicReleaseUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T06:58:57.124Z" hostname="DESKTOP-TQS95I0" time="27.247">
+  <properties/>
+  <testcase name="fullReleaseKeepsNativeAdminButGuestAndForgedLocalAccessCannotExposeAccountControls" classname="id.iswara.music.PublicReleaseUiTest" time="24.8"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

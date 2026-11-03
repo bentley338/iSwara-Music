@@ -48,11 +48,11 @@ object SpaceRules {
     private val defaults = listOf(SpaceFeature.STUDIO, SpaceFeature.OFFLINE, SpaceFeature.TOGETHER, SpaceFeature.RECAP)
     fun pins(raw: String?, admin: Boolean): List<SpaceFeature> =
         (if (raw == null) defaults else raw.split(',').mapNotNull { id -> SpaceFeature.entries.find { it.id == id } })
-            .distinct().filter { it != SpaceFeature.ADMIN || admin }.take(6)
+            .distinct().filter { it != SpaceFeature.ADMIN || (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED && admin) }.take(6)
     fun toggle(pins: List<SpaceFeature>, feature: SpaceFeature): List<SpaceFeature> =
         if (feature in pins) pins - feature else (pins + feature).takeLast(6)
     fun matches(feature: SpaceFeature, query: String, group: Int, admin: Boolean): Boolean =
-        (feature != SpaceFeature.ADMIN || admin) && (group == 0 || feature.group == group) &&
+        (feature != SpaceFeature.ADMIN || (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED && admin)) && (group == 0 || feature.group == group) &&
             (query.isBlank() || "${feature.title} ${feature.english} ${feature.description} ${feature.englishDescription}".contains(query.trim(), true))
 }
 
@@ -60,7 +60,7 @@ object SpaceRules {
     val owner = vm.libraryRepository.scope.collectAsStateWithLifecycle().value
     val account = vm.auth.account.collectAsStateWithLifecycle().value
     val access = vm.adminAccess.collectAsStateWithLifecycle().value
-    val admin = account != null && access.allowed && access.owner == account.id
+    val admin = id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED && account != null && access.allowed && access.owner == account.id
     val rawPins = remember(owner) { vm.preferences.raw("spacePins:$owner") }.collectAsStateWithLifecycle(initialValue = null).value
     val pins = remember(rawPins, admin) { SpaceRules.pins(rawPins, admin) }
     val player = vm.playback.state.collectAsStateWithLifecycle().value

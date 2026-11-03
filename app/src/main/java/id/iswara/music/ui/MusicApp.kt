@@ -190,7 +190,7 @@ import androidx.compose.animation.core.tween
         "banks" -> SavedQueuesDialog(vm) { featureDialog = null }
         "recap" -> ListeningRecap(vm) { featureDialog = null }
         "car" -> CarMode(vm) { featureDialog = null }
-        "admin" -> account?.let { current -> AdminScreen(vm, current.id) { featureDialog = null } }
+        "admin" -> if (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) account?.let { current -> AdminScreen(vm, current.id) { featureDialog = null } }
     }
     if (linkPrompt != null) TextPrompt(tr("Buka tautan musik", "Open music link"), tr("Tautan lagu atau playlist", "Track or playlist link"), linkPrompt!!, { linkPrompt = it }, { linkPrompt = null }) { vm.shared(linkPrompt.orEmpty()); linkPrompt = null }
     sourceTrack?.let {SourcePicker(vm,it){sourceTrack=null}}

@@ -1,0 +1,16 @@
+{
+  "version": "0.9.1",
+  "version_code": 12,
+  "bytes": 173592244,
+  "sha256": "4a71818141190a0a9ecff460380a1961e4acc78be3522c667714c6b0b7af2841",
+  "certificate_sha256": "6903592161d5a611c0748f4d9b38802b879053927e8c4b84ca7bd64f5c901dbe",
+  "matches_previous_certificate": true,
+  "bundled_models_match_manifest": true,
+  "all_native_abis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86",
+    "x86_64"
+  ],
+  "apk_runtime_executed_on_android": false
+}

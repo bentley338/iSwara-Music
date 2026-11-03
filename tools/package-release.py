@@ -28,7 +28,7 @@ source = destination / f'iSwara-{version}-source.zip'
 with ZipFile(source, 'w', ZIP_DEFLATED, compresslevel=6) as archive:
     for path in sorted(root.rglob('*')):
         relative = path.relative_to(root)
-        if not path.is_file() or any(part in blocked for part in relative.parts) or path.name in private or path.name.startswith('.env.') or path.suffix.lower() in {'.jks', '.keystore', '.log', '.hprof'}:
+        if not path.is_file() or any(part in blocked for part in relative.parts) or path.name in private or path.name.startswith('.env.') or path.suffix.lower() in {'.jks', '.keystore', '.pem', '.key', '.p12', '.pfx', '.log', '.hprof'}:
             continue
         archive.write(path, 'iSwara/' + relative.as_posix())
 with ZipFile(source) as archive:

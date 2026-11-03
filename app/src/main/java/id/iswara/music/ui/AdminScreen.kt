@@ -20,6 +20,7 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
 
 @Composable fun AdminScreen(vm: MusicViewModel, owner: String, close: () -> Unit) {
+    if (!id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) return
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var contentQuery by remember { mutableStateOf("") }

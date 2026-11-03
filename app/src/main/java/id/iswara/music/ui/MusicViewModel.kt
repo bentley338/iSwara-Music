@@ -50,7 +50,7 @@ class MusicViewModel @Inject constructor(
     val shelves = MutableStateFlow(listOf(Shelf("Suara dari Indonesia", "musik Indonesia populer"), Shelf("Di luar putaranmu", "international indie pop songs"), Shelf("Akustik sore", "lagu akustik Indonesia"), Shelf("Tenang & fokus", "instrumental piano focus"), Shelf("Indie pilihan", "indie Indonesia songs"), Shelf("Energi baru", "upbeat pop workout songs")))
     val adminAccess = MutableStateFlow(AdminAccess())
     val homeContent = MutableStateFlow(HomeContent())
-    fun refreshAdmin() = viewModelScope.launch { adminAccess.value = admin.access() }
+    fun refreshAdmin() = viewModelScope.launch { adminAccess.value = if (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) admin.access() else AdminAccess() }
     fun refreshContent() = viewModelScope.launch { try { homeContent.value = admin.home() } catch (e: CancellationException) { throw e } catch (_: Exception) { } }
     val togetherOpen=MutableStateFlow(false)
     val togetherInvite=MutableStateFlow("")
@@ -110,7 +110,7 @@ class MusicViewModel @Inject constructor(
         viewModelScope.launch {together.messages.collect {messages.emit(it)}}
         refreshHome()
         refreshContent()
-        viewModelScope.launch { auth.account.map { it?.id }.distinctUntilChanged().collectLatest { adminAccess.value = AdminAccess(); adminAccess.value = admin.access() } }
+        if (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) viewModelScope.launch { auth.account.map { it?.id }.distinctUntilChanged().collectLatest { adminAccess.value = AdminAccess(); adminAccess.value = admin.access() } }
         viewModelScope.launch {
             library.map { it.history.firstOrNull() }.distinctUntilChangedBy { it?.id }.collectLatest { seed ->
                 if (seed != null && !seed.local) {

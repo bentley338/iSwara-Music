@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-11-03T06:42:40.919668+00:00",
+  "anonymous_sensitive_endpoints": {
+    "library": 401,
+    "membership": 401,
+    "audit": 401,
+    "release_table": 401,
+    "admin_summary": 401,
+    "admin_user_search": 401,
+    "admin_users_function": 401
+  },
+  "all_anonymous_requests_denied": true,
+  "production_mutations_performed": false,
+  "regular_user_authorization_covered_by_local_sql_tests": true,
+  "operator_mfa_status_inspected": false
+}

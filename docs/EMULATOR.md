@@ -1,23 +1,15 @@
-# Menguji APK di emulator Windows
+﻿# Android device and emulator testing
 
-AVD `iswara_api36` dengan image Google APIs Android 16/x86_64 sudah tersedia pada komputer pengembangan. Percobaan rilis 0.5.0 tidak berhasil menjalankan Android: emulator melaporkan driver akselerasi tidak terpasang, sementara dua variasi mode software tetap berstatus ADB offline. Tidak ada fitur sistem atau pengaturan keamanan Windows yang diubah untuk memaksa emulator berjalan.
-
-Untuk menyiapkan komputer:
-
-1. Pastikan virtualisasi CPU aktif di BIOS/UEFI.
-2. Ikuti petunjuk resmi Android untuk akselerasi emulator Windows. Pada komputer yang mendukungnya, aktifkan Windows Hypervisor Platform melalui fitur Windows, lalu restart bila diminta. Perubahan ini dilakukan pemilik komputer karena dapat memerlukan hak administrator dan restart.
-3. Buka Android Studio → Device Manager → `iswara_api36` → Cold Boot. Tunggu Android selesai boot.
-4. Jalankan `adb devices`; lanjutkan hanya jika emulator berstatus `device`, bukan `offline`.
-5. Pasang `dist/iSwara-0.5.0.apk` melalui `adb -s emulator-5554 install -r dist/iSwara-0.5.0.apk`.
-
-Untuk uji playback, dari root proyek jalankan:
+Use Android Studio's SDK Manager to install Android SDK Platform 36, Build Tools 36.0.0, platform-tools, Android Emulator, and a compatible system image. Create an AVD in Device Manager and confirm it boots completely before running instrumentation tests.
 
 ```powershell
-python tools/verify-device.py --serial emulator-5554 --version 0.5.0 --cold --screen-off-seconds 90
+adb devices -l
+emulator -accel-check
+.\gradlew.bat :app:connectedDebugAndroidTest
 ```
 
-Perintah tersebut mencari dan memutar musik nyata, mengganti antrean aktif, memeriksa kontrol session serta layar mati, lalu meninggalkan musik dalam keadaan jeda. Gunakan akun uji atau mode tamu. Emulator tanpa keluaran audio tidak membuktikan mutu suara speaker maupun Bluetooth.
+An offline/unauthorized ADB entry is not a usable test device. For a physical device, unlock it, enable developer USB debugging, connect a data-capable cable, and accept the device's debugging authorization prompt yourself. Do not post device identifiers or authentication material in public issues.
 
-Uji kartu lirik dengan pemilih aplikasi dan pemilih berkas Android, widget melalui launcher, serta izin overlay ditolak/diberikan/dicabut. Dua emulator dengan akun berbeda diperlukan untuk uji Denger Bareng dua sesi. Pengujian Robolectric tersedia melalui `:app:testDebugUnitTest`; ini pengujian komponen Android di JVM, terpisah dari menjalankan APK pada emulator penuh.
+The current build host last reported no connected ADB device and emulator acceleration status 6: the hypervisor driver is not installed. It has not provided evidence of running the APK on Android. Install/configure the appropriate official hypervisor support through normal owner-controlled Windows/Android Studio setup if needed. Do not disable security protections to claim a successful test.
 
-Rujukan: [akselerasi emulator Android di Windows](https://developer.android.com/studio/run/emulator-acceleration#vm-windows).
+Robolectric tests run Android components on the JVM, including native rendering in selected tests. Compiling instrumentation tests is different from executing them. Neither proves native codecs, Bluetooth focus, system overlays, prolonged background playback, real installer permissions, or two-device Realtime behavior.
