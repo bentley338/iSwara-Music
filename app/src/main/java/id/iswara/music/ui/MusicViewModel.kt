@@ -8,6 +8,7 @@ import id.iswara.music.cloud.*
 import id.iswara.music.data.*
 import id.iswara.music.model.*
 import id.iswara.music.playback.PlaybackConnection
+import id.iswara.music.playback.recommendQueue
 import id.iswara.music.source.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -80,8 +81,9 @@ class MusicViewModel @Inject constructor(
         queuePreviewJob?.cancel();val track=playback.state.value.track ?: return;val owner=libraryRepository.scope.value
         queuePreview.value=QueuePreview(loading=true,owner=owner,seed=track.id)
         queuePreviewJob=viewModelScope.launch {try {
-            val candidates=withTimeout(25_000){source.related(track)};val current=library.value
-            val tracks=id.iswara.music.playback.QueueRules.smart(track,playback.state.value.queue,candidates,current.history.take(8).map {it.id},current.favorites,current.history,settings.value.radioMode,25)
+            val state = playback.state.value
+            val queue = state.order.mapNotNull { state.queue.getOrNull(it) }.ifEmpty { state.queue }
+            val tracks = withTimeout(25_000) { source.recommendQueue(track, queue, library.value, settings.value.radioMode, limit = 25) }
             if(owner==libraryRepository.scope.value)queuePreview.value=QueuePreview(tracks,owner=owner,seed=track.id)
         }catch(_:TimeoutCancellationException){if(owner==libraryRepository.scope.value)queuePreview.value=QueuePreview(error="Pencarian rekomendasi terlalu lama. Coba lagi.",owner=owner,seed=track.id)}catch(e:CancellationException){throw e}catch(_:Exception){if(owner==libraryRepository.scope.value)queuePreview.value=QueuePreview(error="Rekomendasi belum tersedia. Coba lagi.",owner=owner,seed=track.id)}}
     }
@@ -114,9 +116,7 @@ class MusicViewModel @Inject constructor(
         viewModelScope.launch {
             library.map { it.history.firstOrNull() }.distinctUntilChangedBy { it?.id }.collectLatest { seed ->
                 if (seed != null && !seed.local) {
-                    val related = try {source.related(seed)}catch(e:CancellationException){throw e}catch(_:Exception){emptyList()}
-                    val current=library.value
-                    val picks=id.iswara.music.playback.QueueRules.smart(seed,emptyList(),related,current.history.take(8).map {it.id},current.favorites,current.history,settings.value.radioMode,18)
+                    val picks = source.recommendQueue(seed, emptyList(), library.value, settings.value.radioMode, limit = 18)
                     if (picks.isNotEmpty()) shelves.update { existing -> listOf(Shelf("Karena kamu mendengarkan ${seed.artist.ifBlank { seed.title }}", "", picks, false)) + existing.filter { it.query.isNotEmpty() } }
                 }
             }

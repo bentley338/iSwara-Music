@@ -5,6 +5,7 @@ import id.iswara.music.model.*
 import id.iswara.music.playback.*
 import id.iswara.music.source.*
 import id.iswara.music.ui.*
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.File
@@ -61,6 +62,60 @@ class ReleaseImportCurationTest {
         assertEquals(1f,RemixRules.parameters(Settings(remix="practice"),false).pitch,0f)
         assertTrue(RemixRules.hall(Settings(remix="concert"),false));assertFalse(RemixRules.hall(Settings(remix="concert"),true))
     }
+
+    @Test fun radioRejectsRepeatVersionsButKeepsDifferentRecordingsWithCommonTitles() {
+        val seed = queueTrack("seed", "Hujan", "Nara - Topic")
+        val queued = queueTrack("queued", "Home", "Ari")
+        val recent = queueTrack("recent", "Pulang", "Dara")
+        val candidates = listOf(
+            queueTrack("seed-cover", "Hujan (Acoustic Cover)", "Rio"),
+            queueTrack("seed-live", "Nara - Hujan (Live at Jakarta)", "Nara"),
+            queueTrack("seed-slow", "Hujan slowed + reverb", "Remix channel"),
+            queueTrack("queued-copy", "Home (Official Audio)", "Ari - Topic"),
+            queueTrack("recent-copy", "Pulang (Lyrics)", "Dara"),
+            queueTrack("different-home", "Home", "Ira"),
+            queueTrack("other", "Senja", "Nara"),
+        )
+        val result = QueueRules.smart(seed, listOf(queued), candidates, listOf(recent.id), history = listOf(recent))
+        assertEquals(setOf("different-home", "other"), result.map { it.id }.toSet())
+    }
+
+    @Test fun failedRelatedLookupSearchesArtistCatalogAndRejectsUnrelatedSearchHits() = runBlocking {
+        val seed = queueTrack("seed", "Hujan", "Nara - Topic")
+        val queries = mutableListOf<String>()
+        val source = object : MusicSource {
+            override suspend fun related(track: Track): List<Track> = error("Related feed unavailable")
+            override suspend fun search(query: String, kind: SearchKind, next: String?): CatalogPage {
+                queries += query
+                val results = listOf(
+                    queueTrack("copy", "Hujan (Official Audio)", "Nara"),
+                    queueTrack("unrelated", "Another song", "Other Artist"),
+                    queueTrack("different", "Senja", "Nara"),
+                )
+                return CatalogPage(results.map { CatalogItem(it.id, it.title, it.artist, "", it.url, "song", it) })
+            }
+            override suspend fun collection(url: String, next: String?) = error("Unexpected collection request")
+            override suspend fun resolve(track: Track, quality: String) = error("Unexpected stream request")
+            override suspend fun fromUrl(url: String) = error("Unexpected metadata request")
+        }
+        assertEquals(listOf("different"), source.recommendQueue(seed, emptyList(), Library(), "balanced").map { it.id })
+        assertEquals(listOf("Nara"), queries)
+    }
+
+    @Test fun discoveryUsesRecordingHistoryAndRadioLimitsRepeatedArtists() {
+        val seed = queueTrack("seed", "Hujan", "Nara")
+        val familiar = queueTrack("favorite", "Laut", "Dara")
+        val new = queueTrack("new", "Senja", "Ari")
+        val candidates = listOf(familiar.copy(id = "alt", title = "Laut (Official Audio)"), new)
+        assertEquals("alt", QueueRules.smart(seed, emptyList(), candidates, favorites = listOf(familiar), mode = "familiar").first().id)
+        assertEquals("new", QueueRules.smart(seed, emptyList(), candidates, history = listOf(familiar), mode = "discovery").first().id)
+
+        val sameArtist = (1..8).map { queueTrack("track-$it", "Track $it", "Dara") }
+        assertEquals(3, QueueRules.smart(seed, emptyList(), sameArtist).size)
+    }
+
+    private fun queueTrack(id: String, title: String, artist: String) =
+        Track(id, title, artist, duration = 180, url = "https://www.youtube.com/watch?v=$id")
     @Test fun languagesAndLyricThemesStaySelectableWithoutNetwork() {
         assertTrue(TranslationLanguages.codes.size>100);assertTrue(TranslationLanguages.valid("mni-Mtei"));assertFalse(TranslationLanguages.valid("id&tl=en"))
         assertTrue(TranslationLanguages.label("id").isNotBlank());assertTrue(LyricsVisuals.styles.size>=7)

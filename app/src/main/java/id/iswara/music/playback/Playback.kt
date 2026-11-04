@@ -324,20 +324,27 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
         if (radioStopped) return
         val seed = player.currentMediaItem?.track()?.takeUnless { it.local } ?: return
         if (!settings.autoplay || player.repeatMode != Player.REPEAT_MODE_OFF || !player.playWhenReady || radioJob?.isActive == true) return
-        if (!force && (player.mediaItemCount - player.currentMediaItemIndex > 3 || seed.id in radioSeeds)) return
+        if (!force) {
+            val order = playbackOrder(player)
+            if (order.size - order.indexOf(player.currentMediaItemIndex) > 3 || seed.id in radioSeeds) return
+        }
         val token = generation
         val owner = activeOwner
         radioLoading.value = true; radioError.value = null
         radioJob = scope.launch {
             try {
                 delay(1500)
-                val related = try { source.related(seed) } catch (e: CancellationException) { throw e } catch (_: Exception) { emptyList() }
-                val candidates = related.ifEmpty { source.search("${seed.artist.ifBlank { seed.title }} music").items.mapNotNull { it.track } }
-                if (token != generation || owner != activeOwner || !settings.autoplay || radioStopped || player.repeatMode != Player.REPEAT_MODE_OFF) return@launch
-                val queue = (0 until player.mediaItemCount).mapNotNull { player.getMediaItemAt(it).track() }
-                val collection=library.snapshot(owner)
-                if(token!=generation || owner!=activeOwner)return@launch
-                val additions = QueueRules.smart(seed,queue,candidates,recent.toList()+collection.history.take(8).map {it.id},collection.favorites,collection.history,settings.radioMode)
+                val queue = playbackOrder(player).mapNotNull { player.getMediaItemAt(it).track() }
+                val collection = library.snapshot(owner)
+                if (token != generation || owner != activeOwner) return@launch
+                val recommendations = source.recommendQueue(seed, queue, collection, settings.radioMode, recent.toList())
+                if (token != generation || owner != activeOwner || owner != library.scope.value || !settings.autoplay ||
+                    radioStopped || player.repeatMode != Player.REPEAT_MODE_OFF) return@launch
+                val latestQueue = playbackOrder(player).mapNotNull { player.getMediaItemAt(it).track() }
+                val additions = if (latestQueue == queue) recommendations else QueueRules.smart(
+                    seed, latestQueue, recommendations, recent.toList() + collection.history.take(8).map { it.id },
+                    collection.favorites, collection.history, settings.radioMode,
+                )
                 radioSeeds += seed.id
                 if (additions.isEmpty()) { radioError.value = "Belum ada rekomendasi baru. Coba radio lagi."; return@launch }
                 val ended = player.playbackState == Player.STATE_ENDED || player.playerError != null

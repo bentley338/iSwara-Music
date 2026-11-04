@@ -54,7 +54,7 @@ object SourceMatchRules {
     override suspend fun search(query:String,kind:SearchKind,next:String?)=youtube.search(query,kind,next)
     override suspend fun collection(url:String,next:String?)=youtube.collection(url,next)
     override suspend fun fromUrl(url:String)=youtube.fromUrl(url)
-    override suspend fun related(track:Track):List<Track> = try {youtube.related(track)}catch(e:CancellationException){throw e}catch(_:Exception){youtube.search("${track.artist} ${track.title}").items.mapNotNull {it.track}.filterNot {it.id==track.id}}
+    override suspend fun related(track: Track): List<Track> = youtube.related(track)
     private fun key(owner:String,id:String)="sourceMatch:$owner:$id"
     private suspend fun saved(track:Track):Track? = try {preferences.raw(key(library.scope.value,track.id)).first()?.let {AppJson.decodeFromString<Track>(it)}?.takeIf {SourceMatchRules.validUrl(it.url)}}catch(e:CancellationException){throw e}catch(_:Exception){null}
     suspend fun choose(original:Track,candidate:Track) {
