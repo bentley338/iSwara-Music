@@ -67,6 +67,11 @@ import androidx.compose.animation.core.tween
     var featureDialog by rememberSaveable { mutableStateOf<String?>(null) }
     var linkPrompt by remember { mutableStateOf<String?>(null) }
     var menuTrack by remember { mutableStateOf<Track?>(null) }
+    var excerptTrack by remember(owner) { mutableStateOf<Track?>(null) }
+    var recommendationReason by remember(owner) { mutableStateOf<String?>(null) }
+    val tasteState = vm.taste.collectAsStateWithLifecycle().value
+    val taste = tasteState.second.takeIf { tasteState.first == owner }
+    val tasteUndo = vm.tasteUndo.collectAsStateWithLifecycle().value
     var sourceTrack by remember {mutableStateOf<Track?>(null)}
     var playlistTrack by remember { mutableStateOf<Track?>(null) }
     var playlistName by remember { mutableStateOf<String?>(null) }
@@ -76,6 +81,12 @@ import androidx.compose.animation.core.tween
     var systemMessage by remember { mutableStateOf<String?>(null) }
     val equalizerUnavailable = tr("Equalizer sistem tidak tersedia di perangkat ini.", "A system equalizer is not available on this device.")
     val snackbars = remember { SnackbarHostState() }
+    val tasteSaved = tr("Preferensi rekomendasi diperbarui", "Recommendation preference updated")
+    val undoLabel = tr("Urungkan", "Undo")
+    LaunchedEffect(tasteUndo) {
+        val undo = tasteUndo ?: return@LaunchedEffect
+        if (snackbars.showSnackbar(tasteSaved, actionLabel = undoLabel) == SnackbarResult.ActionPerformed) vm.undoTaste(undo)
+    }
     val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri -> if (uri != null) vm.action {
         val content = vm.libraryRepository.export()
         withContext(Dispatchers.IO) { context.contentResolver.openOutputStream(uri)?.bufferedWriter()?.use { it.write(content) } ?: error("Backup tidak bisa disimpan") }
@@ -194,6 +205,12 @@ import androidx.compose.animation.core.tween
     }
     if (linkPrompt != null) TextPrompt(tr("Buka tautan musik", "Open music link"), tr("Tautan lagu atau playlist", "Track or playlist link"), linkPrompt!!, { linkPrompt = it }, { linkPrompt = null }) { vm.shared(linkPrompt.orEmpty()); linkPrompt = null }
     sourceTrack?.let {SourcePicker(vm,it){sourceTrack=null}}
+    excerptTrack?.let { track -> TrackExcerptDialog(vm, track) { excerptTrack = null } }
+    recommendationReason?.let { reason ->
+        AlertDialog(onDismissRequest = { recommendationReason = null },
+            title = { Text(tr("Kenapa lagu ini muncul?", "Why this track?")) }, text = { Text(reason) },
+            confirmButton = { TextButton({ recommendationReason = null }) { Text(tr("Tutup", "Close")) } })
+    }
     menuTrack?.let { track -> ModalBottomSheet(onDismissRequest = { menuTrack = null }, containerColor = MaterialTheme.colorScheme.surfaceContainerLow, contentColor = MaterialTheme.colorScheme.onSurface, tonalElevation = 0.dp) {
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).navigationBarsPadding()) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -206,6 +223,38 @@ import androidx.compose.animation.core.tween
         }
         HorizontalDivider(Modifier.padding(horizontal = 20.dp), color = MaterialTheme.colorScheme.outlineVariant)
         MenuAction(Icons.Rounded.PlayArrow, tr("Putar lagu", "Play track")) { vm.playback.play(listOf(track)); menuTrack = null }
+        if (state.roomRole == null) MenuAction(Icons.Rounded.Headphones, tr("Coba dengar 15 detik", "Preview 15 seconds")) {
+            excerptTrack = track
+            menuTrack = null
+        }
+        if (!track.local) {
+            val shelf = if (tab == 0 || tab == 4) {
+                val shelves by vm.shelves.collectAsStateWithLifecycle()
+                shelves.firstOrNull { shelf -> shelf.tracks.any { it.id == track.id } }
+            } else null
+            val reason = when {
+                track.id in state.radioIds -> tr("Autoplay memilih lagu ini dari kandidat yang berkaitan dengan sesi dengar ini.", "Autoplay picked this track from candidates related to this listening session.")
+                shelf?.query?.isNotBlank() == true -> tr("Katalog sumber mengembalikan lagu ini untuk tema rak yang lo buka.", "The music catalog returned this track for the shelf you opened.")
+                shelf != null -> tr("Lagu ini muncul di rak rekomendasi berdasarkan riwayat dengarmu.", "This track appeared on the shelf based on your listening history.")
+                else -> null
+            }
+            if (reason != null) MenuAction(Icons.Rounded.Info, tr("Kenapa lagu ini muncul?", "Why this track?")) {
+                recommendationReason = reason
+                menuTrack = null
+            }
+            if (track.artist.isNotBlank()) MenuAction(Icons.Rounded.ThumbDown,
+                if (taste?.less(track) == true) tr("Pulihkan rekomendasi artis", "Restore artist recommendations")
+                else tr("Kurangi rekomendasi artis ini", "Recommend this artist less")) {
+                vm.changeTaste(track, hide = false)
+                menuTrack = null
+            }
+            MenuAction(Icons.Rounded.VisibilityOff,
+                if (taste?.hidden(track) == true) tr("Tampilkan di rekomendasi", "Show in recommendations")
+                else tr("Sembunyikan dari rekomendasi 30 hari", "Hide from recommendations for 30 days")) {
+                vm.changeTaste(track, hide = true)
+                menuTrack = null
+            }
+        }
         if (track.artist.isNotBlank() && !track.local) MenuAction(Icons.Rounded.PersonSearch,tr("Cari lagu artis ini","Find this artist")) {navigate(1);vm.discover(track.artist,SearchKind.SONGS);menuTrack=null;player=false}
         val liked = library.favorites.any { it.id == track.id }
         MenuAction(if (liked) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder, if (liked) tr("Hapus dari favorit", "Remove favorite") else tr("Simpan ke favorit", "Save favorite")) { vm.favorite(track); menuTrack = null }

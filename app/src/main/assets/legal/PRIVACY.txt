@@ -2,6 +2,8 @@
 
 Aplikasi tidak menyertakan SDK iklan atau analitik.
 
+Pengenalan lagu bersifat opsional. Saat diminta, aplikasi mengirim cuplikan pendek dari mikrofon atau berkas pilihan, beserta token API AudD pengguna, langsung ke AudD untuk identifikasi. Aplikasi tidak menyimpan token dan menghapus rekaman mikrofon sementara setelah permintaan selesai. Pemrosesan oleh AudD mengikuti kebijakan layanannya.
+
 Pencarian musik, sampul, dan pemutaran terhubung langsung ke YouTube/YouTube Music serta server medianya. Layanan tersebut menerima alamat jaringan perangkat dan metadata permintaan. Permintaan lirik mengirim judul lagu, artis, dan durasi yang tersedia ke LRCLIB dan, bila perlu atau pada pencarian manual, KuGou.
 
 Favorit, playlist, riwayat dengar, riwayat pencarian, dan pengaturan pemutaran disimpan di perangkat. Riwayat pencarian, antrean pemutaran, dan pengaturan tampilan tidak diunggah oleh sinkronisasi cloud. Ketika pengguna masuk, metadata playlist, favorit, dan riwayat dengar disinkronkan ke proyek Supabase yang dikonfigurasi. Berkas audio tidak diunggah.

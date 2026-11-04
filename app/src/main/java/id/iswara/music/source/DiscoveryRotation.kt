@@ -3,6 +3,7 @@ package id.iswara.music.source
 import id.iswara.music.model.Library
 import id.iswara.music.model.Track
 import id.iswara.music.playback.QueueRules.Recording
+import id.iswara.music.playback.ListeningTaste
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -18,6 +19,8 @@ internal class DiscoveryRotation {
         library: Library,
         duration: String = "any",
         blocked: List<Track> = emptyList(),
+        taste: ListeningTaste = ListeningTaste(),
+        discovery: Boolean = false,
     ): List<Track> {
         val range = when (duration) {
             "short" -> 30L..239L
@@ -30,7 +33,7 @@ internal class DiscoveryRotation {
         val familiarArtists = (library.favorites.take(40) + library.history.take(30))
             .mapTo(hashSetOf()) { Recording(it).artist }
         val eligible = candidates.asSequence()
-            .filter { !it.local && it.id.isNotBlank() && it.id !in blockedIds && it.duration in range }
+            .filter { !it.local && it.id.isNotBlank() && it.id !in blockedIds && it.duration in range && !taste.hidden(it) }
             .distinctBy { it.id }
             .map(::Recording)
             .filter { it.title.isNotBlank() && it.identity !in blockedKeys }
@@ -47,7 +50,8 @@ internal class DiscoveryRotation {
             }.thenByDescending { (index, recording) ->
                 val artist = recording.artist
                 2.0 / (1 + index * 0.12) +
-                    (if (artist in familiarArtists) 0.35 else 0.0) -
+                    (if (artist in familiarArtists) { if (discovery) -1.0 else 0.35 } else 0.0) -
+                    (if (taste.less(recording.track)) 2.5 else 0.0) -
                     (if (recording.identity in recentlyPlayed) 0.75 else 0.0) -
                     (if (selected.isEmpty() && recording.identity == lastOpener) 3.0 else 0.0) -
                     (if (artist == lastArtist) 1.5 else 0.0) -

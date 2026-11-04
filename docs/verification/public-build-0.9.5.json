@@ -1,0 +1,7 @@
+{
+  "version": "0.9.5",
+  "admin_build_flag": true,
+  "native_admin_retained": true,
+  "authorization_enforced_by_server": true,
+  "debuggable": false
+}

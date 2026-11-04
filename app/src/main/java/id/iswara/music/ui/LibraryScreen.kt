@@ -42,6 +42,9 @@ import id.iswara.music.model.*
             PageHeading(playlist.title, "${playlist.tracks.size} ${tr("lagu", "tracks")}")
             FlowRow(Modifier.padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button({ vm.playback.play(playlist.tracks) }, enabled = playlist.tracks.isNotEmpty()) { Icon(Icons.Rounded.PlayArrow, null); Text(tr("Putar", "Play")) }
+                OutlinedButton({ vm.playShuffled(playlist.tracks) }, enabled = playlist.tracks.isNotEmpty()) {
+                    Text(tr("Acak minim ulang", "Shuffle with fewer repeats"))
+                }
                 OutlinedButton({ rename = playlist.title }) { Text(tr("Ubah nama", "Rename")) }
                 ActionIcon(Icons.Rounded.DeleteOutline, tr("Hapus playlist", "Delete playlist"), { delete = true })
             }
@@ -66,6 +69,11 @@ import id.iswara.music.model.*
                 Icon(Icons.Rounded.ChevronRight, null)
             } }
         } else {
+            if (playlist == null && category in listOf(1, 3, 4) && all.isNotEmpty()) item {
+                OutlinedButton({ vm.playShuffled(all) }, Modifier.padding(horizontal = 20.dp)) {
+                    Text(tr("Acak minim ulang", "Shuffle with fewer repeats"))
+                }
+            }
             if (playlist == null && category == 3) item { FlowRow(Modifier.padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onScan, enabled = !loading) { Text(tr("Pindai musik", "Scan music")) }
                 OutlinedButton(onFile) { Text(tr("Pilih file", "Choose file")) }

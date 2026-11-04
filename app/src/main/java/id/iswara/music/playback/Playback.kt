@@ -88,6 +88,9 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
     private val analogProcessor = AnalogAudioProcessor()
     private val warmCache = AudioWarmCache()
     private val audioHttpFactory: DataSource.Factory
+    private val mediaFactory: DataSource.Factory
+    private var excerptPlayer: ExoPlayer? = null
+    private var shuffleJob: Job? = null
     val player: ExoPlayer
     val queueEditor by lazy { PlaybackQueue(player) }
     fun enqueue(track: Track, next: Boolean) { clearUndo(); queueEditor.enqueue(track, next, settings.allowDuplicates) }
@@ -130,6 +133,7 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
             }
             }
         }
+        mediaFactory = factory
         val buffers = DefaultLoadControl.Builder().setBufferDurationsMs(30_000, 120_000, 750, 2500).setPrioritizeTimeOverSizeThresholds(true).build()
         val renderers = object : androidx.media3.exoplayer.DefaultRenderersFactory(context) {
             override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioTrackPlaybackParams: Boolean): androidx.media3.exoplayer.audio.AudioSink =
@@ -289,12 +293,14 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
     private fun persistenceSnapshot()=roomBackup?.takeIf {it.first==activeOwner}?.second ?: snapshot()
     fun beginQueue() = beginQueue(null)
     internal fun beginQueue(context: RadioContext?) {
+        shuffleJob?.cancel()
         val bank = activeBank.value; val owner = activeOwner; val saved = snapshot()
         if (bank != null) scope.launch { savedQueues.update(owner,bank,saved) }
         activeBank.value = null; clearUndo()
         radioContext = context
         radioAdvanceFrom = null
         if (sleepAtEnd.value) sleep(0); generation++; radioStopped = false; failedInRow = 0; radioJob?.cancel(); radioSeeds.clear(); recent.clear(); radioIds.value = emptySet(); radioError.value = null; radioLoading.value = false
+        excerptPlayer?.stop()
     }
     private fun clearUndo() { undoJob?.cancel(); undo = null; undoLabel.value = null }
     fun editWithUndo(label: String, block: () -> Unit) {
@@ -347,6 +353,7 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
                 if (!force) delay(1500)
                 val queue = playbackOrder(player).mapNotNull { player.getMediaItemAt(it).track() }
                 val collection = library.snapshot(owner)
+                val taste = preferences.taste(owner).first()
                 val topArtists = try {
                     statistics.topArtistKeys(owner)
                 } catch (error: CancellationException) {
@@ -357,15 +364,19 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
                 if (token != generation || owner != activeOwner) return@launch
                 val recommendations = source.recommendQueue(
                     seed, queue, collection, settings.radioMode, recent.toList(),
-                    limit = if (context == null) 15 else 18, context = context, topArtists = topArtists,
+                    limit = if (context == null) 15 else 18, context = context, topArtists = topArtists, taste = taste,
                 )
                 if (token != generation || owner != activeOwner || owner != library.scope.value || !settings.autoplay ||
                     radioStopped || player.repeatMode != Player.REPEAT_MODE_OFF) return@launch
-                val latestQueue = playbackOrder(player).mapNotNull { player.getMediaItemAt(it).track() }
-                val additions = if (latestQueue == queue) recommendations else QueueRules.smart(
-                    seed, latestQueue, recommendations, recent.toList() + collection.history.take(8).map { it.id },
+                val currentTaste = preferences.taste(owner).first()
+                if (token != generation || owner != activeOwner || owner != library.scope.value || !settings.autoplay ||
+                    radioStopped || player.repeatMode != Player.REPEAT_MODE_OFF) return@launch
+                val latestRecommendations = recommendations.filterNot { currentTaste.hidden(it) }
+                val finalQueue = playbackOrder(player).mapNotNull { player.getMediaItemAt(it).track() }
+                val additions = if (finalQueue == queue) latestRecommendations else QueueRules.smart(
+                    seed, finalQueue, latestRecommendations, recent.toList() + collection.history.take(8).map { it.id },
                     collection.favorites, collection.history, settings.radioMode,
-                    limit = recommendations.size, topArtists = topArtists,
+                    limit = latestRecommendations.size, topArtists = topArtists, tasteRules = currentTaste.rules,
                 )
                 radioSeeds += seed.id
                 if (additions.isEmpty()) { radioError.value = "Belum ada rekomendasi baru. Coba radio lagi."; return@launch }
@@ -379,6 +390,96 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
                 }
             } catch (e: CancellationException) { throw e } catch (_: Exception) { if (token == generation) radioError.value = "Radio belum tersambung. Antreanmu tetap tersimpan." }
             finally { if (token == generation) { radioAdvanceFrom = null; radioLoading.value = false } }
+        }
+    }
+    internal fun removeHiddenRecommendations(taste: ListeningTaste) {
+        if (roomRole.value != null) return
+        val order = playbackOrder(player)
+        val after = order.indexOf(player.currentMediaItemIndex)
+        val counts = order.groupingBy { player.getMediaItemAt(it).mediaId }.eachCount()
+        order.drop(after + 1).filter { index ->
+            val item = player.getMediaItemAt(index)
+            item.mediaId in radioIds.value && counts[item.mediaId] == 1 && item.track()?.let { taste.hidden(it) } == true
+        }.sortedDescending().forEach(player::removeMediaItem)
+    }
+
+    internal fun toggleFreshShuffle() {
+        if (shuffleJob?.isActive == true) {
+            shuffleJob?.cancel()
+            return
+        }
+        if (player.shuffleModeEnabled) {
+            player.shuffleModeEnabled = false
+            return
+        }
+        val owner = activeOwner
+        val token = generation
+        shuffleJob = scope.launch {
+            val history = try {
+                library.snapshot(owner).history
+            } catch (error: CancellationException) {
+                throw error
+            } catch (_: Exception) {
+                emptyList()
+            }
+            if (owner != activeOwner || owner != library.scope.value || token != generation || roomRole.value != null) return@launch
+            val current = player.currentMediaItemIndex
+            val upcoming = (0 until player.mediaItemCount).filter { it != current }
+            val tracks = upcoming.map { player.getMediaItemAt(it).track() }
+            if (tracks.all { it != null }) {
+                val artist = QueueRules.artistKey(player.currentMediaItem?.track()?.artist.orEmpty())
+                val order = listOf(current).filter { it in 0 until player.mediaItemCount } +
+                    freshShuffleOrder(tracks.filterNotNull(), history, artist).map { upcoming[it] }
+                player.setShuffleOrder(androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder(order.toIntArray(), System.nanoTime()))
+            }
+            player.shuffleModeEnabled = true
+        }
+    }
+
+    internal suspend fun previewExcerpt(track: Track, onReady: () -> Unit) {
+        check(roomRole.value == null) { "Keluar dari room untuk mencoba cuplikan." }
+        check(excerptPlayer == null) { "Cuplikan masih berjalan." }
+        val resume = player.playWhenReady
+        val token = generation
+        val current = player.currentMediaItem
+        val position = player.currentPosition
+        val preview = ExoPlayer.Builder(context).setMediaSourceFactory(DefaultMediaSourceFactory(mediaFactory)).build()
+        val done = CompletableDeferred<Unit>()
+        val mainListener = object : Player.Listener {
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                if (playWhenReady) done.complete(Unit)
+            }
+            override fun onPositionDiscontinuity(oldPosition: Player.PositionInfo, newPosition: Player.PositionInfo, reason: Int) {
+                done.complete(Unit)
+            }
+        }
+        excerptPlayer = preview
+        player.pause()
+        player.addListener(mainListener)
+        try {
+            preview.setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MUSIC).build(), true)
+            preview.addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    when (playbackState) {
+                        Player.STATE_READY -> onReady()
+                        Player.STATE_ENDED, Player.STATE_IDLE -> done.complete(Unit)
+                    }
+                }
+                override fun onPlayerError(error: PlaybackException) { done.completeExceptionally(error) }
+            })
+            preview.setMediaItem(track.mediaItem().buildUpon()
+                .setClippingConfiguration(MediaItem.ClippingConfiguration.Builder().setEndPositionMs(15_000).build()).build())
+            preview.prepare()
+            preview.play()
+            withTimeout(28_000) { done.await() }
+        } finally {
+            player.removeListener(mainListener)
+            if (excerptPlayer === preview) {
+                excerptPlayer = null
+                preview.release()
+                if (resume && token == generation && current == player.currentMediaItem &&
+                    kotlin.math.abs(player.currentPosition - position) < 1000 && roomRole.value == null) player.play()
+            }
         }
     }
     private fun prepareNext() {
@@ -412,7 +513,7 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
     fun sleepAfterTrack() { sleep(0); if (player.currentMediaItem != null) { sleepAtEnd.value = true; player.pauseAtEndOfMediaItems = true } }
     fun invalidateStream() { if (player.playerError?.let(PlaybackFailures::recovery) == Recovery.REFRESH_URL) player.currentMediaItem?.track()?.let { streams.invalidate(it) }; retried = null; audioRetried = null }
     fun reloadSource(track:Track){streams.invalidate(track);warmCache.clear();prefetchJob?.cancel();prefetchKey=null;retried=null;audioRetried=null;retryJob?.cancel()}
-    fun release() { val owner = activeOwner; val saved = persistenceSnapshot(); val bank = activeBank.value; timer?.cancel(); retryJob?.cancel(); radioJob?.cancel(); prefetchJob?.cancel(); undoJob?.cancel(); saveJob?.cancel(); warmCache.clear(); effects.release(); scope.launch { try { preferences.saveQueue(owner, saved); if (bank != null) savedQueues.update(owner,bank,saved) } finally { scope.cancel() } }; player.release() }
+    fun release() { val owner = activeOwner; val saved = persistenceSnapshot(); val bank = activeBank.value; timer?.cancel(); retryJob?.cancel(); radioJob?.cancel(); prefetchJob?.cancel(); undoJob?.cancel(); saveJob?.cancel(); shuffleJob?.cancel(); excerptPlayer?.let { excerptPlayer = null; it.stop(); it.release() }; warmCache.clear(); effects.release(); scope.launch { try { preferences.saveQueue(owner, saved); if (bank != null) savedQueues.update(owner,bank,saved) } finally { scope.cancel() } }; player.release() }
 }
 
 @AndroidEntryPoint
@@ -495,12 +596,13 @@ class PlaybackConnection @Inject constructor(@ApplicationContext private val con
     fun playFromDiscovery(track: Track, query: String, candidates: List<Track>) {
         playQueue(listOf(track), 0, query.takeIf { it.isNotBlank() }?.let { RadioContext(it, candidates.take(40)) })
     }
-    private fun playQueue(tracks: List<Track>, index: Int, context: RadioContext?) {
+    internal fun playAt(track: Track, position: Long) = playQueue(listOf(track), 0, null, position)
+    private fun playQueue(tracks: List<Track>, index: Int, context: RadioContext?, position: Long = 0) {
         if (tracks.isEmpty()) return
         onRoomPersonalPlay?.invoke()
         command {
             engine.beginQueue(context)
-            it.setMediaItems(tracks.map(Track::mediaItem), index.coerceIn(tracks.indices), 0)
+            it.setMediaItems(tracks.map(Track::mediaItem), index.coerceIn(tracks.indices), position.coerceAtLeast(0))
             it.prepare()
             it.play()
         }
@@ -516,7 +618,9 @@ class PlaybackConnection @Inject constructor(@ApplicationContext private val con
     fun next() = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; if (it.hasNextMediaItem()) { it.seekToNextMediaItem(); if (it.playbackState == Player.STATE_IDLE) it.prepare() } else engine.nextFromRadio() }
     fun previous() = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; if (it.currentPosition > 3000) it.seekTo(0) else if (it.hasPreviousMediaItem()) it.seekToPreviousMediaItem() }
     fun seek(position: Long) = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; it.seekTo(position) }
-    fun shuffle() = command { if(engine.roomRole.value!=null)return@command;roomControl.value++; it.shuffleModeEnabled = !it.shuffleModeEnabled }
+    fun shuffle() = command { if(engine.roomRole.value!=null)return@command;roomControl.value++; engine.toggleFreshShuffle() }
+    internal fun removeHiddenRecommendations(taste: ListeningTaste) = engine.removeHiddenRecommendations(taste)
+    internal suspend fun previewExcerpt(track: Track, onReady: () -> Unit) = engine.previewExcerpt(track, onReady)
     fun repeat() = command { if(engine.roomRole.value!=null)return@command;roomControl.value++; it.repeatMode = when (it.repeatMode) { Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL; Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE; else -> Player.REPEAT_MODE_OFF } }
     fun enqueue(track: Track, next: Boolean) { onRoomEnqueue?.let {it(track,next);return};command { engine.enqueue(track, next) } }
     fun move(from: Int, to: Int) = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; engine.moveQueue(from, to) }

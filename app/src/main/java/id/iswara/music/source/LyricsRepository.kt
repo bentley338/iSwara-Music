@@ -25,6 +25,14 @@ data class LyricCandidate(val id: String, val title: String, val artist: String,
     val synced: String = "", val plain: String = "", val instrumental: Boolean = false, val accessKey: String = "")
 
 object LyricsRules {
+    private val credits = Regex("""[\s(\[]+(?:feat\.?|ft\.?|featuring)\s+[^)\]]+[)\]]?""", RegexOption.IGNORE_CASE)
+    private val releaseSuffix = Regex("""\s+[-\u2013\u2014|]\s+(?:official\s+)?(?:audio|(?:music\s+)?video|lyrics?|visualizer)\s*$""", RegexOption.IGNORE_CASE)
+    private val phraseSeparators = Regex("""[^\p{L}\p{N}\p{M}]+""")
+    fun lookupTitle(track: Track) = cleanTitle(track.title, track.artist).replace(releaseSuffix, "").replace(credits, "").trim()
+    fun primaryArtist(artist: String) = cleanArtist(artist).replace(credits, "").substringBefore(" & ").substringBefore(", ").trim()
+    fun phrase(value: String) = java.text.Normalizer.normalize(value, java.text.Normalizer.Form.NFKC)
+        .lowercase(java.util.Locale.ROOT).replace(phraseSeparators, " ").trim()
+
     fun cleanTitle(title: String, artist: String): String = title
         .replace(Regex("(?i)\\([^)]*(official|music video|lyrics?|visualizer|\\bhd\\b|\\b4k\\b)[^)]*\\)"), "")
         .replace(Regex("(?i)\\[[^]]*(official|music video|lyrics?|visualizer|\\bhd\\b|\\b4k\\b)[^]]*]"), "")
@@ -38,17 +46,30 @@ object LyricsRules {
         return x.intersect(y).size.toDouble() / x.union(y).size
     }
     fun score(track: Track, candidate: LyricCandidate): Double {
-        val title = cleanTitle(track.title, track.artist)
+        val title = lookupTitle(track)
         val artist = cleanArtist(track.artist)
-        val versions = listOf("live", "remix", "acoustic", "instrumental", "karaoke", "cover", "sped", "slowed")
-        if (versions.any { normalize(title).split(' ').contains(it) != normalize(candidate.title).split(' ').contains(it) }) return 0.0
+        val versions = listOf("live", "remix", "acoustic", "instrumental", "karaoke", "cover", "sped", "slowed", "nightcore")
+        val originalVersion = normalize(track.title).replace("akustik", "acoustic").split(' ')
+        val candidateVersion = normalize(candidate.title).replace("akustik", "acoustic").split(' ')
+        if (versions.any { (it in originalVersion) != (it in candidateVersion) }) return 0.0
         if (track.duration > 0 && candidate.duration > 0 && kotlin.math.abs(track.duration - candidate.duration) > maxOf(10, track.duration * 6 / 100)) return 0.0
-        val titleScore = similarity(title, candidate.title)
-        val artistScore = similarity(artist, candidate.artist)
+        val titleScore = similarity(title, lookupTitle(track.copy(title = candidate.title, artist = candidate.artist)))
+        val artistScore = maxOf(similarity(artist, candidate.artist), similarity(primaryArtist(artist), primaryArtist(candidate.artist)))
         if (titleScore < .65 || artistScore < .4) return 0.0
         return titleScore * .7 + artistScore * .3
     }
+
+    fun fitTiming(track: Track, candidate: LyricCandidate, lyrics: Lyrics): Lyrics {
+        if (lyrics.lines.isEmpty() || track.duration <= 0) return lyrics
+        val tooLong = lyrics.lines.last().time > (track.duration + 2) * 1000
+        val differentLength = candidate.duration > 0 && kotlin.math.abs(track.duration - candidate.duration) > 4
+        return if (tooLong || differentLength) lyrics.copy(
+            lines = emptyList(), plain = lyrics.plain.ifBlank { lyrics.lines.joinToString("\n") { it.text } },
+        ) else lyrics
+    }
 }
+
+internal data class LyricHit(val track: Track, val excerpt: String, val position: Long?)
 
 @Singleton class LyricsRepository @Inject constructor(private val database: IswaraDatabase, private val library: LibraryRepository) {
     private val client = OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).callTimeout(8, TimeUnit.SECONDS).build()
@@ -59,6 +80,7 @@ object LyricsRules {
     private val missing=ConcurrentHashMap<String,Long>()
     private val dao get() = database.experience()
     private fun metadata(track: Track) = "${track.title}\n${track.artist}\n${track.duration}"
+    private fun cachedTrack(row: LyricsCacheRow) = runCatching { AppJson.decodeFromString<Track>(row.metadata) }.getOrNull()
     private fun JsonObject.text(key: String) = this[key]?.jsonPrimitive?.contentOrNull.orEmpty()
     private fun request(host: String, path: String, params: Map<String, String>): JsonElement {
         val url = HttpUrl.Builder().scheme("https").host(host).addPathSegments(path).apply { params.forEach { (k,v) -> addQueryParameter(k,v) } }.build()
@@ -77,13 +99,22 @@ object LyricsRules {
     }
     private fun fromLrcJson(value: JsonObject): Lyrics = Lyrics(MusicRules.parseLyrics(value.text("syncedLyrics")), value.text("plainLyrics"), value["instrumental"]?.jsonPrimitive?.booleanOrNull == true, "lrclib")
     private fun exact(track: Track): Lyrics? {
-        val params = mutableMapOf("track_name" to LyricsRules.cleanTitle(track.title, track.artist), "artist_name" to LyricsRules.cleanArtist(track.artist))
+        val params = mutableMapOf("track_name" to LyricsRules.lookupTitle(track), "artist_name" to LyricsRules.cleanArtist(track.artist))
         if (track.duration > 0) params["duration"] = track.duration.toString()
-        return (request("lrclib.net", "api/get", params) as? JsonObject)?.let(::fromLrcJson)?.takeIf { it.available }
+        val value = request("lrclib.net", "api/get", params) as? JsonObject ?: return null
+        val candidate = lrcCandidate(value)
+        if (LyricsRules.score(track, candidate) < .82) return null
+        return LyricsRules.fitTiming(track, candidate, fromLrcJson(value)).takeIf { it.available }
     }
-    private fun searchLrc(query: String): List<LyricCandidate> = (request("lrclib.net", "api/search", mapOf("q" to query)) as? JsonArray).orEmpty().take(15).mapNotNull { element ->
+    private fun lrcCandidate(value: JsonObject) = LyricCandidate(
+        "lrclib:${value.text("id")}", value.text("trackName"), value.text("artistName"),
+        value["duration"]?.jsonPrimitive?.doubleOrNull?.toLong() ?: 0, "lrclib", value.text("syncedLyrics"),
+        value.text("plainLyrics"), value["instrumental"]?.jsonPrimitive?.booleanOrNull == true,
+    )
+    private fun searchLrc(query: String): List<LyricCandidate> = searchLrc(mapOf("q" to query))
+    private fun searchLrc(params: Map<String, String>): List<LyricCandidate> = (request("lrclib.net", "api/search", params) as? JsonArray).orEmpty().take(20).mapNotNull { element ->
         val value = element as? JsonObject ?: return@mapNotNull null
-        LyricCandidate("lrclib:${value.text("id")}", value.text("trackName"), value.text("artistName"), value["duration"]?.jsonPrimitive?.doubleOrNull?.toLong() ?: 0, "lrclib", value.text("syncedLyrics"), value.text("plainLyrics"), value["instrumental"]?.jsonPrimitive?.booleanOrNull == true)
+        lrcCandidate(value)
     }
     private fun searchKugou(query: String): List<LyricCandidate> {
         val value = request("lyrics.kugou.com", "search", mapOf("ver" to "1", "man" to "yes", "keyword" to query)) as? JsonObject ?: return emptyList()
@@ -125,17 +156,37 @@ object LyricsRules {
     suspend fun get(track: Track, refresh: Boolean = false): Lyrics {
         val owner = library.scope.value
         val cached = withContext(Dispatchers.IO) { dao.lyrics(owner, track.id) }
-        if (cached != null && (cached.manual || (!refresh && cached.metadata == metadata(track) && System.currentTimeMillis() - cached.modified < 30L * 86400_000)))
+        if (cached != null && (cached.manual || (!refresh && (cachedTrack(cached)?.let(::metadata) ?: cached.metadata) == metadata(track) && System.currentTimeMillis() - cached.modified < 30L * 86400_000)))
             runCatching { AppJson.decodeFromString<Lyrics>(cached.payload) }.getOrNull()?.let { return it }
         val key = "$owner:${track.id}:${metadata(track)}"
         if(!refresh && (missing[key] ?: 0)>System.currentTimeMillis())return Lyrics()
         val task = pending.computeIfAbsent(key) { scope.async(start = CoroutineStart.LAZY) {
             val direct = optional<Lyrics?>(null) { exact(track) }
             val result = direct?.takeIf {it.lines.isNotEmpty() || it.instrumental} ?: run {
-                val query = "${LyricsRules.cleanTitle(track.title, track.artist)} ${LyricsRules.cleanArtist(track.artist)}"
-                val candidates = search(query).map { it to LyricsRules.score(track,it) }.filter { it.second >= .82 }.sortedWith(compareByDescending<Pair<LyricCandidate,Double>> {it.second}.thenByDescending {it.first.synced.isNotBlank()})
+                val title = LyricsRules.lookupTitle(track)
+                val artist = LyricsRules.primaryArtist(track.artist)
+                val query = "$title $artist".trim()
+                val rows = coroutineScope {
+                    val allProviders = async { if (query.length >= 2) search(query) else emptyList() }
+                    val structured = async {
+                        if (title.isBlank()) emptyList() else optional(emptyList()) {
+                            searchLrc(mapOf("track_name" to title, "artist_name" to artist))
+                        }
+                    }
+                    (allProviders.await() + structured.await()).distinctBy { it.id }
+                }
+                val candidates = rows.map { it to LyricsRules.score(track,it) }.filter { it.second >= .82 }
+                    .sortedWith(compareByDescending<Pair<LyricCandidate,Double>> {it.second}
+                        .thenByDescending {it.first.synced.isNotBlank()}
+                        .thenBy { if (track.duration > 0 && it.first.duration > 0) kotlin.math.abs(track.duration - it.first.duration) else Long.MAX_VALUE })
                 var found: Lyrics? = null
-                for ((candidate, _) in candidates.take(5)) { currentCoroutineContext().ensureActive(); val fetched = optional<Lyrics?>(null) { fetch(candidate) }; if(fetched?.available==true && found==null)found=fetched;if(fetched?.lines?.isNotEmpty()==true || fetched?.instrumental==true){found=fetched;break} }
+                withTimeoutOrNull(12_000) {
+                    for ((candidate, _) in candidates.take(5)) {
+                        val fetched = optional<Lyrics?>(null) { LyricsRules.fitTiming(track, candidate, fetch(candidate)) }
+                        if (fetched?.available == true && !fetched.instrumental && found == null) found = fetched
+                        if (fetched?.lines?.isNotEmpty() == true) { found = fetched; break }
+                    }
+                }
                 found ?: direct ?: Lyrics()
             }
             currentCoroutineContext().ensureActive()
@@ -150,8 +201,23 @@ object LyricsRules {
         if (owner in deletedOwners) return@withLock
         val old = dao.lyrics(owner, track.id)
         if (old?.manual == true && !manual) return@withLock
-        dao.saveLyrics(LyricsCacheRow(owner, track.id, metadata(track), AppJson.encodeToString(lyrics), manual, System.currentTimeMillis()))
+        dao.saveLyrics(LyricsCacheRow(owner, track.id, AppJson.encodeToString(track), AppJson.encodeToString(lyrics), manual, System.currentTimeMillis()))
         dao.pruneLyrics(owner)
+    }
+    internal suspend fun findPhrase(query: String, tracks: List<Track>): List<LyricHit> = withContext(Dispatchers.IO) {
+        val owner = library.scope.value
+        val needle = LyricsRules.phrase(query.take(160))
+        if (needle.length < 3) return@withContext emptyList()
+        val known = tracks.associateBy { it.id }
+        val results = dao.recentLyrics(owner).asSequence().mapNotNull { row ->
+            val track = known[row.id] ?: cachedTrack(row) ?: return@mapNotNull null
+            val lyrics = runCatching { AppJson.decodeFromString<Lyrics>(row.payload) }.getOrNull() ?: return@mapNotNull null
+            val timed = lyrics.lines.firstOrNull { needle in LyricsRules.phrase(it.text) }
+            val text = timed?.text ?: lyrics.plain.lineSequence().firstOrNull { needle in LyricsRules.phrase(it) }
+                ?: return@mapNotNull null
+            LyricHit(track, text, timed?.time)
+        }.take(30).toList()
+        if (owner == library.scope.value) results else emptyList()
     }
     suspend fun choose(track: Track, candidate: LyricCandidate, owner: String = library.scope.value): Lyrics = withContext(Dispatchers.IO) {
         val result = fetch(candidate)

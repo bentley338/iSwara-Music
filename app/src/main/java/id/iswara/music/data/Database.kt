@@ -67,6 +67,7 @@ data class LyricsCacheRow(val owner: String, val id: String, val metadata: Strin
     @Query("DELETE FROM saved_queues WHERE owner = :owner AND id = :id") suspend fun deleteQueue(owner: String, id: String)
     @Query("DELETE FROM saved_queues WHERE owner = :owner") suspend fun clearQueues(owner: String)
     @Query("SELECT * FROM lyrics_cache WHERE owner = :owner AND id = :id") suspend fun lyrics(owner: String, id: String): LyricsCacheRow?
+    @Query("SELECT * FROM lyrics_cache WHERE owner = :owner ORDER BY modified DESC LIMIT 500") suspend fun recentLyrics(owner: String): List<LyricsCacheRow>
     @Upsert suspend fun saveLyrics(row: LyricsCacheRow)
     @Query("DELETE FROM lyrics_cache WHERE owner = :owner AND id = :id") suspend fun deleteLyrics(owner: String, id: String)
     @Query("DELETE FROM lyrics_cache WHERE owner = :owner") suspend fun clearLyrics(owner: String)

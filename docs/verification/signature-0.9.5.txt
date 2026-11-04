@@ -1,0 +1,17 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=iSwara Local Release, O=iSwara, C=ID
+Signer #1 certificate SHA-256 digest: 6903592161d5a611c0748f4d9b38802b879053927e8c4b84ca7bd64f5c901dbe
+Signer #1 certificate SHA-1 digest: 69a4c242752cae06a6651a418b133d830e6e1ead
+Signer #1 certificate MD5 digest: e605341447deabad69b7c02c29db1b31
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: a94248b2276331a93bcd788a3ef9a18173294c6f8e390dedf2027cc3b14eb801
+Signer #1 public key SHA-1 digest: 7bbdb411a76fb6e88dd4f1c2e685a815c9032215
+Signer #1 public key MD5 digest: 9417155303cb300e952eceeb1cabc3e6

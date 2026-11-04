@@ -39,7 +39,11 @@ val musicTopics = listOf(
 )
 
 @Composable fun ExploreScreen(vm: MusicViewModel, search: (String, SearchKind) -> Unit, mix: () -> Unit, onMenu: (Track) -> Unit) {
-    val shelves = vm.shelves.collectAsStateWithLifecycle().value
+    val owner = vm.libraryRepository.scope.collectAsStateWithLifecycle().value
+    val taste = vm.taste.collectAsStateWithLifecycle().value
+    val shelves = vm.shelves.collectAsStateWithLifecycle().value.map { shelf ->
+        if (taste.first == owner) shelf.copy(tracks = shelf.tracks.filterNot { taste.second.hidden(it) }.sortedBy { taste.second.less(it) }) else shelf
+    }
     var group by rememberSaveable { mutableStateOf("all") }
     val english = LocalEnglish.current
     val groups = listOf("genre" to tr("Cari warna musikmu", "Explore genres"), "mood" to tr("Untuk setiap suasana", "For every mood"), "decade" to tr("Putar kembali waktunya", "Turn back time"))
@@ -88,6 +92,7 @@ val musicTopics = listOf(
 @Composable fun MixBuilderScreen(vm: MusicViewModel, back: () -> Unit, onMenu: (Track) -> Unit) {
     val owner = vm.libraryRepository.scope.collectAsStateWithLifecycle().value
     val snapshot = vm.mixPreview.collectAsStateWithLifecycle().value
+    val pinned = vm.mixPinned.collectAsStateWithLifecycle().value
     val result = if (snapshot.owner == owner || snapshot.owner.isEmpty()) snapshot else MixPreview()
     val player = vm.playback.state.collectAsStateWithLifecycle().value
     var prompt by rememberSaveable(owner) { mutableStateOf("") }
@@ -109,7 +114,7 @@ val musicTopics = listOf(
             SettingChoice(tr("Durasi per lagu", "Track duration"), duration, listOf("any" to tr("Bebas", "Any"), "short" to "< 4 ${tr("menit", "min")}", "long" to "4–10 ${tr("menit", "min")}")) { duration = it }
             Button({ vm.previewMix(prompt, size, duration) }, Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp), enabled = prompt.trim().length >= 3 && !result.loading) {
                 if (result.loading) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(8.dp)) }
-                Text(if (result.loading) tr("Menyusun mix…", "Building mix…") else tr("Susun mix", "Build mix"))
+                Text(if (result.loading) tr("Menyusun mix…", "Building mix…") else if (result.tracks.isNotEmpty()) tr("Susun ulang", "Build again") else tr("Susun mix", "Build mix"))
             }
             if (result.loading) TextButton(vm::cancelMix, Modifier.padding(horizontal = 12.dp)) { Text(tr("Batalkan pencarian mix", "Cancel mix search")) }
         }
@@ -122,14 +127,28 @@ val musicTopics = listOf(
                 Text("${result.tracks.size} ${tr("lagu", "tracks")} · ${result.tracks.sumOf { it.duration } / 60} ${tr("menit", "min")}", Modifier.padding(horizontal = 20.dp, vertical = 8.dp))
                 FlowRow(Modifier.padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button({ vm.playback.play(result.tracks) }, enabled = !result.loading && player.roomRole == null) { Icon(Icons.Rounded.PlayArrow, null); Text(tr("Putar mix", "Play mix")) }
-                    OutlinedButton({ vm.playback.play(result.tracks.shuffled()) }, enabled = !result.loading && player.roomRole == null) { Icon(Icons.Rounded.Shuffle, null); Text(tr("Acak", "Shuffle")) }
+                    OutlinedButton({ vm.playShuffled(result.tracks) }, enabled = !result.loading && player.roomRole == null) { Icon(Icons.Rounded.Shuffle, null); Text(tr("Acak", "Shuffle")) }
                     OutlinedButton({ name = result.prompt.take(100) }, enabled = !result.loading) { Text(tr("Simpan playlist", "Save playlist")) }
+                }
+                FlowRow(Modifier.padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val relaxed = tr("santai", "relaxed")
+                    TextButton({ vm.previewMix(prompt, size, duration, relaxed) }, enabled = !result.loading) {
+                        Text(tr("Lebih santai", "More relaxed"))
+                    }
+                    TextButton({ vm.previewMix(prompt, size, duration, discovery = true) }, enabled = !result.loading) {
+                        Text(tr("Lebih banyak artis baru", "More new artists"))
+                    }
                 }
                 if (player.roomRole != null) Text(tr("Keluar room untuk memutar mix pribadi.", "Leave the room to play a personal mix."), Modifier.padding(20.dp), style = MaterialTheme.typography.bodySmall)
             }
             items(result.tracks, key = { it.id }) { track ->
                 TrackRow(track, { if (player.roomRole == null) vm.playback.play(result.tracks, result.tracks.indexOf(track)) }, { onMenu(track) }, active = track.id == player.track?.id, enabled = player.roomRole == null)
-                TextButton({ vm.removeMixTrack(track.id) }, Modifier.padding(start = 72.dp), enabled = !result.loading) { Text(tr("Keluarkan dari mix", "Remove from mix")) }
+                FlowRow(Modifier.padding(horizontal = 20.dp)) {
+                    TextButton({ vm.pinMixTrack(track.id) }, enabled = !result.loading) {
+                        Text(if (track.id in pinned) tr("Lepas sematan", "Unpin track") else tr("Pertahankan", "Keep track"))
+                    }
+                    TextButton({ vm.removeMixTrack(track.id) }, enabled = !result.loading) { Text(tr("Keluarkan dari mix", "Remove from mix")) }
+                }
             }
         }
     }

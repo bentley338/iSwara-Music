@@ -53,9 +53,11 @@ object QueueRules {
         mode: String = "balanced",
         limit: Int = 15,
         topArtists: Set<String> = emptySet(),
+        tasteRules: Map<String, Long> = emptyMap(),
     ): List<Track> {
         if (limit <= 0) return emptyList()
         val origin = Recording(seed)
+        val taste = ListeningTaste(tasteRules)
         val recentIds = recent.toHashSet()
         val blocked = existing + seed + history.filter { it.id in recentIds }
         val recordings = blocked.map(::Recording)
@@ -69,7 +71,7 @@ object QueueRules {
         val lastArtists = (existing.takeLast(2).ifEmpty { listOf(seed) }).map { artistKey(it.artist) }.toMutableList()
         val counts = mutableMapOf<String, Int>()
         val candidates = related.asSequence().distinctBy { it.id }
-            .filter { !it.local && it.id !in blockedIds && it.duration in 30..1800 }
+            .filter { !it.local && it.id !in blockedIds && it.duration in 30..1800 && !taste.hidden(it) }
             .map(::Recording)
             .filter { it.title.isNotBlank() && it.title != origin.title && it.identity !in used }
             .filter { origin.variants.containsAll(it.variants) && (it.variants.isEmpty() || it.title !in usedTitles) }
@@ -83,7 +85,8 @@ object QueueRules {
                     else -> familiar * 0.4 + if (known) 0.0 else 0.2
                 }
                 val listeningBoost = if (mode != "discovery" && recording.artist in topArtists) 0.35 else 0.0
-                recording to (2.0 / (1 + index * 0.12) + preference + listeningBoost)
+                val reduceArtist = if (taste.less(recording.track)) 2.5 else 0.0
+                recording to (2.0 / (1 + index * 0.12) + preference + listeningBoost - reduceArtist)
             }.toMutableList()
         val result = mutableListOf<Track>()
         repeat(limit.coerceAtMost(50)) {

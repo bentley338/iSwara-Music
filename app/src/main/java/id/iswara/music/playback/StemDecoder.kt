@@ -2,19 +2,30 @@ package id.iswara.music.playback
 
 import android.content.Context
 import android.media.*
+import android.net.Uri
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.*
 
 object StemDecoder {
-    fun decode(context:Context,input:File,output:File,checkpoint:()->Unit):Long {
+    fun decode(context:Context,input:File,output:File,checkpoint:()->Unit):Long =
+        decode(output, 0, checkpoint) { it.setDataSource(input.absolutePath) }
+
+    internal fun clip(context: Context, input: Uri, output: File, checkpoint: () -> Unit): Long =
+        decode(output, StemDsp.RATE * 10L, checkpoint) { it.setDataSource(context, input, null) }
+
+    private fun decode(output: File, clipFrames: Long, checkpoint: () -> Unit, open: (MediaExtractor) -> Unit): Long {
         val extractor=MediaExtractor();var decoder:MediaCodec?=null
         try {
-            extractor.setDataSource(input.absolutePath)
+            open(extractor)
             val index=(0 until extractor.trackCount).firstOrNull {extractor.getTrackFormat(it).getString(MediaFormat.KEY_MIME)?.startsWith("audio/")==true} ?: error("Berkas tidak mempunyai trek audio.")
             extractor.selectTrack(index);val format=extractor.getTrackFormat(index)
-            if(format.containsKey(MediaFormat.KEY_DURATION))require(format.getLong(MediaFormat.KEY_DURATION)<=480_000_000L){"Pemisahan maksimal 8 menit per lagu."}
+            if(format.containsKey(MediaFormat.KEY_DURATION)) {
+                val duration = format.getLong(MediaFormat.KEY_DURATION)
+                if (clipFrames == 0L) require(duration <= 480_000_000L) { "Pemisahan maksimal 8 menit per lagu." }
+                else if (duration >= 28_000_000L) extractor.seekTo(15_000_000L, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
+            }
             format.setInteger(MediaFormat.KEY_PCM_ENCODING,AudioFormat.ENCODING_PCM_16BIT)
             val codec=MediaCodec.createDecoderByType(format.getString(MediaFormat.KEY_MIME)!!);decoder=codec
             codec.configure(format,null,null,0);codec.start()
@@ -44,7 +55,7 @@ object StemDecoder {
                             val width=if(encoding==AudioFormat.ENCODING_PCM_FLOAT)4 else 2
                             require(encoding==AudioFormat.ENCODING_PCM_FLOAT || encoding==AudioFormat.ENCODING_PCM_16BIT){"Decoder belum mendukung PCM ini."}
                             val frame=FloatArray(channels)
-                            while(pcm.remaining()>=channels*width){for(ch in frame.indices)frame[ch]=if(width==4)pcm.float.takeIf {it.isFinite()} ?: 0f else pcm.short/32768f
+                            while(pcm.remaining()>=channels*width && (clipFrames == 0L || samples.frames < clipFrames)){for(ch in frame.indices)frame[ch]=if(width==4)pcm.float.takeIf {it.isFinite()} ?: 0f else pcm.short/32768f
                                 var left=frame[0];var right=frame.getOrElse(1){left}
                                 if(channels>2){left+=frame[2]*.707f;right+=frame[2]*.707f;var scale=1.707f
                                     if(channels>3){left+=frame[3]*.3f;right+=frame[3]*.3f;scale+=.3f}
@@ -53,6 +64,7 @@ object StemDecoder {
                                     left/=scale;right/=scale
                                 };samples.add(left,right)
                             };last=android.os.SystemClock.elapsedRealtime()
+                            if (clipFrames > 0L && samples.frames >= clipFrames) done = true
                         }} finally {codec.releaseOutputBuffer(slot,false)}
                         if(info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM!=0)done=true
                     }

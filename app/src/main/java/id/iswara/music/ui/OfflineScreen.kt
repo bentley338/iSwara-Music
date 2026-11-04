@@ -75,7 +75,7 @@ object OfflineRules {
                 if (selecting) TextButton({ selected = if (shown.all { it.track.id in selected }) selected - shown.map { it.track.id }.toSet() else selected + shown.map { it.track.id } }) { Text(tr("Pilih semua hasil", "Select all results")) }
                 else {
                     Button({ vm.playback.play(tracks) }, enabled = tracks.isNotEmpty() && player.roomRole == null) { Text(tr("Putar hasil", "Play results")) }
-                    OutlinedButton({ vm.playback.play(tracks.shuffled()) }, enabled = tracks.isNotEmpty() && player.roomRole == null) { Text(tr("Acak", "Shuffle")) }
+                    OutlinedButton({ vm.playShuffled(tracks) }, enabled = tracks.isNotEmpty() && player.roomRole == null) { Text(tr("Acak", "Shuffle")) }
                 }
             }
             if (selecting && chosen.isNotEmpty()) {

@@ -8,6 +8,8 @@ import id.iswara.music.cloud.*
 import id.iswara.music.data.*
 import id.iswara.music.model.*
 import id.iswara.music.playback.PlaybackConnection
+import id.iswara.music.playback.ListeningTaste
+import id.iswara.music.playback.freshShuffleOrder
 import id.iswara.music.playback.recommendQueue
 import id.iswara.music.source.*
 import kotlinx.coroutines.*
@@ -19,6 +21,7 @@ import javax.inject.Inject
 data class Shelf(val title: String, val query: String, val tracks: List<Track> = emptyList(), val loading: Boolean = true, val error: String? = null)
 data class SearchState(val query: String = "", val kind: SearchKind = SearchKind.SONGS, val items: List<CatalogItem> = emptyList(), val next: String? = null, val loading: Boolean = false, val error: String? = null)
 data class MixPreview(val prompt: String = "", val tracks: List<Track> = emptyList(), val loading: Boolean = false, val error: String? = null, val owner: String = "")
+internal data class TasteUndo(val owner: String, val key: String, val previous: Long?)
 data class QueuePreview(val tracks:List<Track> = emptyList(),val loading:Boolean=false,val error:String?=null,val owner:String="",val seed:String="")
 data class DetailState(val title: String, val url: String, val items: List<CatalogItem> = emptyList(), val next: String? = null, val loading: Boolean = true, val error: String? = null, val artwork: String = "", val subtitle: String = "", val kind: String = "playlist")
 
@@ -62,6 +65,12 @@ class MusicViewModel @Inject constructor(
     suspend fun roomSearch(query:String)=source.search(query).items.mapNotNull {it.track}.filter(TogetherRules::valid).take(20)
     val mixBusy = MutableStateFlow(false)
     val mixPreview = MutableStateFlow(MixPreview())
+    val mixPinned = MutableStateFlow<Set<String>>(emptySet())
+    internal val tasteUndo = MutableStateFlow<TasteUndo?>(null)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    internal val taste = libraryRepository.scope.flatMapLatest { owner ->
+        preferences.taste(owner).map { owner to it }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, "" to ListeningTaste())
     private var mixPreviewJob: Job? = null
     private var moodMixJob: Job? = null
     private var mixRotation = DiscoveryRotation()
@@ -89,8 +98,16 @@ class MusicViewModel @Inject constructor(
         queuePreviewJob=viewModelScope.launch {try {
             val state = playback.state.value
             val queue = state.order.mapNotNull { state.queue.getOrNull(it) }.ifEmpty { state.queue }
-            val tracks = withTimeout(25_000) { source.recommendQueue(track, queue, library.value, settings.value.radioMode, limit = 25) }
-            if(owner==libraryRepository.scope.value)queuePreview.value=QueuePreview(tracks,owner=owner,seed=track.id)
+            val tracks = withTimeout(25_000) {
+                source.recommendQueue(track, queue, library.value, settings.value.radioMode, limit = 25,
+                    taste = preferences.taste(owner).first())
+            }
+            val latestTaste = preferences.taste(owner).first()
+            if (owner == libraryRepository.scope.value && playback.state.value.track?.id == track.id) {
+                queuePreview.value = QueuePreview(tracks.filterNot { latestTaste.hidden(it) }.sortedBy { latestTaste.less(it) }, owner = owner, seed = track.id)
+            } else if (queuePreview.value.owner == owner && queuePreview.value.seed == track.id) {
+                queuePreview.value = QueuePreview()
+            }
         }catch(_:TimeoutCancellationException){if(owner==libraryRepository.scope.value)queuePreview.value=QueuePreview(error="Pencarian rekomendasi terlalu lama. Coba lagi.",owner=owner,seed=track.id)}catch(e:CancellationException){throw e}catch(_:Exception){if(owner==libraryRepository.scope.value)queuePreview.value=QueuePreview(error="Rekomendasi belum tersedia. Coba lagi.",owner=owner,seed=track.id)}}
     }
     fun cancelQueuePreview(){queuePreviewJob?.cancel();queuePreview.update {it.copy(loading=false)}}
@@ -121,6 +138,8 @@ class MusicViewModel @Inject constructor(
                 mixRotation = DiscoveryRotation()
                 personalRotation = DiscoveryRotation()
                 mixPreview.value = MixPreview()
+                mixPinned.value = emptySet()
+                tasteUndo.value = null
                 cancelQueuePreview()
                 queuePreview.value = QueuePreview()
                 shelves.update { all -> all.filter { it.query.isNotEmpty() } }
@@ -147,7 +166,8 @@ class MusicViewModel @Inject constructor(
                     shelves.update { all -> all.filter { it.query.isNotEmpty() } }
                     return@collectLatest
                 }
-                val related = source.recommendQueue(seed, emptyList(), collection, settings.value.radioMode, limit = 30)
+                val related = source.recommendQueue(seed, emptyList(), collection, settings.value.radioMode, limit = 30,
+                    taste = preferences.taste(owner).first())
                 if (libraryRepository.scope.value != owner) return@collectLatest
                 val catalog = shelves.value.filter { it.query.isNotEmpty() }
                 val picks = personalRotation.select(related, 12, collection, blocked = catalog.flatMap { it.tracks })
@@ -194,26 +214,67 @@ class MusicViewModel @Inject constructor(
     }
     fun query(value: String) { search.value = search.value.copy(query = value); searchNow(true) }
     fun discover(query: String, kind: SearchKind) { search.value = SearchState(query = query, kind = kind); searchNow() }
-    fun previewMix(prompt: String, count: Int = 15, duration: String = "any") {
+    fun previewMix(prompt: String, count: Int = 15, duration: String = "any", refinement: String = "", discovery: Boolean = false) {
         mixPreviewJob?.cancel()
         val text = prompt.trim().take(180)
         if (text.length < 3) { mixPreview.value = MixPreview(error = "Tulis suasana atau jenis musik yang kamu inginkan."); return }
         val owner = libraryRepository.scope.value
-        mixPreview.value = MixPreview(text, loading = true, owner = owner)
+        val previous = mixPreview.value.takeIf { it.owner == owner && it.prompt == text }
+        if (previous == null) mixPinned.value = emptySet()
+        val keep = previous?.tracks.orEmpty().filter { it.id in mixPinned.value }.take(count.coerceIn(10, 20))
+        mixPreview.value = MixPreview(text, previous?.tracks.orEmpty(), loading = true, owner = owner)
         mixPreviewJob = viewModelScope.launch {
             try {
                 val tracks = withTimeout(25_000) {
-                    selectMix(text, count.coerceIn(10, 20), duration, owner)
+                    selectMix(text, count.coerceIn(10, 20), duration, owner, keep, refinement, discovery)
                 }
                 check(owner == libraryRepository.scope.value) { "Akun berubah. Susun mix lagi." }
                 mixPreview.value = MixPreview(text, tracks, error = if (tracks.isEmpty()) "Belum ada lagu yang cocok. Coba suasana atau durasi lain." else null, owner = owner)
-            } catch (e: TimeoutCancellationException) { if (owner == libraryRepository.scope.value) mixPreview.value = MixPreview(text, error = "Pencarian terlalu lama. Coba lagi.", owner = owner) }
+            } catch (e: TimeoutCancellationException) { if (owner == libraryRepository.scope.value) mixPreview.value = MixPreview(text, previous?.tracks.orEmpty(), error = "Pencarian terlalu lama. Coba lagi.", owner = owner) }
             catch (e: CancellationException) { throw e }
-            catch (_: Exception) { if (owner == libraryRepository.scope.value) mixPreview.value = MixPreview(text, error = "Mix belum bisa dimuat. Periksa koneksi lalu coba lagi.", owner = owner) }
+            catch (_: Exception) { if (owner == libraryRepository.scope.value) mixPreview.value = MixPreview(text, previous?.tracks.orEmpty(), error = "Mix belum bisa dimuat. Periksa koneksi lalu coba lagi.", owner = owner) }
         }
     }
     fun cancelMix() { mixPreviewJob?.cancel(); mixPreviewJob = null; mixPreview.update { it.copy(loading = false) } }
-    fun removeMixTrack(id: String) { mixPreview.update { it.copy(tracks = it.tracks.filterNot { track -> track.id == id }) } }
+    fun pinMixTrack(id: String) { mixPinned.update { if (id in it) it - id else it + id } }
+    fun removeMixTrack(id: String) {
+        mixPinned.update { it - id }
+        mixPreview.update { it.copy(tracks = it.tracks.filterNot { track -> track.id == id }) }
+    }
+    internal fun changeTaste(track: Track, hide: Boolean) = action {
+        val owner = libraryRepository.scope.value
+        val current = preferences.taste(owner).first()
+        val key = if (hide) ListeningTaste.recordingKey(track) else ListeningTaste.artistKey(track)
+        val previous = current.rules[key]
+        val value = if (hide) {
+            if (current.hidden(track)) null else System.currentTimeMillis() + 30L * 86_400_000
+        } else if (current.less(track)) null else -1L
+        preferences.editTaste(owner, key, value)
+        if (owner == libraryRepository.scope.value) {
+            tasteUndo.value = TasteUndo(owner, key, previous)
+            if (hide && value != null) {
+                playback.removeHiddenRecommendations(preferences.taste(owner).first())
+                val hidden = mixPreview.value.tracks.filter { ListeningTaste.recordingKey(it) == key }.map { it.id }.toSet()
+                mixPinned.update { it - hidden }
+                mixPreview.update { it.copy(tracks = it.tracks.filterNot { item -> item.id in hidden }) }
+                queuePreview.update { it.copy(tracks = it.tracks.filterNot { item -> ListeningTaste.recordingKey(item) == key }) }
+            }
+        }
+    }
+    internal fun undoTaste(undo: TasteUndo) = action {
+        if (undo.owner == libraryRepository.scope.value && tasteUndo.value == undo) {
+            preferences.editTaste(undo.owner, undo.key, undo.previous)
+            tasteUndo.value = null
+        }
+    }
+    internal suspend fun findLyricPhrase(query: String): List<LyricHit> {
+        val collection = library.value
+        return lyricsRepository.findPhrase(query, collection.history + collection.favorites +
+            collection.playlists.flatMap { it.tracks } + local.value)
+    }
+    fun playShuffled(tracks: List<Track>) {
+        playback.play(freshShuffleOrder(tracks, library.value.history).map { tracks[it] })
+    }
     fun saveMix(title: String) = action {
         val result = mixPreview.value
         check(result.tracks.isNotEmpty() && !result.loading) { "Susun mix terlebih dahulu." }
@@ -260,12 +321,27 @@ class MusicViewModel @Inject constructor(
     }
     fun closeDetail() { detailJob?.cancel(); detail.value = null }
     fun favorite(track: Track) = action { libraryRepository.favorite(track) }
-    private suspend fun selectMix(text: String, count: Int, duration: String, owner: String): List<Track> {
-        val query = if (text.endsWith(" songs", ignoreCase = true)) text else "$text songs"
+    private suspend fun selectMix(
+        text: String, count: Int, duration: String, owner: String, keep: List<Track> = emptyList(),
+        refinement: String = "", discovery: Boolean = false,
+    ): List<Track> {
+        val total = Regex("""\b(\d{1,3})\s*(?:menit|minutes|min)\b""", RegexOption.IGNORE_CASE)
+        val goal = total.find(text)?.groupValues?.get(1)?.toLongOrNull()?.coerceIn(5, 120)?.times(60)
+        val phrase = total.replace(text, "").trim().trimEnd(',', '.', ' ').ifBlank { text }
+        val query = listOf(phrase, refinement, "songs").filter { it.isNotBlank() }.joinToString(" ")
         val collection = libraryRepository.snapshot(owner)
         val candidates = source.discoveryCandidates(query, expand = true)
+        val preferences = preferences.taste(owner).first()
         check(libraryRepository.scope.value == owner) { "Akun berubah. Susun mix lagi." }
-        return mixRotation.select(candidates, count, collection, duration)
+        val pinned = keep.filterNot { preferences.hidden(it) }
+        val picks = mixRotation.select(candidates, count - pinned.size, collection, duration, pinned, preferences, discovery)
+        if (goal == null) return pinned + picks
+        var seconds = pinned.sumOf { it.duration }
+        return pinned + picks.filter { track ->
+            val include = seconds < goal && seconds + track.duration <= goal + 120
+            if (include) seconds += track.duration
+            include
+        }
     }
     fun moodMix(prompt: String) {
         if (mixBusy.value) return

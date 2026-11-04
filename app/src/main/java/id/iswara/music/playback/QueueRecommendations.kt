@@ -22,10 +22,11 @@ internal suspend fun MusicSource.recommendQueue(
     limit: Int = 15,
     context: RadioContext? = null,
     topArtists: Set<String> = emptySet(),
+    taste: ListeningTaste = ListeningTaste(),
 ): List<Track> {
     val recentIds = recent + library.history.take(8).map { it.id }
     fun select(tracks: List<Track>, chosen: List<Track> = emptyList()) = QueueRules.smart(
-        seed, queue + chosen, tracks, recentIds, library.favorites, library.history, mode, limit - chosen.size, topArtists,
+        seed, queue + chosen, tracks, recentIds, library.favorites, library.history, mode, limit - chosen.size, topArtists, taste.rules,
     )
 
     val (related, themed) = coroutineScope {

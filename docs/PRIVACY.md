@@ -22,6 +22,8 @@ Offline audio is AES-GCM encrypted per account in private storage, excluded from
 
 ## Processing, translation and exports
 
+Song recognition is optional. When you request it, the app sends a short sample from the microphone or the audio file you select, along with your AudD API token, directly to AudD for identification. The app does not save the token and deletes its temporary microphone recording after the request. AudD handles the request under its own policies.
+
 Tempo/pitch/hall/bass, analog effects and cover-palette extraction run locally. Stem separation uses bundled Spleeter models without sending audio to an AI service. Unavailable source audio is fetched from the music provider. Stem results use encrypted account-scoped blocks. Plaintext working files stay in private cache and are cleaned after processing; leftovers older than 24 hours are cleaned on a later start.
 
 Japanese/Korean/Chinese readings run locally with Kuromoji/ICU. Enabling integrated translation asks consent to send lyric text and language choices to Google Translate, including subsequent songs while active. The provider sees the network address. Wi-Fi restrictions/cancellation are available; cancellation cannot recall data already sent. Word meanings require an explicit action. Email, Supabase tokens and audio are not sent for translation. Cached results are in memory, limited to 24 song/language contexts and cleared on account changes. Browser translation actions can separately send selected text to Google Translate. Machine translation/readings can be wrong.

@@ -61,6 +61,21 @@ class Preferences @Inject constructor(@ApplicationContext private val context: C
     suspend fun toggle(name: String, value: Boolean) { context.dataStore.edit { it[booleanPreferencesKey(name)] = value } }
     suspend fun set(name: String, value: String) { context.dataStore.edit { it[stringPreferencesKey(name)] = value } }
     suspend fun setOwnerValue(owner:String,name:String,value:String) {context.dataStore.edit {if(owner !in deletedOwners)it[stringPreferencesKey(name)]=value}}
+    internal fun taste(owner: String) = raw("taste:$owner").map(::decodeTaste)
+    internal suspend fun editTaste(owner: String, key: String, value: Long?) {
+        context.dataStore.edit { prefs ->
+            if (owner in deletedOwners) return@edit
+            val stored = stringPreferencesKey("taste:$owner")
+            val rules = decodeTaste(prefs[stored]).rules.toMutableMap()
+            rules.entries.removeAll { it.value > 0 && it.value <= System.currentTimeMillis() }
+            rules.remove(key)
+            if (value != null) rules[key] = value
+            prefs[stored] = AppJson.encodeToString(rules.entries.toList().takeLast(500).associate { it.toPair() })
+        }
+    }
+    private fun decodeTaste(raw: String?) = id.iswara.music.playback.ListeningTaste(
+        runCatching { AppJson.decodeFromString<Map<String, Long>>(raw ?: "{}") }.getOrDefault(emptyMap())
+    )
     suspend fun dataSaver(value: Boolean) { context.dataStore.edit { it[booleanPreferencesKey("dataSaver")] = value } }
     suspend fun search(query: String) { context.dataStore.edit { p ->
         val old = runCatching { AppJson.decodeFromString<List<String>>(p[stringPreferencesKey("search")] ?: "[]") }.getOrDefault(emptyList())
@@ -69,7 +84,7 @@ class Preferences @Inject constructor(@ApplicationContext private val context: C
     suspend fun saveQueue(scope: String, snapshot: QueueSnapshot) { context.dataStore.edit {if(scope !in deletedOwners)it[stringPreferencesKey("queue:$scope")]=AppJson.encodeToString(snapshot)} }
     suspend fun clearOwnerData(owner:String) {
         deletedOwners+=owner
-        context.dataStore.edit {p -> p.asMap().keys.filter {it.name in setOf("queue:$owner","stats:$owner","lastTogether:$owner","spacePins:$owner","radioNickname:$owner") || it.name.startsWith("lyricsOffset:$owner:") || it.name.startsWith("sourceMatch:$owner:")}.forEach {p.remove(stringPreferencesKey(it.name))}}
+        context.dataStore.edit {p -> p.asMap().keys.filter {it.name in setOf("queue:$owner","stats:$owner","lastTogether:$owner","spacePins:$owner","radioNickname:$owner","taste:$owner") || it.name.startsWith("lyricsOffset:$owner:") || it.name.startsWith("sourceMatch:$owner:")}.forEach {p.remove(stringPreferencesKey(it.name))}}
     }
     fun queue(scope: String) = context.dataStore.data.map { p -> runCatching { AppJson.decodeFromString<QueueSnapshot>(p[stringPreferencesKey("queue:$scope")] ?: "{}") }.getOrDefault(QueueSnapshot()) }
 }

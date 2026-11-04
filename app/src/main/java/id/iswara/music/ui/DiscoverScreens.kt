@@ -31,7 +31,11 @@ import androidx.compose.ui.platform.testTag
     val saved = vm.savedQueues.collectAsStateWithLifecycle().value
     val cloudRows = content.announcements
     val featuredRows = content.collections
-    val shelves = vm.shelves.collectAsStateWithLifecycle().value
+    val owner = vm.libraryRepository.scope.collectAsStateWithLifecycle().value
+    val taste = vm.taste.collectAsStateWithLifecycle().value
+    val shelves = vm.shelves.collectAsStateWithLifecycle().value.map { shelf ->
+        if (taste.first == owner) shelf.copy(tracks = shelf.tracks.filterNot { taste.second.hidden(it) }.sortedBy { taste.second.less(it) }) else shelf
+    }
     val library = vm.library.collectAsStateWithLifecycle().value
     val player = vm.screenPlayback.collectAsStateWithLifecycle().value
     val busy = vm.mixBusy.collectAsStateWithLifecycle().value
@@ -229,6 +233,8 @@ import androidx.compose.ui.platform.testTag
     val search = vm.search.collectAsStateWithLifecycle().value
     val settings = vm.settings.collectAsStateWithLifecycle().value
     val state = vm.playback.state.collectAsStateWithLifecycle().value
+    var lyricSearch by remember { mutableStateOf(false) }
+    var recognition by remember { mutableStateOf(false) }
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 24.dp)) {
         item { PageHeading(tr("Cari musik", "Search music"), tr("Lagu, album, playlist, dan artis.", "Songs, albums, playlists, and artists.")) }
         item {
@@ -237,6 +243,13 @@ import androidx.compose.ui.platform.testTag
                 SearchKind.entries.forEach { kind -> val label = when (kind) { SearchKind.SONGS -> tr("Lagu", "Songs"); SearchKind.ALBUMS -> "Album"; SearchKind.PLAYLISTS -> "Playlist"; SearchKind.ARTISTS -> tr("Artis", "Artists") }
                     FilterChip(search.kind == kind, { vm.kind(kind) }, { Text(label) })
                 }
+            }
+        }
+        item {
+            Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                AssistChip({ recognition = true }, { Text(tr("Kenali lagu", "Identify song")) })
+                AssistChip({ lyricSearch = true }, { Text(tr("Cari dari lirik", "Search lyrics")) })
             }
         }
         if (search.query.isBlank()) {
@@ -258,6 +271,11 @@ import androidx.compose.ui.platform.testTag
             if (!search.loading && search.error == null && search.items.isEmpty()) item { EmptyState(tr("Tidak ada hasil", "No results"), tr("Coba kata lain atau ganti kategori.", "Try another query or category."), Icons.Rounded.SearchOff) }
             if (search.next != null && !search.loading) item { OutlinedButton(vm::moreSearch, Modifier.fillMaxWidth().padding(20.dp)) { Text(tr("Muat lebih banyak", "Load more")) } }
         }
+    }
+    if (lyricSearch) LyricPhraseDialog(vm) { lyricSearch = false }
+    if (recognition) RecognitionDialog({ recognition = false }) { title, artist ->
+        recognition = false
+        vm.discover("$title $artist", SearchKind.SONGS)
     }
 }
 
@@ -287,7 +305,7 @@ import androidx.compose.ui.platform.testTag
                 FlowRow(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (tracks.isNotEmpty()) {
                         Button({ vm.playback.play(tracks) }) { Icon(Icons.Rounded.PlayArrow, null); Text(tr("Putar", "Play")) }
-                        OutlinedButton({ vm.playback.play(tracks.shuffled()) }) { Icon(Icons.Rounded.Shuffle, null); Text(tr("Acak", "Shuffle")) }
+                        OutlinedButton({ vm.playShuffled(tracks) }) { Icon(Icons.Rounded.Shuffle, null); Text(tr("Acak", "Shuffle")) }
                         OutlinedButton({ vm.saveCollection() }) { Icon(Icons.Rounded.PlaylistAdd, null); Text(tr("Simpan", "Save")) }
                     }
                     IconButton({ context.startActivity(android.content.Intent.createChooser(android.content.Intent(android.content.Intent.ACTION_SEND).setType("text/plain").putExtra(android.content.Intent.EXTRA_TEXT, detail.url), null)) }) { Icon(Icons.Rounded.Share, tr("Bagikan koleksi", "Share collection")) }
