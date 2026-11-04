@@ -14,7 +14,8 @@ class LibraryRepository @Inject constructor(private val dao: DocumentDao) {
     val scope = MutableStateFlow("guest")
     private val lock = Mutex()
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    val library = scope.flatMapLatest { dao.observe(it).onStart { emit(emptyList()) } }.map(::decode)
+    val library = scope.flatMapLatest { observe(it).onStart { emit(Library()) } }
+    internal fun observe(owner: String): Flow<Library> = dao.observe(owner).map(::decode)
     private fun decode(docs: List<Document>): Library {
         val live = docs.filterNot { it.deleted }
         return Library(

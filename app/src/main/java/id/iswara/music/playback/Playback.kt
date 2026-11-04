@@ -73,6 +73,8 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
     private var activeOwner = library.scope.value
     private var settings = id.iswara.music.data.Settings()
     private var radioJob: Job? = null
+    private var radioContext: RadioContext? = null
+    private var radioAdvanceFrom: String? = null
     private var generation = 0L
     private var radioStopped = false
     private var failedInRow = 0
@@ -285,10 +287,13 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
         if(saved?.first==activeOwner) {player.pause();player.stop();player.restoreQueue(saved.second)}
     }
     private fun persistenceSnapshot()=roomBackup?.takeIf {it.first==activeOwner}?.second ?: snapshot()
-    fun beginQueue() {
+    fun beginQueue() = beginQueue(null)
+    internal fun beginQueue(context: RadioContext?) {
         val bank = activeBank.value; val owner = activeOwner; val saved = snapshot()
         if (bank != null) scope.launch { savedQueues.update(owner,bank,saved) }
         activeBank.value = null; clearUndo()
+        radioContext = context
+        radioAdvanceFrom = null
         if (sleepAtEnd.value) sleep(0); generation++; radioStopped = false; failedInRow = 0; radioJob?.cancel(); radioSeeds.clear(); recent.clear(); radioIds.value = emptySet(); radioError.value = null; radioLoading.value = false
     }
     private fun clearUndo() { undoJob?.cancel(); undo = null; undoLabel.value = null }
@@ -317,7 +322,12 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
         check(owner == activeOwner && owner == library.scope.value) { "Akun berubah." }
         beginQueue(); activeBank.value = id; player.restoreQueue(saved.snapshot); player.prepare(); player.play()
     }
-    fun stopRadioForQueue() { radioStopped = true; generation++; radioJob?.cancel(); radioLoading.value = false; radioError.value = null }
+    fun stopRadioForQueue() { radioStopped = true; generation++; radioJob?.cancel(); radioAdvanceFrom = null; radioLoading.value = false; radioError.value = null }
+    fun nextFromRadio() {
+        radioAdvanceFrom = player.currentMediaItem?.mediaId
+        maybeRadio(force = true)
+        if (radioJob?.isActive != true) radioAdvanceFrom = null
+    }
     fun maybeRadio(force: Boolean = false) {
         if(roomRole.value!=null)return
         if (force) radioStopped = false
@@ -330,20 +340,32 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
         }
         val token = generation
         val owner = activeOwner
+        val context = radioContext
         radioLoading.value = true; radioError.value = null
         radioJob = scope.launch {
             try {
-                delay(1500)
+                if (!force) delay(1500)
                 val queue = playbackOrder(player).mapNotNull { player.getMediaItemAt(it).track() }
                 val collection = library.snapshot(owner)
+                val topArtists = try {
+                    statistics.topArtistKeys(owner)
+                } catch (error: CancellationException) {
+                    throw error
+                } catch (_: Exception) {
+                    emptySet()
+                }
                 if (token != generation || owner != activeOwner) return@launch
-                val recommendations = source.recommendQueue(seed, queue, collection, settings.radioMode, recent.toList())
+                val recommendations = source.recommendQueue(
+                    seed, queue, collection, settings.radioMode, recent.toList(),
+                    limit = if (context == null) 15 else 18, context = context, topArtists = topArtists,
+                )
                 if (token != generation || owner != activeOwner || owner != library.scope.value || !settings.autoplay ||
                     radioStopped || player.repeatMode != Player.REPEAT_MODE_OFF) return@launch
                 val latestQueue = playbackOrder(player).mapNotNull { player.getMediaItemAt(it).track() }
                 val additions = if (latestQueue == queue) recommendations else QueueRules.smart(
                     seed, latestQueue, recommendations, recent.toList() + collection.history.take(8).map { it.id },
                     collection.favorites, collection.history, settings.radioMode,
+                    limit = recommendations.size, topArtists = topArtists,
                 )
                 radioSeeds += seed.id
                 if (additions.isEmpty()) { radioError.value = "Belum ada rekomendasi baru. Coba radio lagi."; return@launch }
@@ -351,9 +373,12 @@ class PlaybackEngine @Inject constructor(@ApplicationContext private val context
                 val first = player.mediaItemCount
                 radioIds.value += additions.map { it.id }
                 clearUndo(); queueEditor.appendRadio(additions)
-                if (ended && player.playWhenReady) { player.seekTo(first, 0); player.prepare() }
+                if (player.playWhenReady) {
+                    if (ended) { player.seekTo(first, 0); player.prepare() }
+                    else if (radioAdvanceFrom == player.currentMediaItem?.mediaId) player.seekToNextMediaItem()
+                }
             } catch (e: CancellationException) { throw e } catch (_: Exception) { if (token == generation) radioError.value = "Radio belum tersambung. Antreanmu tetap tersimpan." }
-            finally { if (token == generation) radioLoading.value = false }
+            finally { if (token == generation) { radioAdvanceFrom = null; radioLoading.value = false } }
         }
     }
     private fun prepareNext() {
@@ -466,7 +491,20 @@ class PlaybackConnection @Inject constructor(@ApplicationContext private val con
         state.value = PlaybackState(currentTrack, c.isPlaying, c.playbackState == Player.STATE_BUFFERING, c.currentPosition.coerceAtLeast(0), c.duration.takeIf { it > 0 } ?: ((currentTrack?.duration ?: 0) * 1000), queue, c.currentMediaItemIndex.coerceAtLeast(0), c.shuffleModeEnabled, c.repeatMode, c.playerError?.let(PlaybackFailures::message), engine.timerEnds.value, c.hasNextMediaItem(), engine.radioLoading.value, engine.radioError.value, engine.radioIds.value, c.playerError?.let(PlaybackFailures::report), engine.sleepAtEnd.value, order, engine.undoLabel.value, engine.activeBank.value, engine.pauseReason.value, engine.roomRole.value,c.playWhenReady)
     }
     private fun command(action: (MediaController) -> Unit) { controller?.let(action) ?: pending.addLast(action) }
-    fun play(tracks: List<Track>, index: Int = 0) { if (tracks.isEmpty()) return; onRoomPersonalPlay?.invoke(); engine.beginQueue(); command { it.setMediaItems(tracks.map(Track::mediaItem), index.coerceIn(tracks.indices), 0); it.prepare(); it.play() } }
+    fun play(tracks: List<Track>, index: Int = 0) = playQueue(tracks, index, null)
+    fun playFromDiscovery(track: Track, query: String, candidates: List<Track>) {
+        playQueue(listOf(track), 0, query.takeIf { it.isNotBlank() }?.let { RadioContext(it, candidates.take(40)) })
+    }
+    private fun playQueue(tracks: List<Track>, index: Int, context: RadioContext?) {
+        if (tracks.isEmpty()) return
+        onRoomPersonalPlay?.invoke()
+        command {
+            engine.beginQueue(context)
+            it.setMediaItems(tracks.map(Track::mediaItem), index.coerceIn(tracks.indices), 0)
+            it.prepare()
+            it.play()
+        }
+    }
     fun toggle() { if(engine.roomRole.value=="member") {onRoomToggle?.invoke();return};roomControl.value++;command { if ((it.isPlaying || (it.playWhenReady && it.playbackState == Player.STATE_BUFFERING)) && it.playerError == null) it.pause() else { if (it.playerError != null) engine.invalidateStream(); if (it.playbackState == Player.STATE_ENDED) it.seekTo(0); if (it.playbackState == Player.STATE_IDLE) it.prepare(); it.play() } } }
     fun resume() = command { if (it.mediaItemCount > 0) { if (it.playerError != null) engine.invalidateStream(); if (it.playbackState == Player.STATE_ENDED) it.seekTo(0); if (it.playbackState == Player.STATE_IDLE) it.prepare(); it.play() } }
     fun reloadSource(id:String)=command {player->
@@ -475,7 +513,7 @@ class PlaybackConnection @Inject constructor(@ApplicationContext private val con
         val position=player.currentPosition.coerceAtLeast(0);val index=player.currentMediaItemIndex;val play=player.playWhenReady
         engine.reloadSource(track);player.stop();player.seekTo(index,position);player.prepare();player.playWhenReady=play
     }
-    fun next() = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; if (it.hasNextMediaItem()) { it.seekToNextMediaItem(); if (it.playbackState == Player.STATE_IDLE) it.prepare() } else engine.maybeRadio(true) }
+    fun next() = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; if (it.hasNextMediaItem()) { it.seekToNextMediaItem(); if (it.playbackState == Player.STATE_IDLE) it.prepare() } else engine.nextFromRadio() }
     fun previous() = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; if (it.currentPosition > 3000) it.seekTo(0) else if (it.hasPreviousMediaItem()) it.seekToPreviousMediaItem() }
     fun seek(position: Long) = command { if(engine.roomRole.value=="member")return@command;roomControl.value++; it.seekTo(position) }
     fun shuffle() = command { if(engine.roomRole.value!=null)return@command;roomControl.value++; it.shuffleModeEnabled = !it.shuffleModeEnabled }

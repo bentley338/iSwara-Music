@@ -12,6 +12,8 @@ import id.iswara.music.playback.recommendQueue
 import id.iswara.music.source.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import javax.inject.Inject
 
 data class Shelf(val title: String, val query: String, val tracks: List<Track> = emptyList(), val loading: Boolean = true, val error: String? = null)
@@ -59,11 +61,15 @@ class MusicViewModel @Inject constructor(
     val radioOpen=MutableStateFlow(false)
     suspend fun roomSearch(query:String)=source.search(query).items.mapNotNull {it.track}.filter(TogetherRules::valid).take(20)
     val mixBusy = MutableStateFlow(false)
-    val mixResult = MutableStateFlow<List<Track>>(emptyList())
     val mixPreview = MutableStateFlow(MixPreview())
     private var mixPreviewJob: Job? = null
-    private val homePermits = kotlinx.coroutines.sync.Semaphore(2)
-    val listening = statistics.entries.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    private var moodMixJob: Job? = null
+    private var mixRotation = DiscoveryRotation()
+    private var personalRotation = DiscoveryRotation()
+    private val homeRotation = DiscoveryRotation()
+    private val homePermits = Semaphore(3)
+    private val homeRefresh = MutableStateFlow(0)
+    val listening = statistics.scopedEntries.stateIn(viewModelScope, SharingStarted.Eagerly, OwnedListening())
     val savedQueues = queueBanks.entries.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val search = MutableStateFlow(SearchState())
     val detail = MutableStateFlow<DetailState?>(null)
@@ -108,17 +114,45 @@ class MusicViewModel @Inject constructor(
     private var lyricJob: Job? = null
     private var homeJob: Job? = null
     init {
-        viewModelScope.launch { libraryRepository.scope.collect { cancelMix(); mixPreview.value = MixPreview();queuePreviewJob?.cancel();queuePreview.value=QueuePreview();shelves.update {all->all.filter {it.query.isNotEmpty()}} } }
+        viewModelScope.launch {
+            libraryRepository.scope.drop(1).collect {
+                cancelMix()
+                moodMixJob?.cancel()
+                mixRotation = DiscoveryRotation()
+                personalRotation = DiscoveryRotation()
+                mixPreview.value = MixPreview()
+                cancelQueuePreview()
+                queuePreview.value = QueuePreview()
+                shelves.update { all -> all.filter { it.query.isNotEmpty() } }
+            }
+        }
         viewModelScope.launch {together.messages.collect {messages.emit(it)}}
-        refreshHome()
+        loadHome(expand = false)
+        observeHomeRecommendations()
         refreshContent()
         if (id.iswara.music.BuildConfig.ADMIN_TOOLS_ENABLED) viewModelScope.launch { auth.account.map { it?.id }.distinctUntilChanged().collectLatest { adminAccess.value = AdminAccess(); adminAccess.value = admin.access() } }
+    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeHomeRecommendations() {
         viewModelScope.launch {
-            library.map { it.history.firstOrNull() }.distinctUntilChangedBy { it?.id }.collectLatest { seed ->
-                if (seed != null && !seed.local) {
-                    val picks = source.recommendQueue(seed, emptyList(), library.value, settings.value.radioMode, limit = 18)
-                    if (picks.isNotEmpty()) shelves.update { existing -> listOf(Shelf("Karena kamu mendengarkan ${seed.artist.ifBlank { seed.title }}", "", picks, false)) + existing.filter { it.query.isNotEmpty() } }
+            libraryRepository.scope.flatMapLatest { owner ->
+                combine(libraryRepository.observe(owner), homeRefresh) { collection, refresh ->
+                    Triple(owner, collection, refresh)
                 }
+            }.distinctUntilChangedBy { (owner, collection, refresh) ->
+                Triple(owner, collection.history.firstOrNull { !it.local }?.id, refresh)
+            }.collectLatest { (owner, collection) ->
+                val seed = collection.history.firstOrNull { !it.local }
+                if (seed == null) {
+                    shelves.update { all -> all.filter { it.query.isNotEmpty() } }
+                    return@collectLatest
+                }
+                val related = source.recommendQueue(seed, emptyList(), collection, settings.value.radioMode, limit = 30)
+                if (libraryRepository.scope.value != owner) return@collectLatest
+                val catalog = shelves.value.filter { it.query.isNotEmpty() }
+                val picks = personalRotation.select(related, 12, collection, blocked = catalog.flatMap { it.tracks })
+                val title = "Karena kamu mendengarkan ${seed.artist.ifBlank { seed.title }}"
+                shelves.value = if (picks.isEmpty()) catalog else listOf(Shelf(title, "", picks, false)) + catalog
             }
         }
     }
@@ -126,16 +160,36 @@ class MusicViewModel @Inject constructor(
         try { block() } catch (e: CancellationException) { throw e } catch (e: Exception) { messages.emit(e.message ?: "Terjadi kesalahan. Coba lagi.") }
     }
     fun refreshHome() {
+        homeRefresh.update { it + 1 }
+        loadHome(expand = true)
+    }
+    private fun loadHome(expand: Boolean) {
         homeJob?.cancel()
         homeJob = viewModelScope.launch {
-            shelves.value.filter { it.query.isNotEmpty() }.forEach { shelf -> launch {
-                shelves.update { all -> all.map { if (it.query == shelf.query) it.copy(loading = true, error = null) else it } }
-                try {
-                    homePermits.acquire()
-                    val result = try { source.search(shelf.query).items.mapNotNull { it.track }.take(12) } finally { homePermits.release() }
-                    shelves.update { all -> all.map { if (it.query == shelf.query) it.copy(tracks = result, loading = false) else it } }
-                } catch (e: CancellationException) { throw e } catch (_: Exception) { shelves.update { all -> all.map { if (it.query == shelf.query) it.copy(loading = false, error = "Musik belum bisa dimuat. Coba lagi.") else it } } }
-            } }
+            val catalog = shelves.value.filter { it.query.isNotEmpty() }
+            shelves.update { all -> all.map { if (it.query.isEmpty()) it else it.copy(loading = true, error = null) } }
+            catalog.forEach { shelf ->
+                launch {
+                    val candidates = homePermits.withPermit {
+                        try {
+                            withTimeoutOrNull(18_000) { source.discoveryCandidates(shelf.query, expand) }
+                        } catch (error: CancellationException) {
+                            throw error
+                        } catch (_: Exception) {
+                            null
+                        }
+                    }
+                    val current = shelves.value
+                    val blocked = current.filter { it.query != shelf.query }.flatMap { it.tracks }
+                    val refreshed = if (candidates.isNullOrEmpty()) {
+                        shelf.copy(loading = false, error = if (candidates == null) "Musik belum bisa dimuat. Coba lagi." else null)
+                    } else {
+                        val picks = homeRotation.select(candidates, 20, Library(), blocked = blocked)
+                        shelf.copy(tracks = picks, loading = false, error = null)
+                    }
+                    shelves.value = current.map { if (it.query == shelf.query) refreshed else it }
+                }
+            }
         }
     }
     fun query(value: String) { search.value = search.value.copy(query = value); searchNow(true) }
@@ -149,9 +203,7 @@ class MusicViewModel @Inject constructor(
         mixPreviewJob = viewModelScope.launch {
             try {
                 val tracks = withTimeout(25_000) {
-                    source.search("$text songs").items.mapNotNull { it.track }.distinctBy { it.id }.filter {
-                        when (duration) { "short" -> it.duration in 30..239; "long" -> it.duration in 240..600; else -> it.duration in 30..1800 }
-                    }.take(count.coerceIn(10, 20))
+                    selectMix(text, count.coerceIn(10, 20), duration, owner)
                 }
                 check(owner == libraryRepository.scope.value) { "Akun berubah. Susun mix lagi." }
                 mixPreview.value = MixPreview(text, tracks, error = if (tracks.isEmpty()) "Belum ada lagu yang cocok. Coba suasana atau durasi lain." else null, owner = owner)
@@ -208,15 +260,29 @@ class MusicViewModel @Inject constructor(
     }
     fun closeDetail() { detailJob?.cancel(); detail.value = null }
     fun favorite(track: Track) = action { libraryRepository.favorite(track) }
-    fun moodMix(prompt: String) = action {
-        require(prompt.trim().length >= 3) { "Tulis suasana atau jenis musik yang kamu inginkan." }
-        mixBusy.value = true
-        try {
-            val found = source.search(prompt.trim() + " songs").items.mapNotNull { it.track }.filter { it.duration in 30..1800 }.distinctBy { it.id }.take(15)
-            check(found.isNotEmpty()) { "Belum ada lagu yang cocok. Coba suasana lain." }
-            mixResult.value = found
-            playback.play(found)
-        } finally { mixBusy.value = false }
+    private suspend fun selectMix(text: String, count: Int, duration: String, owner: String): List<Track> {
+        val query = if (text.endsWith(" songs", ignoreCase = true)) text else "$text songs"
+        val collection = libraryRepository.snapshot(owner)
+        val candidates = source.discoveryCandidates(query, expand = true)
+        check(libraryRepository.scope.value == owner) { "Akun berubah. Susun mix lagi." }
+        return mixRotation.select(candidates, count, collection, duration)
+    }
+    fun moodMix(prompt: String) {
+        if (mixBusy.value) return
+        val owner = libraryRepository.scope.value
+        moodMixJob = action {
+            val text = prompt.trim().take(180)
+            require(text.length >= 3) { "Tulis suasana atau jenis musik yang kamu inginkan." }
+            mixBusy.value = true
+            try {
+                val found = withTimeoutOrNull(25_000) { selectMix(text, 15, "any", owner) }
+                    ?: error("Pencarian terlalu lama. Coba lagi.")
+                check(found.isNotEmpty()) { "Belum ada lagu yang cocok. Coba suasana lain." }
+                playback.play(found)
+            } finally {
+                mixBusy.value = false
+            }
+        }
     }
     fun saveQueue() = action { val state = playback.state.value; val tracks = state.order.ifEmpty { state.queue.indices.toList() }.mapNotNull { state.queue.getOrNull(it) }; check(tracks.isNotEmpty()); val p = libraryRepository.createPlaylist("Antrean ${java.time.LocalDate.now()}"); libraryRepository.updatePlaylist(p.copy(tracks = tracks.distinctBy { it.id })); messages.emit("Antrean disimpan sebagai playlist") }
     fun download(track: Track) = action { offline.enqueue(track, if (settings.value.dataSaver) "low" else settings.value.quality); messages.emit("${track.title} masuk antrean unduhan") }

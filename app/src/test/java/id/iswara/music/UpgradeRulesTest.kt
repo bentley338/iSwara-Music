@@ -26,6 +26,20 @@ class UpgradeRulesTest {
         assertEquals(95L, summary.seconds); assertEquals(75L, summary.tracks.first().second)
         assertEquals("Artis a", summary.artists.first().first)
     }
+    @Test fun chartsCombineAlternateUploadsButKeepRemixesSeparate() {
+        val original = track("original").copy(title = "Hujan", artist = "Nara")
+        val duplicate = original.copy(id = "alternate", title = "Hujan (Official Audio)", artist = "Nara - Topic")
+        val remix = original.copy(id = "remix", title = "Hujan (Remix)")
+        val entries = listOf(
+            ListeningDay("2026-11-01", original, 100),
+            ListeningDay("2026-11-02", duplicate, 80),
+            ListeningDay("2026-11-03", remix, 90),
+            ListeningDay("2026-11-04", track("zero"), 0),
+        )
+        val summary = summarizeListening(entries, "2026-11")
+        assertEquals(listOf("Nara" to 270L), summary.artists)
+        assertEquals(listOf(180L, 90L), summary.tracks.map { it.second })
+    }
     @Test fun offlineAudioAuthenticatesCiphertextAndSeparatesOwners() {
         val key = KeyGenerator.getInstance("AES").apply { init(256) }.generateKey()
         val cipher = Cipher.getInstance("AES/GCM/NoPadding").apply { init(Cipher.ENCRYPT_MODE, key) }

@@ -52,6 +52,23 @@ class NavigationSpaceUiTest {
             file.outputStream().use { image.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }; image.recycle()
         }
     }
+    @Test fun tappingAnIndieShelfTrackStartsOnlyThatTrack() {
+        val vm = ViewModelProvider(ui.activity)[MusicViewModel::class.java]
+        val tracks = (1..3).map {
+            Track("indie-$it", "Lagu indie $it", "Artis $it", duration = 180, url = "content://test/indie-$it", local = true)
+        }
+        ui.runOnUiThread { vm.shelves.value = listOf(Shelf("Indie pilihan", "indie fixture songs", tracks, false)) }
+        ui.onNodeWithTag("home-list").performScrollToNode(hasText("Indie pilihan"))
+        ui.onNode(hasScrollToIndexAction() and hasAnyDescendant(hasText(tracks.first().title)) and
+            hasAnyAncestor(hasTestTag("home-list"))).performScrollToIndex(1)
+        ui.onNodeWithText(tracks[1].title).performScrollTo().performClick()
+        ui.waitUntil(10_000) {
+            Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(100))
+            vm.playback.state.value.queue.map { it.id } == listOf(tracks[1].id)
+        }
+        Assert.assertEquals(tracks[1].id, vm.playback.state.value.track?.id)
+    }
+
     @Test fun phoneMenusFeatureSearchShortcutsDialogsAndMixPreview() {
         val vm = ViewModelProvider(ui.activity)[MusicViewModel::class.java]
         ui.onNodeWithTag("bottom-navigation").assertIsDisplayed()

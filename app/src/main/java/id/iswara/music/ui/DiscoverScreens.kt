@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import id.iswara.music.cloud.*
+import id.iswara.music.data.summarizeListening
 import id.iswara.music.R
 import id.iswara.music.model.*
 import kotlinx.coroutines.flow.map
@@ -101,13 +102,16 @@ import androidx.compose.ui.platform.testTag
         item(key="together-entry") { FilledTonalButton({vm.togetherOpen.value=true},Modifier.fillMaxWidth().padding(horizontal=20.dp,vertical=8.dp)) { Icon(Icons.Rounded.Groups,null);Spacer(Modifier.width(8.dp));Text(tr("Denger bareng","Listen together")) } }
         val resume = player.track ?: library.history.firstOrNull()
         if (resume != null) item(key="resume") {
-            Surface(onClick = { if (player.track?.id == resume.id) onPlayer() else vm.playback.play(library.history) }, shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surfaceContainerHigh, modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
+            Surface(onClick = { if (player.track?.id == resume.id) onPlayer() else vm.playback.play(listOf(resume)) }, shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surfaceContainerHigh, modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
                 Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     Art(resume.artwork, resume.title, Modifier.size(92.dp))
                     Column(Modifier.weight(1f)) { Text(tr("LANJUT DENGARKAN", "KEEP LISTENING"), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary); Spacer(Modifier.height(8.dp)); Text(resume.title, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis); Text(resume.artist, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall) }
-                    ActionIcon(if (player.playing) Icons.Rounded.PauseCircle else Icons.Rounded.PlayCircle,tr("Putar atau jeda","Play or pause"),{if(player.track?.id==resume.id)vm.playback.toggle() else vm.playback.play(library.history)},active=true)
+                    ActionIcon(if (player.playing) Icons.Rounded.PauseCircle else Icons.Rounded.PlayCircle,tr("Putar atau jeda","Play or pause"),{if(player.track?.id==resume.id)vm.playback.toggle() else vm.playback.play(listOf(resume))},active=true)
                 }
             }
+        }
+        if (filter == 0) item(key = "listening-charts") {
+            HomeListeningCharts(vm, onMenu, onSearch)
         }
         item(key="mood-title") { SectionTitle(tr("Bawa suasanamu", "Find your mood")) }
         item(key="mood-content") {
@@ -124,22 +128,71 @@ import androidx.compose.ui.platform.testTag
                 Surface(onClick = { vm.playback.play(p.tracks) }, enabled = p.tracks.isNotEmpty(), shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.width(240.dp)) { Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) { Art(p.tracks.firstOrNull()?.artwork.orEmpty(), p.title, Modifier.size(54.dp)); Column(Modifier.padding(start = 12.dp).weight(1f)) { Text(p.title, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleSmall); Text("${p.tracks.size} ${tr("lagu", "tracks")}", style = MaterialTheme.typography.bodySmall) }; Icon(Icons.Rounded.PlayArrow, null) } }
             } } }
         }
-        if (library.history.isNotEmpty()) { item(key="history-title") { SectionTitle(tr("Putar lagi", "Play it again")) }; item(key="history-content") { TrackShelf(library.history.take(10).distinctBy {it.id}, { vm.playback.play(library.history, library.history.indexOf(it)) }, onMenu) } }
-        shelves.filter { filter == 0 || (filter == 1 && (it.query.contains("Indonesia") || it.query == "musik Indonesia populer")) || (filter == 2 && !it.query.contains("Indonesia") && it.query.isNotEmpty()) }.forEach { shelf ->
+        if (library.history.isNotEmpty()) { item(key="history-title") { SectionTitle(tr("Putar lagi", "Play it again")) }; item(key="history-content") { TrackShelf(library.history.take(10).distinctBy {it.id}, { vm.playback.play(listOf(it)) }, onMenu) } }
+        shelves.filter { it.tracks.isNotEmpty() || it.loading || it.error != null }.filter {
+            filter == 0 || (filter == 1 && it.query.contains("Indonesia")) ||
+                (filter == 2 && !it.query.contains("Indonesia") && it.query.isNotEmpty())
+        }.forEach { shelf ->
             item(key = "catalog:"+shelf.query.ifEmpty {"related"}) {
                 SectionTitle(if (english) when (shelf.query) { "musik Indonesia populer" -> "Sounds of Indonesia"; "international indie pop songs" -> "Outside your rotation"; "lagu akustik Indonesia" -> "Acoustic afternoon"; "instrumental piano focus" -> "Stay focused"; "indie Indonesia songs" -> "Indie picks"; "upbeat pop workout songs" -> "Fresh energy"; else -> "Inspired by your listening" } else shelf.title)
                 when {
-                    shelf.tracks.isNotEmpty() -> TrackShelf(shelf.tracks.distinctBy {it.id}, { vm.playback.play(shelf.tracks, shelf.tracks.indexOf(it)) }, onMenu)
+                    shelf.tracks.isNotEmpty() -> TrackShelf(shelf.tracks.distinctBy {it.id}, { vm.playback.playFromDiscovery(it, shelf.query, shelf.tracks) }, onMenu)
                     shelf.loading -> HomeShelfLoading()
                     shelf.error != null -> EmptyState(tr("Belum tersambung", "Unable to connect"), tr("Musik belum bisa dimuat.", "Music could not be loaded."), Icons.Rounded.WifiOff, tr("Coba lagi", "Retry"), vm::refreshHome)
                 }
             }
         }
-        if (library.favorites.isNotEmpty()) { item(key="favorites-title") { SectionTitle(tr("Favoritmu", "Your favorites")) }; items(library.favorites.take(8).distinctBy {it.id}, key = { "favorite:${it.id}" }) { t -> TrackRow(t, { vm.playback.play(library.favorites, library.favorites.indexOf(t)) }, { onMenu(t) }) } }
+        if (library.favorites.isNotEmpty()) { item(key="favorites-title") { SectionTitle(tr("Favoritmu", "Your favorites")) }; items(library.favorites.take(8).distinctBy {it.id}, key = { "favorite:${it.id}" }) { t -> TrackRow(t, { vm.playback.play(listOf(t)) }, { onMenu(t) }) } }
     }
     if (mood != null) TextPrompt(tr("Mix sesuai suasana", "A mix for your mood"), tr("Contoh: akustik galau saat hujan", "Try: acoustic songs for a rainy night"), mood!!, { mood = it }, { mood = null }) { vm.moodMix(mood.orEmpty()); mood = null }
     if (stats) ListeningRecap(vm) { stats = false }
     if (banks) SavedQueuesDialog(vm) { banks = false }
+}
+
+@Composable private fun HomeListeningCharts(vm: MusicViewModel, onMenu: (Track) -> Unit, onSearch: () -> Unit) {
+    val owner = vm.libraryRepository.scope.collectAsStateWithLifecycle().value
+    val listening = vm.listening.collectAsStateWithLifecycle().value
+    var showArtists by remember(owner) { mutableStateOf(false) }
+    var month by remember(owner) { mutableStateOf(false) }
+    val today = java.time.LocalDate.now()
+    val from = today.minusDays(if (month) 29 else 6).toString()
+    val summary = remember(listening, owner, from, today) {
+        val entries = listening.entries.takeIf { listening.owner == owner }.orEmpty()
+        summarizeListening(entries.filter { it.date >= from && it.date <= today.toString() }, "")
+    }
+    SectionTitle(tr("Top dengaranmu", "Your listening charts"))
+    Text(tr("Diurutkan berdasarkan waktu dengar di perangkat ini.", "Ranked by listening time on this device."),
+        modifier = Modifier.padding(horizontal = 20.dp), style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant)
+    Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        FilterChip(!showArtists, { showArtists = false }, { Text(tr("Top Lagu", "Top tracks")) })
+        FilterChip(showArtists, { showArtists = true }, { Text(tr("Top Artis", "Top artists")) })
+        FilterChip(!month, { month = false }, { Text(tr("7 hari", "7 days")) })
+        FilterChip(month, { month = true }, { Text(tr("30 hari", "30 days")) })
+    }
+    if (summary.seconds == 0L || (showArtists && summary.artists.isEmpty())) {
+        Text(tr("Belum ada data untuk periode ini.", "No listening data for this period."),
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp), style = MaterialTheme.typography.bodySmall)
+    } else if (showArtists) {
+        summary.artists.forEachIndexed { index, (artist, seconds) ->
+            ListItem(
+                headlineContent = { Text(artist, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                leadingContent = { Text("${index + 1}", color = MaterialTheme.colorScheme.primary) },
+                supportingContent = { Text(timeLabel(seconds * 1000)) },
+                modifier = Modifier.clickable(onClickLabel = tr("Cari lagu artis", "Find artist tracks")) {
+                    vm.discover(artist, SearchKind.SONGS)
+                    onSearch()
+                },
+            )
+        }
+    } else {
+        summary.tracks.forEachIndexed { index, (track, seconds) ->
+            TrackRow(track, { vm.playback.play(listOf(track)) }, { onMenu(track) }, trailing = {
+                Text("#${index + 1} · ${timeLabel(seconds * 1000)}", style = MaterialTheme.typography.labelMedium)
+                ActionIcon(Icons.Rounded.MoreHoriz, tr("Opsi lagu", "Track options"), { onMenu(track) })
+            })
+        }
+    }
 }
 
 @Composable fun SectionTitle(title: String) { Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 22.dp, bottom = 14.dp).semantics { heading() }) }

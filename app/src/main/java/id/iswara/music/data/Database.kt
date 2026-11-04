@@ -38,6 +38,8 @@ data class ListeningRecord(val owner: String, val date: String, val trackId: Str
 abstract class ListeningDao {
     @Query("SELECT * FROM listening_days WHERE owner = :owner ORDER BY date DESC, trackId")
     abstract fun observe(owner: String): Flow<List<ListeningRecord>>
+    @Query("SELECT * FROM listening_days WHERE owner = :owner AND date BETWEEN :from AND :through ORDER BY date DESC, trackId")
+    abstract suspend fun between(owner: String, from: String, through: String): List<ListeningRecord>
     @Query("SELECT * FROM listening_days WHERE owner = :owner AND date = :date AND trackId = :trackId")
     abstract suspend fun get(owner: String, date: String, trackId: String): ListeningRecord?
     @Upsert abstract suspend fun put(record: ListeningRecord)

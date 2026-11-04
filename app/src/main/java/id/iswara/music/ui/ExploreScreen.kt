@@ -80,7 +80,7 @@ val musicTopics = listOf(
         } }
         shelves.filter { it.tracks.isNotEmpty() }.take(2).forEach { shelf ->
             item { SectionTitle(if (english) "From your discovery" else shelf.title) }
-            item { TrackShelf(shelf.tracks, { vm.playback.play(shelf.tracks, shelf.tracks.indexOf(it)) }, onMenu) }
+            item { TrackShelf(shelf.tracks, { vm.playback.playFromDiscovery(it, shelf.query, shelf.tracks) }, onMenu) }
         }
     }
 }

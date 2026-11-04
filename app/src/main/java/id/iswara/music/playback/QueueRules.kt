@@ -26,7 +26,7 @@ object QueueRules {
         LyricsRules.cleanArtist(artist).replace(credits, "")
     )
 
-    private data class Recording(val track: Track) {
+    internal data class Recording(val track: Track) {
         val artist = artistKey(track.artist)
         private val cleanTitle = LyricsRules.cleanTitle(track.title, track.artist).replace(credits, "")
         private val edition = suffix.find(cleanTitle)
@@ -52,6 +52,7 @@ object QueueRules {
         history: List<Track> = emptyList(),
         mode: String = "balanced",
         limit: Int = 15,
+        topArtists: Set<String> = emptySet(),
     ): List<Track> {
         if (limit <= 0) return emptyList()
         val origin = Recording(seed)
@@ -81,7 +82,8 @@ object QueueRules {
                     "discovery" -> (if (known) -0.8 else 0.8) - familiar * 0.3
                     else -> familiar * 0.4 + if (known) 0.0 else 0.2
                 }
-                recording to (2.0 / (1 + index * 0.12) + preference)
+                val listeningBoost = if (mode != "discovery" && recording.artist in topArtists) 0.35 else 0.0
+                recording to (2.0 / (1 + index * 0.12) + preference + listeningBoost)
             }.toMutableList()
         val result = mutableListOf<Track>()
         repeat(limit.coerceAtMost(50)) {

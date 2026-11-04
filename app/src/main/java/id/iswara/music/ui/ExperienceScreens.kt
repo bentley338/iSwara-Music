@@ -45,7 +45,9 @@ import kotlinx.serialization.encodeToString
 }
 
 @Composable fun ListeningRecap(vm: MusicViewModel, close: () -> Unit) {
-    val entries = vm.listening.collectAsStateWithLifecycle().value
+    val owner = vm.libraryRepository.scope.collectAsStateWithLifecycle().value
+    val listening = vm.listening.collectAsStateWithLifecycle().value
+    val entries = listening.entries.takeIf { listening.owner == owner }.orEmpty()
     var period by remember { mutableStateOf("month") }
     var clear by remember { mutableStateOf(false) }
     val now = java.time.LocalDate.now()
@@ -69,7 +71,6 @@ import kotlinx.serialization.encodeToString
         }
     }
     if (clear) ConfirmDialog(tr("Hapus rekap dengar?", "Clear listening recap?"), tr("Statistik akun ini di perangkat ini akan dihapus.", "Clears this account's listening statistics on this device."), { clear = false }) {
-        val owner = vm.libraryRepository.scope.value
         vm.action { vm.statistics.clearOwner(owner) }; clear = false
     }
 }

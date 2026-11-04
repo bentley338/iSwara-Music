@@ -114,6 +114,40 @@ class ReleaseImportCurationTest {
         assertEquals(3, QueueRules.smart(seed, emptyList(), sameArtist).size)
     }
 
+    @Test fun shelfRadioExpandsTheThemeAndLeavesExistingQueueEntriesAlone() = runBlocking {
+        val seed = queueTrack("seed", "Hujan", "Nara")
+        val manual = queueTrack("manual", "Pilihan sendiri", "Ari")
+        val themed = (1..10).map { queueTrack("indie-$it", "Indie $it", "Artis indie $it") }
+        val outside = queueTrack("outside", "Top Dance", "DJ")
+        val calls = mutableListOf<Pair<String, String?>>()
+        val source = object : MusicSource {
+            override suspend fun related(track: Track) = listOf(outside, themed[3])
+            override suspend fun search(query: String, kind: SearchKind, next: String?): CatalogPage {
+                calls += query to next
+                val tracks = if (next == null) themed.take(5) + listOf(seed, manual) else themed.drop(5)
+                return CatalogPage(tracks.map { CatalogItem(it.id, it.title, it.artist, "", it.url, "song", it) },
+                    if (next == null) "more" else null)
+            }
+            override suspend fun collection(url: String, next: String?) = error("Unexpected collection")
+            override suspend fun resolve(track: Track, quality: String) = error("Unexpected resolve")
+            override suspend fun fromUrl(url: String) = error("Unexpected URL")
+        }
+        val queue = listOf(seed, manual)
+        val picks = source.recommendQueue(seed, queue, Library(), "balanced",
+            context = RadioContext("indie Indonesia songs", themed.take(2)))
+        assertEquals(themed.toSet(), picks.toSet())
+        assertEquals(themed[3], picks.first())
+        assertEquals(listOf(seed, manual), queue)
+        assertEquals(listOf("indie Indonesia songs" to null, "indie Indonesia songs" to "more"), calls)
+    }
+
+    @Test fun listeningAffinityBreaksCloseTiesWithoutOverridingDiscoveryMode() {
+        val seed = queueTrack("seed", "Hujan", "Nara")
+        val tracks = listOf(queueTrack("a", "Senja", "Ari"), queueTrack("b", "Laut", "Sari"))
+        assertEquals("b", QueueRules.smart(seed, emptyList(), tracks, topArtists = setOf("sari")).first().id)
+        assertEquals("a", QueueRules.smart(seed, emptyList(), tracks, mode = "discovery", topArtists = setOf("sari")).first().id)
+    }
+
     private fun queueTrack(id: String, title: String, artist: String) =
         Track(id, title, artist, duration = 180, url = "https://www.youtube.com/watch?v=$id")
     @Test fun languagesAndLyricThemesStaySelectableWithoutNetwork() {
