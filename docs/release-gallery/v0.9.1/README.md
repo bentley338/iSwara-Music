@@ -25,3 +25,9 @@ These panels use screenshots from earlier iSwara app tests. Some screens contain
 ![Audio and playlists](04-tools.jpg)
 
 [Equalizer](../../screenshots/equalizer.png) ? [Playlist import](../../screenshots/import-0.9-phone.png) ? [Mix builder](../../screenshots/mix-preview-phone.png) ? [Queue curation](../../screenshots/curation-0.9-phone.png)
+
+## English interface
+
+![English interface](english-interface.jpg)
+
+[Your space](../../screenshots/account-english.png) / [Settings](../../screenshots/settings-english.png)
