@@ -9,6 +9,10 @@ import id.iswara.music.source.LyricCandidate
 import id.iswara.music.source.Lyrics
 import id.iswara.music.source.LyricsRules
 import id.iswara.music.source.SongRecognition
+import id.iswara.music.source.hasMusicSignal
+import id.iswara.music.source.sharedTikTokLink
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -51,5 +55,23 @@ class DiscoveryToolsTest {
         assertNull(SongRecognition.parse("""{"status":"success","result":null}"""))
         assertEquals("Senja", SongRecognition.parse("""{"status":"success","result":{"title":"Senja","artist":"Ari"}}""")?.title)
         assertTrue(runCatching { SongRecognition.parse("""{"status":"error","error":{"error_code":900}}""") }.isFailure)
+    }
+
+    @Test fun tikTokShareRejectsSpoofedHostsAndAllowsVideoLinks() {
+        assertEquals("https://vm.tiktok.com/example/", sharedTikTokLink("Cek video (https://vm.tiktok.com/example/)."))
+        assertNull(sharedTikTokLink("https://tiktok.com.invalid/video/123 https://www.tiktok.com@evil.example/video/1"))
+        assertNull(sharedTikTokLink("https://www.tiktok.com:81/video/1"))
+    }
+
+    @Test fun playbackCaptureRejectsSilenceAndEncodesMonoPcm() {
+        assertFalse(hasMusicSignal(ShortArray(1024), 1024))
+        assertTrue(hasMusicSignal(ShortArray(1024) { if (it % 2 == 0) 2000 else -2000 }, 1024))
+        val pcm = byteArrayOf(1, 2, 3, 4)
+        val wave = SongRecognition.wav(pcm, 44_100, 1)
+        val header = ByteBuffer.wrap(wave).order(ByteOrder.LITTLE_ENDIAN)
+        assertEquals(1, header.getShort(22).toInt())
+        assertEquals(44_100, header.getInt(24))
+        assertEquals(pcm.size, header.getInt(40))
+        assertArrayEquals(pcm, wave.copyOfRange(44, wave.size))
     }
 }

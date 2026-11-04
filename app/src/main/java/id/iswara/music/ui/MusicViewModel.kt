@@ -384,6 +384,11 @@ class MusicViewModel @Inject constructor(
         check(tracks.isNotEmpty()) { "Lagu belum ditemukan. Coba judul atau artis lain." }
         playback.play(tracks)
     }
+    internal val recognition = MutableStateFlow<id.iswara.music.source.RecognitionEntry?>(null)
+    internal fun openRecognition(entry: id.iswara.music.source.RecognitionEntry = id.iswara.music.source.RecognitionEntry()) {
+        id.iswara.music.source.PlaybackRecognitionService.reset()
+        recognition.value = entry
+    }
     fun shared(text: String): Job = action {
         Regex("iswara://(room|radio)/([A-Za-z0-9-]{12,16})(?=[?\\s]|$)").find(text)?.let {invite->
             val code=TogetherRules.code(invite.groupValues[2]);require(code.length==12){"Kode undangan tidak valid."}

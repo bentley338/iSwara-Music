@@ -1,0 +1,16 @@
+{
+  "health": 204,
+  "invalid_audio": 422,
+  "quota_private": true,
+  "real_provider_sample": {
+    "title": "Everybody Wants To Rule The World",
+    "artist": "Tears For Fears",
+    "album": "Songs From The Big Chair"
+  },
+  "device_capture_tested": false,
+  "microphone_format_sample": {
+    "title": "Everybody Wants To Rule The World",
+    "artist": "Tears For Fears",
+    "album": "Songs From The Big Chair"
+  }
+}

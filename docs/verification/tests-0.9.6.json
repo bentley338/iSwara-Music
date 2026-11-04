@@ -1,0 +1,149 @@
+{
+  "version": "0.9.6",
+  "tests": 28,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "id.iswara.music.DiscoveryRotationTest",
+      "name": "repeatedMixUsesUnseenSongsBeforeRecyclingOlderResults",
+      "seconds": 0.27
+    },
+    {
+      "class": "id.iswara.music.DiscoveryRotationTest",
+      "name": "expandedSearchAddsAnotherPageAndRetainsFirstPageIfExpansionFails",
+      "seconds": 0.196
+    },
+    {
+      "class": "id.iswara.music.DiscoveryRotationTest",
+      "name": "selectionRespectsDurationAndAvoidsCopiesFromOtherShelves",
+      "seconds": 0.002
+    },
+    {
+      "class": "id.iswara.music.DiscoveryRotationTest",
+      "name": "smallPoolKeepsUsableSongsButChangesItsOpeningTrack",
+      "seconds": 0.002
+    },
+    {
+      "class": "id.iswara.music.DiscoveryToolsTest",
+      "name": "tikTokShareRejectsSpoofedHostsAndAllowsVideoLinks",
+      "seconds": 0.119
+    },
+    {
+      "class": "id.iswara.music.DiscoveryToolsTest",
+      "name": "recognitionReturnsNoMatchAndRejectsProviderErrors",
+      "seconds": 0.517
+    },
+    {
+      "class": "id.iswara.music.DiscoveryToolsTest",
+      "name": "shuffleKeepsAllIndicesAndRecentRecordingsMoveBehindFreshPicks",
+      "seconds": 0.088
+    },
+    {
+      "class": "id.iswara.music.DiscoveryToolsTest",
+      "name": "snoozeCatchesAlternateUploadAndExpires",
+      "seconds": 0.043
+    },
+    {
+      "class": "id.iswara.music.DiscoveryToolsTest",
+      "name": "playbackCaptureRejectsSilenceAndEncodesMonoPcm",
+      "seconds": 0.005
+    },
+    {
+      "class": "id.iswara.music.DiscoveryToolsTest",
+      "name": "featuredArtistAndUploadLabelsMatchButDifferentTimingBecomesPlain",
+      "seconds": 0.024
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "duplicatesAreExplicitAndEmptyShuffleQueueCanAcceptItsFirstSong",
+      "seconds": 28.62
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "normalQueueMovesExistingSongNextAndKeepsSeekPosition",
+      "seconds": 0.357
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "reorderAndClearUseActualShuffleOrderRatherThanStorageIndex",
+      "seconds": 0.279
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "radioAndSessionRestorePreserveManualShuffleEdits",
+      "seconds": 0.451
+    },
+    {
+      "class": "id.iswara.music.PlaybackQueueTest",
+      "name": "playNextHonorsShuffleForExistingAndNewSongsWithoutChangingCurrentTrack",
+      "seconds": 0.186
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "csvHandlesExportifyQuotingBomNewlinesAndMilliseconds",
+      "seconds": 0.286
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "checksumAndWorkerPayloadAreBounded",
+      "seconds": 0.272
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "updateLinksEnforceReleasePathAndTrustedRedirects",
+      "seconds": 0.009
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "smartQueueVariesArtistsExcludesRecordingDuplicatesAndPreservesInputOrder",
+      "seconds": 0.158
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "importerDoesNotAutomaticallyAcceptDifferentArtistOrCover",
+      "seconds": 0.023
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "languagesAndLyricThemesStaySelectableWithoutNetwork",
+      "seconds": 0.287
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "shelfRadioExpandsTheThemeAndLeavesExistingQueueEntriesAlone",
+      "seconds": 0.294
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "textJsonAndM3uKeepMetadataWithoutReadingLocalPaths",
+      "seconds": 0.148
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "discoveryUsesRecordingHistoryAndRadioLimitsRepeatedArtists",
+      "seconds": 0.012
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "radioRejectsRepeatVersionsButKeepsDifferentRecordingsWithCommonTitles",
+      "seconds": 0.01
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "listeningAffinityBreaksCloseTiesWithoutOverridingDiscoveryMode",
+      "seconds": 0.005
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "failedRelatedLookupSearchesArtistCatalogAndRejectsUnrelatedSearchHits",
+      "seconds": 0.448
+    },
+    {
+      "class": "id.iswara.music.ReleaseImportCurationTest",
+      "name": "addedRemixPresetsHaveDistinctRealParametersAndRoomsKeepOriginalClock",
+      "seconds": 0.032
+    }
+  ]
+}

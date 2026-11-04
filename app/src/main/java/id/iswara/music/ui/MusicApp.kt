@@ -115,6 +115,14 @@ import androidx.compose.animation.core.tween
     if(importOpen)PlaylistImportScreen(vm){vm.importOpen.value=false}
     if(smartQueueOpen)SmartQueueScreen(vm){vm.smartQueueOpen.value=false}
     val navigate: (Int) -> Unit = { next -> tab = next; settingsOpen = false; section = null; libraryCategory = 0; vm.closeDetail() }
+    val recognition by vm.recognition.collectAsStateWithLifecycle()
+    recognition?.let { entry -> key(entry) {
+        RecognitionDialog(entry, { vm.recognition.value = null }) { title, artist ->
+            vm.recognition.value = null
+            navigate(1)
+            vm.discover("$title $artist", SearchKind.SONGS)
+        }
+    } }
     LaunchedEffect(radioRequest){if(radioRequest){navigate(6);vm.radioOpen.value=false}}
     val showPlayer: (Int) -> Unit = { target ->
         if (state.track != null) { playerTab = target; player = true }

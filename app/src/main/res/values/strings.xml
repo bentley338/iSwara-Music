@@ -1,1 +1,9 @@
-<resources><string name="app_name">iSwara Music</string></resources>
+<resources>
+    <string name="app_name" translatable="false">iSwara Music</string>
+    <string name="recognition_name">Kenali lagu</string>
+    <string name="recognition_notice">iSwara sedang mendengarkan audio perangkat.</string>
+    <string name="recognition_stop">Hentikan</string>
+    <string name="recognition_matching">Mencocokkan audio…</string>
+    <string name="recognition_no_match">Lagu belum ditemukan</string>
+    <string name="recognition_no_audio">Audio perangkat tidak tertangkap</string>
+</resources>

@@ -8,6 +8,7 @@ import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.ContextCompat
+import id.iswara.music.BuildConfig
 import id.iswara.music.model.AppJson
 import id.iswara.music.playback.StemDecoder
 import id.iswara.music.playback.StemDsp
@@ -23,7 +24,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -37,6 +37,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 internal data class RecognizedSong(val title: String, val artist: String, val album: String)
+internal enum class RecognitionIssue { UNAVAILABLE, LIMIT, NETWORK, NO_AUDIO, STOPPED, PERMISSION, FILE }
+internal class RecognitionFailure(val issue: RecognitionIssue) : IOException()
 
 internal object SongRecognition {
     private val client = OkHttpClient.Builder().followRedirects(false).callTimeout(22, TimeUnit.SECONDS).build()
@@ -75,54 +77,70 @@ internal object SongRecognition {
             require(frames >= StemDsp.RATE) { "Audio terlalu pendek." }
             require(output.length() in 1..2_000_000)
             val pcm = output.readBytes()
-            ByteBuffer.allocate(44 + pcm.size).order(ByteOrder.LITTLE_ENDIAN).apply {
-                put("RIFF".toByteArray(Charsets.US_ASCII)); putInt(36 + pcm.size)
-                put("WAVEfmt ".toByteArray(Charsets.US_ASCII)); putInt(16)
-                putShort(1); putShort(2); putInt(StemDsp.RATE); putInt(StemDsp.RATE * 4)
-                putShort(4); putShort(16)
-                put("data".toByteArray(Charsets.US_ASCII)); putInt(pcm.size); put(pcm)
-            }.array()
+            wav(pcm, StemDsp.RATE, 2)
         } finally {
             output.delete()
         }
     }
 
-    suspend fun identify(audio: ByteArray, microphone: Boolean, token: String): RecognizedSong? {
-        require(token.isNotBlank() && token.length <= 256)
+    internal fun wav(pcm: ByteArray, rate: Int, channels: Int): ByteArray {
+        require(rate in 8_000..48_000 && channels in 1..2 && pcm.size % (channels * 2) == 0)
+        return ByteBuffer.allocate(44 + pcm.size).order(ByteOrder.LITTLE_ENDIAN).apply {
+            put("RIFF".toByteArray(Charsets.US_ASCII)); putInt(36 + pcm.size)
+            put("WAVEfmt ".toByteArray(Charsets.US_ASCII)); putInt(16)
+            putShort(1); putShort(channels.toShort()); putInt(rate); putInt(rate * channels * 2)
+            putShort((channels * 2).toShort()); putShort(16)
+            put("data".toByteArray(Charsets.US_ASCII)); putInt(pcm.size); put(pcm)
+        }.array()
+    }
+
+    private fun request(): Request.Builder {
+        val url = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_ANON_KEY
+        if (!url.startsWith("https://") || key.isBlank()) throw RecognitionFailure(RecognitionIssue.UNAVAILABLE)
+        return Request.Builder().url("$url/functions/v1/recognize-song").header("apikey", key).apply {
+            if (key.startsWith("eyJ")) header("Authorization", "Bearer $key")
+        }
+    }
+
+    suspend fun available() { execute(request().head().build()) { Unit } }
+
+    suspend fun identify(audio: ByteArray, microphone: Boolean): RecognizedSong? {
         require(audio.size in 1..2_000_044)
         val type = if (microphone) "audio/mp4" else "audio/wav"
-        val name = if (microphone) "clip.m4a" else "clip.wav"
-        val body = MultipartBody.Builder().setType(MultipartBody.FORM)
-            .addFormDataPart("api_token", token)
-            .addFormDataPart("file", name, audio.toRequestBody(type.toMediaType()))
-            .build()
-        val request = Request.Builder().url("https://api.audd.io/").post(body).build()
-        return suspendCancellableCoroutine { result ->
+        return execute(request().post(audio.toRequestBody(type.toMediaType())).build()) {
+            val source = it.body?.source() ?: error("Empty recognition response")
+            require(!source.request(65_537)) { "Recognition response too large" }
+            parse(source.readUtf8())
+        }
+    }
+
+    private suspend fun <T> execute(request: Request, read: (Response) -> T): T = suspendCancellableCoroutine { result ->
             val call = client.newCall(request)
             result.invokeOnCancellation { call.cancel() }
             call.enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) = result.resumeWithException(e)
                 override fun onResponse(call: Call, response: Response) {
                     try {
-                        val song = response.use {
-                            check(it.isSuccessful) { "Layanan pengenal lagu tidak tersedia." }
-                            val source = it.body?.source() ?: error("Respons kosong.")
-                            require(!source.request(65_537)) { "Respons terlalu besar." }
-                            parse(source.readUtf8())
+                        val value = response.use {
+                            if (!it.isSuccessful) throw RecognitionFailure(when (it.code) {
+                                429 -> RecognitionIssue.LIMIT
+                                401, 403, 404, 503 -> RecognitionIssue.UNAVAILABLE
+                                else -> RecognitionIssue.NETWORK
+                            })
+                            read(it)
                         }
-                        result.resume(song)
+                        result.resume(value)
                     } catch (error: Exception) {
                         result.resumeWithException(error)
                     }
                 }
             })
         }
-    }
-
     internal fun parse(json: String): RecognizedSong? {
         val root = AppJson.parseToJsonElement(json) as? JsonObject ?: error("Respons tidak valid.")
         fun JsonObject.text(key: String) = this[key]?.jsonPrimitive?.contentOrNull.orEmpty().trim().take(200)
-        check(root.text("status") == "success") { "Periksa token atau kuota AudD." }
+        check(root.text("status") == "success") { "Recognition failed" }
         val song = root["result"] as? JsonObject ?: return null
         val title = song.text("title")
         val artist = song.text("artist")

@@ -22,7 +22,7 @@ Offline audio is AES-GCM encrypted per account in private storage, excluded from
 
 ## Processing, translation and exports
 
-Song recognition is optional. When you request it, the app sends a short sample from the microphone or the audio file you select, along with your AudD API token, directly to AudD for identification. The app does not save the token and deletes its temporary microphone recording after the request. AudD handles the request under its own policies.
+Song recognition is optional. When you request it, the app sends a short audio sample from the microphone, a selected audio/video file, or compatible Android playback to the configured iSwara recognition service, which forwards it to AudD. Internal capture uses Android's consent screen and records only audio, not screen images. Shared TikTok links reopen the video on the device; they are not sent to the recognition service. iSwara does not retain samples on the server, and temporary microphone or file-processing data is deleted after the request. The service uses shared rate-limit counters derived from network addresses; it does not store the addresses or their full hashes. AudD handles samples under its own policies.
 
 Tempo/pitch/hall/bass, analog effects and cover-palette extraction run locally. Stem separation uses bundled Spleeter models without sending audio to an AI service. Unavailable source audio is fetched from the music provider. Stem results use encrypted account-scoped blocks. Plaintext working files stay in private cache and are cleaned after processing; leftovers older than 24 hours are cleaned on a later start.
 

@@ -1,0 +1,8 @@
+<resources>
+    <string name="recognition_name">Identify song</string>
+    <string name="recognition_notice">iSwara is listening to device audio.</string>
+    <string name="recognition_stop">Stop</string>
+    <string name="recognition_matching">Matching audio…</string>
+    <string name="recognition_no_match">No song found</string>
+    <string name="recognition_no_audio">No device audio captured</string>
+</resources>

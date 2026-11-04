@@ -234,7 +234,6 @@ import androidx.compose.ui.platform.testTag
     val settings = vm.settings.collectAsStateWithLifecycle().value
     val state = vm.playback.state.collectAsStateWithLifecycle().value
     var lyricSearch by remember { mutableStateOf(false) }
-    var recognition by remember { mutableStateOf(false) }
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 24.dp)) {
         item { PageHeading(tr("Cari musik", "Search music"), tr("Lagu, album, playlist, dan artis.", "Songs, albums, playlists, and artists.")) }
         item {
@@ -248,7 +247,7 @@ import androidx.compose.ui.platform.testTag
         item {
             Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                AssistChip({ recognition = true }, { Text(tr("Kenali lagu", "Identify song")) })
+                AssistChip({ vm.openRecognition() }, { Text(tr("Kenali lagu", "Identify song")) })
                 AssistChip({ lyricSearch = true }, { Text(tr("Cari dari lirik", "Search lyrics")) })
             }
         }
@@ -273,10 +272,6 @@ import androidx.compose.ui.platform.testTag
         }
     }
     if (lyricSearch) LyricPhraseDialog(vm) { lyricSearch = false }
-    if (recognition) RecognitionDialog({ recognition = false }) { title, artist ->
-        recognition = false
-        vm.discover("$title $artist", SearchKind.SONGS)
-    }
 }
 
 @Composable fun CatalogRow(item: CatalogItem, onClick: () -> Unit, onMenu: () -> Unit, active: Boolean = false) {

@@ -1,0 +1,146 @@
+{
+  "lib/arm64-v8a/libandroidx.graphics.path.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/arm64-v8a/libdatastore_shared_counter.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/arm64-v8a/libonnxruntime.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/arm64-v8a/libonnxruntime4j_jni.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/armeabi-v7a/libandroidx.graphics.path.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/armeabi-v7a/libdatastore_shared_counter.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/armeabi-v7a/libonnxruntime.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/armeabi-v7a/libonnxruntime4j_jni.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86/libandroidx.graphics.path.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86/libdatastore_shared_counter.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86/libonnxruntime.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86/libonnxruntime4j_jni.so": {
+    "bits": 32,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86_64/libandroidx.graphics.path.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86_64/libdatastore_shared_counter.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86_64/libonnxruntime.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  },
+  "lib/x86_64/libonnxruntime4j_jni.so": {
+    "bits": 64,
+    "load_alignment": [
+      16384,
+      16384
+    ],
+    "supports_16kb_elf": true
+  }
+}
